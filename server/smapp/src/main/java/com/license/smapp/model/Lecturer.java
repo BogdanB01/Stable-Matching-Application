@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.nashorn.internal.ir.PropertyKey;
 import org.hibernate.annotations.Cascade;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -26,7 +23,7 @@ public class Lecturer extends User{
     private String cabinetNumber;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "lecturer")
+    @OneToMany(mappedBy = "lecturer", cascade = CascadeType.ALL)
     private List<Project> projects;
 
     public Lecturer() {}

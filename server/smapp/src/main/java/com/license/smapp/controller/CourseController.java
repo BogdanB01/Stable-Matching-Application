@@ -84,4 +84,20 @@ public class CourseController {
 
         //if resource already exists -> return ResponseEntity.status(HTTPStatus.Conflict).build();
     }
+
+    /**
+     * Update a particular Course Object
+     * @param course the object that needs to be updated
+     * @param id the id of the object
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> updateCourse(@RequestBody Course course, @PathVariable Long id) {
+        Course updatedCourse = this.courseService.findById(id);
+        if(updatedCourse == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        courseService.save(updatedCourse);
+        return ResponseEntity.noContent().build();
+    }
 }

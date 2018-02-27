@@ -1,15 +1,20 @@
 package com.license.smapp.controller;
 
 import com.license.smapp.dto.CreateLecturerDTO;
+import com.license.smapp.dto.CreateProjectDTO;
 import com.license.smapp.model.Lecturer;
+import com.license.smapp.model.Project;
 import com.license.smapp.service.LecturerService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -23,6 +28,8 @@ public class LecturerController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    private Logger LOGGER = LoggerFactory.getLogger(LecturerController.class);
 
     /**
      * Get a list with all the Lecturer objects from the database
@@ -78,5 +85,41 @@ public class LecturerController {
         return ResponseEntity.created(new URI("/lecturers/" + newLecturer.getId())).build();
     }
 
+    /**
+     * Update a particular Student Object
+     * @param lecturer the object that needs to be updated
+     * @param id the id of the object
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> updateLecturer(@RequestBody Lecturer lecturer, @PathVariable Long id) {
+        Lecturer updatedLecturer = this.lecturerService.findById(id);
+        if(updatedLecturer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        lecturerService.save(updatedLecturer);
+        return ResponseEntity.noContent().build();
+    }
 
+    /**
+     * Add a project to a particular Lecturer Object
+     * @param: id - the id of the Lecturer
+     * @param project - the project to add to the lecturer's list
+     */
+    @RequestMapping(value = "/{id}/projects", method = RequestMethod.POST)
+    public ResponseEntity<Project> addProject(@PathVariable Long id, @RequestBody CreateProjectDTO project) throws URISyntaxException {
+        Project newProject = this.lecturerService.addProject(id, modelMapper.map(project, Project.class));
+       // LOGGER.error(newProject.getId().toString());
+        return ResponseEntity.created(new URI("/projects/" + newProject.getId())).build();
+    }
+
+    /**
+     * Get a List with Project Objects proposed by the Lecturer
+     * @param: the id of the Lecturer to search by
+     */
+    @RequestMapping(value = "{id}/projects", method = RequestMethod.GET)
+    public ResponseEntity<List<Project>> getProjects(@PathVariable Long id) {
+        Lecturer lecturer = this.lecturerService.findById(id);
+        List<Project> projects = lecturer.getProjects();
+        return ResponseEntity.ok(projects);
+    }
 }

@@ -84,4 +84,19 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update a particular Project Object
+     * @param project the object that needs to be updated
+     * @param id the id of the object
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> updateStudent(@RequestBody Project project, @PathVariable Long id) {
+        Project updatedProject = this.projectService.findById(id);
+        if(updatedProject == null) {
+            return ResponseEntity.notFound().build();
+        }
+        projectService.save(updatedProject);
+        return ResponseEntity.noContent().build();
+    }
+
 }

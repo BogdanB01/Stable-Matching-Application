@@ -1,10 +1,7 @@
 package com.license.smapp.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -20,6 +17,9 @@ public class Student extends User{
 
     @OneToMany(mappedBy = "student")
     private List<Grade> grades;
+
+    @OneToMany(mappedBy = "student")
+    private List<StudentPreferences> preferences;
 
     public Student() {
 
@@ -39,5 +39,17 @@ public class Student extends User{
 
     public void setGrades(List<Grade> grades) {
         this.grades = grades;
+    }
+
+    public List<StudentPreferences> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(List<StudentPreferences> preferences) {
+        this.preferences = preferences;
+    }
+
+    public void addPreference(StudentPreferences preference) {
+        this.preferences.add(preference);
     }
 }

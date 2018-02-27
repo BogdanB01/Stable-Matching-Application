@@ -18,6 +18,9 @@ public class Project {
     private String title;
     private String description;
 
+    @OneToMany(mappedBy = "project")
+    private List<StudentPreferences> studentPreferences;
+
     @ManyToOne
     @JoinColumn(name = "lecturer_id")
     private Lecturer lecturer;
@@ -70,5 +73,13 @@ public class Project {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public List<StudentPreferences> getStudentPreferences() {
+        return studentPreferences;
+    }
+
+    public void setStudentPreferences(List<StudentPreferences> studentPreferences) {
+        this.studentPreferences = studentPreferences;
     }
 }

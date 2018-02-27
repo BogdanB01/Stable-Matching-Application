@@ -48,11 +48,7 @@ public class StudentController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         Student student = studentService.findById(id);
-        if (student != null) {
-            return ResponseEntity.ok(student); // return 200, with json body
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 with null body
-        }
+        return ResponseEntity.ok(student); //return 200 with json body
     }
 
     /**
@@ -63,11 +59,6 @@ public class StudentController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Student> deleteStudentById(@PathVariable Long id) {
-        Student student = studentService.findById(id);
-        if(student == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         studentService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -83,7 +74,6 @@ public class StudentController {
         Student savedStudent = studentService.save(modelMapper.map(student, Student.class));
         return ResponseEntity.created(new URI("/students/" + savedStudent.getId())).build();
 
-        //if resource already exists -> return ResponseEntity.status(HTTPStatus.Conflict).build();
     }
 
     /**
@@ -93,11 +83,13 @@ public class StudentController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateStudent(@RequestBody Student student, @PathVariable Long id) {
-       if(!id.equals(student.getId())) {
-           return ResponseEntity.notFound().build();
-       }
-       studentService.save(student);
-       return ResponseEntity.noContent().build();
+        Student updatedStudent = this.studentService.findById(id);
+        if(updatedStudent == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        studentService.save(updatedStudent);
+        return ResponseEntity.noContent().build();
     }
 
 }

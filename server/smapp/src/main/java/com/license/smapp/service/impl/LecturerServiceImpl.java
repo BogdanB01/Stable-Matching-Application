@@ -1,10 +1,14 @@
 package com.license.smapp.service.impl;
 
+import com.license.smapp.controller.LecturerController;
 import com.license.smapp.exception.EmailAlreadyTakenException;
+import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.Lecturer;
+import com.license.smapp.model.Project;
 import com.license.smapp.model.Role;
 import com.license.smapp.model.User;
 import com.license.smapp.repository.LecturerRepository;
+import com.license.smapp.repository.ProjectRepository;
 import com.license.smapp.repository.RoleRepository;
 import com.license.smapp.repository.UserRepository;
 import com.license.smapp.service.LecturerService;
@@ -26,6 +30,9 @@ public class LecturerServiceImpl implements LecturerService{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @Override
     public Lecturer save(Lecturer entity) {
 
@@ -44,7 +51,11 @@ public class LecturerServiceImpl implements LecturerService{
 
     @Override
     public Lecturer findById(Long id) {
-        return this.lecturerRepository.findOne(id);
+        Lecturer lecturer = this.lecturerRepository.findOne(id);
+        if(lecturer == null) {
+            throw new ResourceNotFoundException(id, "Lecturer not found!");
+        }
+        return lecturer;
     }
 
     @Override
@@ -55,5 +66,15 @@ public class LecturerServiceImpl implements LecturerService{
     @Override
     public void delete(Long id) {
         this.lecturerRepository.delete(id);
+    }
+
+    @Override
+    public Project addProject(Long lecturerId, Project project) {
+        //get lecturer by id
+        Lecturer lecturer = findById(lecturerId);
+
+        project.setLecturer(lecturer);
+        project = this.projectRepository.save(project);
+        return project;
     }
 }

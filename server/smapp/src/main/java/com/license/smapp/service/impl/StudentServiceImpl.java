@@ -1,6 +1,7 @@
 package com.license.smapp.service.impl;
 
 import com.license.smapp.exception.EmailAlreadyTakenException;
+import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.Role;
 import com.license.smapp.model.Student;
 import com.license.smapp.model.User;
@@ -49,7 +50,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findById(Long id) {
-        return studentRepository.findOne(id);
+        Student student = studentRepository.findOne(id);
+        if(student == null) {
+            throw new ResourceNotFoundException(id, "Student not found");
+        }
+        return student;
     }
 
     @Override
@@ -59,6 +64,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Long id) {
-        studentRepository.delete(id);
+        if(findById(id) != null) {
+            studentRepository.delete(id);
+        }
     }
 }
