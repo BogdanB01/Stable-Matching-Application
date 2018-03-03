@@ -2,6 +2,7 @@ package com.license.smapp.controller;
 
 
 import com.license.smapp.dto.CreateStudentDTO;
+import com.license.smapp.model.Grade;
 import com.license.smapp.model.Student;
 import com.license.smapp.service.StudentService;
 import org.modelmapper.ModelMapper;
@@ -91,5 +92,18 @@ public class StudentController {
         studentService.save(updatedStudent);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Get a list with grades for a Student Object
+     * @param id the id of the student
+     * @return a list of that particular student grades
+     */
+    @RequestMapping(value = "/{id}/grades", method = RequestMethod.GET)
+    public ResponseEntity<List<Grade>> getGrades(@PathVariable Long id) {
+        List<Grade> grades = this.studentService.getGradesForStudent(id);
+        return ResponseEntity.ok(grades);
+    }
+
+
 
 }

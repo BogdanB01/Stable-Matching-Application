@@ -1,6 +1,8 @@
 package com.license.smapp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,9 +17,11 @@ public class Student extends User{
     @Column(name="registration_number")
     private String registrationNumber;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "student")
     private List<Grade> grades;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "student")
     private List<StudentPreferences> preferences;
 

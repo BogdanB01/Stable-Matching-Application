@@ -1,5 +1,8 @@
 package com.license.smapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -12,6 +15,7 @@ public class StudentPreferences {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stud_pref_seq")
     private Long id;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     private Student student;
@@ -21,7 +25,7 @@ public class StudentPreferences {
     private Project project;
 
     @Column(name = "submitted_at")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date submittedAt;
 
     public Long getId() {

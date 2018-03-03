@@ -2,6 +2,7 @@ package com.license.smapp.service.impl;
 
 import com.license.smapp.exception.EmailAlreadyTakenException;
 import com.license.smapp.exception.ResourceNotFoundException;
+import com.license.smapp.model.Grade;
 import com.license.smapp.model.Role;
 import com.license.smapp.model.Student;
 import com.license.smapp.model.User;
@@ -67,5 +68,11 @@ public class StudentServiceImpl implements StudentService {
         if(findById(id) != null) {
             studentRepository.delete(id);
         }
+    }
+
+    @Override
+    public List<Grade> getGradesForStudent(Long id) {
+        Student student = findById(id);
+        return student.getGrades();
     }
 }

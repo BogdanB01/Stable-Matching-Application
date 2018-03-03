@@ -18,6 +18,7 @@ drop sequence if exists project_seq;
 drop sequence if exists grade_seq;
 drop sequence if exists course_seq;
 drop sequence if exists stud_pref_seq;
+drop sequence if exists assigned_stud_seq;
 
 
 create sequence user_seq START 1;
@@ -26,7 +27,7 @@ create sequence project_seq START 1;
 create sequence grade_seq START 1;
 create sequence course_seq START 1;
 create sequence stud_pref_seq START 1;
-
+create sequence assigned_stud_seq START 1;
 
 drop extension if exists pgcrypto;
 
@@ -125,7 +126,7 @@ create table students_preferences (
    id bigint primary key,
    student_id bigint not null references students(id) on delete restrict, 
    project_id bigint not null references projects(id) on delete restrict,
-   submitted_at date not null 
+   submitted_at timestamp not null 
 );
 
 --tabelul in care vom tine lista de studenti -> proiecte asignate

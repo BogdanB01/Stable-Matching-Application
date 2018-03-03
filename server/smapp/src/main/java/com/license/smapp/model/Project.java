@@ -1,5 +1,7 @@
 package com.license.smapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Project {
     private String description;
 
     @OneToMany(mappedBy = "project")
+    @JsonBackReference
     private List<StudentPreferences> studentPreferences;
 
     @ManyToOne

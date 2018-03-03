@@ -1,5 +1,7 @@
 package com.license.smapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 /**
@@ -19,6 +21,7 @@ public class Grade {
     @JoinColumn(name="course_id")
     private Course course;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="stud_id")
     private Student student;
