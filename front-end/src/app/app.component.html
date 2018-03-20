@@ -1,0 +1,65 @@
+<!--<app-login> </app-login>  -->
+<!-- *ngIf="isLoggedIn$ | async" -->
+<div  class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="class.mat-elevation-z4" class="example-toolbar"> 
+        
+        <div class="test" fxLayout="row">
+          <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+          <h2> Inscrierea la licenta FII </h2>
+        </div>
+        <div>      
+          <button mat-icon-button (click) = "searchOpen = !searchOpen" fxHide="true" [fxHide.gt-xs]="false">
+            <i class="material-icons">search</i>
+          </button>
+    
+          <mat-form-field class="search" [ngClass]="{'search-open': searchOpen == true}">
+            <input matInput autocomplete="off">
+          </mat-form-field>
+
+          
+          
+        </div>
+    </mat-toolbar>
+    
+  
+    <mat-sidenav-container class="example-sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+      <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                   [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+        
+        <img src="assets/img/fii.png">
+        <div class="menu-link">
+            
+            <button mat-button routerLink="/projects">
+                <mat-icon> dashboard </mat-icon>
+                <span> Proiecte </span>
+            </button>
+
+            <button mat-button routerLink="/lecturer-account">
+                <mat-icon> account_circle </mat-icon>
+                <span> Cont profesor </span>
+            </button>
+
+            <button mat-button routerLink="/student-account">
+                <mat-icon> account_box </mat-icon>
+                <span> Cont student </span>
+            </button>
+
+            <button mat-button routerLink="/admin-account">
+              <mat-icon> build </mat-icon>
+              <span> Cont admin </span>
+            </button> 
+        </div>
+
+        <div class="menu-bottom">
+
+        </div>
+      </mat-sidenav>
+  
+      <mat-sidenav-content fxFlex>
+
+        <router-outlet> </router-outlet>
+
+    </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>

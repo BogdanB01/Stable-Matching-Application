@@ -1,0 +1,15 @@
+<h2 mat-dialog-title> Cauta student </h2>
+<mat-dialog-content>
+    <div class="test">
+        <mat-form-field>
+            <input matInput placeholder="Introdu numele" autocomplete="off">
+        </mat-form-field>
+        <button mat-icon-button>
+                <i class="material-icons">search</i>
+        </button>
+    </div>
+</mat-dialog-content> 
+<mat-dialog-actions> 
+    <button mat-button mat-dialog-close>Anuleaza</button>
+    <button mat-button [mat-dialog-close]="true">Adauga</button>
+</mat-dialog-actions>

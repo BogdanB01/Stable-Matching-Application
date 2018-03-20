@@ -1,0 +1,24 @@
+<mat-card class="project-card">
+    <mat-card-header>
+        <mat-card-title>Aplicatii ale problemelor Stable Matching</mat-card-title>
+        <mat-card-subtitle> Propus de: Frasinaru Cristian </mat-card-subtitle>
+    </mat-card-header>
+
+    <hr/>
+
+    <mat-card-content>
+        <p> At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestia </p>
+
+        <mat-chip-list class="project-tags">
+            <mat-chip *ngFor="let chip of availableColors" selected="true" [color]="chip.color">
+              {{chip.name}}
+            </mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-button> Aplica </button>
+        <button mat-button (click)="goToDetails()"> Detalii </button>
+    </mat-card-actions>
+
+</mat-card>
