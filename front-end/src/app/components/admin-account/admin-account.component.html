@@ -1,1 +1,39 @@
-<p> Works </p>
+<div fxLayout="column" style="padding: 20px;" class="components-container-gt-xs" [ngClass.xs]="'components-container-xs'"  fxLayoutGap="20px">
+
+    <div class="filter">
+		<div class="table-header" style="padding: 0 20px;">
+			<h1 class="mat-headline center-align" >Utilizatori</h1>
+		</div>
+		<div class="example-header" style="padding: 0 20px;">
+			<mat-form-field floatPlaceholder="never" style="height: 80%; width: 100%;">
+				<input matInput #filter placeholder="Filter users">
+			</mat-form-field>
+        </div>
+        
+        <mat-table #table [dataSource]="dataSource">
+            <ng-container matColumnDef="email">
+				<mat-header-cell *matHeaderCellDef> email </mat-header-cell>
+				<mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="role">
+				<mat-header-cell *matHeaderCellDef> role </mat-header-cell>
+				<mat-cell *matCellDef="let row"> {{row.role}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="action">
+				<mat-header-cell *matHeaderCellDef> action </mat-header-cell>
+				<mat-cell *matCellDef="let row"> action </mat-cell>
+            </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator #paginator
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 20]"
+            [showFirstLastButtons]="true">
+        </mat-paginator>
+    </div>
+
+</div>

@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+       /* http
                 .sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS ).and()
                 .exceptionHandling().authenticationEntryPoint( restAuthenticationEntryPoint ).and()
                 .authorizeRequests()
@@ -47,7 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenHelper, jwtUserDetailsService), BasicAuthenticationFilter.class);
 
-        http.csrf().disable();
+        http.csrf().disable();*/
+       //temporary for testing
+       http.authorizeRequests().antMatchers("**").permitAll();
     }
 
 

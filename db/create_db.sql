@@ -11,6 +11,8 @@ drop table if exists user_roles cascade; --
 drop table if exists users cascade; --
 drop table if exists students_preferences; 
 drop table if exists assigned_projects;
+drop table if exists bibliographies;
+
 
 drop sequence if exists user_seq;
 drop sequence if exists tag_seq;
@@ -19,6 +21,7 @@ drop sequence if exists grade_seq;
 drop sequence if exists course_seq;
 drop sequence if exists stud_pref_seq;
 drop sequence if exists assigned_stud_seq;
+drop sequence if exists bibliography_seq;
 
 
 create sequence user_seq START 1;
@@ -28,6 +31,8 @@ create sequence grade_seq START 1;
 create sequence course_seq START 1;
 create sequence stud_pref_seq START 1;
 create sequence assigned_stud_seq START 1;
+create sequence bibliography_seq START 1;
+
 
 drop extension if exists pgcrypto;
 
@@ -135,6 +140,13 @@ create table assigned_projects (
   student_id bigint not null references users(id) on delete restrict,
   project_id bigint not null references projects(id) on delete restrict,
  
+);
+
+
+create table bibliographies (
+  id bigint primary key,
+  name varchar(255),
+  project_id bigint references projects(id) on delete restrict
 );
 
 

@@ -1,6 +1,7 @@
 package com.license.smapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,6 +28,10 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "lecturer_id")
     private Lecturer lecturer;
+
+    @OneToMany(mappedBy = "project")
+    @JsonManagedReference
+    private List<Bibliography> bibliographies;
 
     @ManyToMany
     @JoinTable(
@@ -84,5 +89,13 @@ public class Project {
 
     public void setStudentPreferences(List<StudentPreferences> studentPreferences) {
         this.studentPreferences = studentPreferences;
+    }
+
+    public List<Bibliography> getBibliographies() {
+        return bibliographies;
+    }
+
+    public void setBibliographies(List<Bibliography> bibliographies) {
+        this.bibliographies = bibliographies;
     }
 }
