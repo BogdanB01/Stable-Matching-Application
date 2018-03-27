@@ -1,5 +1,4 @@
-export interface Tag {
+export interface Bibliography {
     id: number;
     name: string;
 }
-

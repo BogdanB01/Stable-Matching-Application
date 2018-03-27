@@ -19,6 +19,7 @@ import { EditLecturerAccountComponent } from './components/edit-lecturer-account
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
 import { AdminAccountComponent } from './components/admin-account/admin-account.component';
+import { StatisticsDialogComponent } from './components/lecturer-project-statistics-dialog/statistics-dialog-component';
 
 
 import { MaterialModule } from './material.module';
@@ -50,7 +51,8 @@ import { AuthGuard } from './shared/services/auth.guard';
     EditLecturerAccountComponent,
     ProjectListComponent,
     EditStudentAccountComponent,
-    AdminAccountComponent
+    AdminAccountComponent,
+    StatisticsDialogComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -64,7 +66,8 @@ import { AuthGuard } from './shared/services/auth.guard';
   ],
   entryComponents: [
     SearchStudentDialogComponent,
-    EditProjectDialogComponent
+    EditProjectDialogComponent,
+    StatisticsDialogComponent
   ],
   providers: [
     MediaMatcher,
