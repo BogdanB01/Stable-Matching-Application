@@ -15,10 +15,10 @@ export class AuthService {
 
     login(user: User): void {
 
-        if (user.email !== '' && user.password !== '') {
+     //   if (user.email !== '' && user.password !== '') {
             this.loggedIn.next(true);
             this.router.navigate(['/projects']);
-        }
+       // }
     }
 
     logout(): void {

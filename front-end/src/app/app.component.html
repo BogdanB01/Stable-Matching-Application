@@ -1,6 +1,6 @@
-<!-- <app-login> </app-login> -->
+ <app-login> </app-login>
 <!-- *ngIf="isLoggedIn$ | async" -->
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+<div *ngIf="isLoggedIn$ | async" class="example-container" [class.example-is-mobile]="mobileQuery.matches">
     <mat-toolbar class="class.mat-elevation-z4" class="example-toolbar"> 
         
         <div class="test" fxLayout="row">

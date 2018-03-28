@@ -12,7 +12,7 @@ import { AdminAccountComponent } from './components/admin-account/admin-account.
 
 const appRoutes: Routes = [
     { path: 'projects', component: ProjectListComponent /*, canActivate: [AuthGuard] */},
-    // { path: 'login', component: LoginComponent },
+    { path: 'login', component: LoginComponent },
     { path: 'project-details', component: ProjectDetailsComponent /*, canActivate: [AuthGuard] */},
     { path: 'student-account', component: StudentAccountComponent },
     { path: 'lecturer-account', component: LecturerAccountComponent },
