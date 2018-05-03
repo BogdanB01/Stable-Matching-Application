@@ -1,7 +1,7 @@
 package com.license.smapp.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
+import com.license.smapp.common.EntityIdResolver;
 import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -14,6 +14,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Role.class
+)
 public class Role implements GrantedAuthority{
 
     @Id
@@ -21,7 +27,8 @@ public class Role implements GrantedAuthority{
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles") @JsonBackReference
+    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     List<User> users;
 
     public Role() {}

@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentAccountComponent implements OnInit {
 
-  tasks: Array<string> = ['Aplicatii ale problemor de tip Stable Matching',
+
+  draggable = false;
+
+  projects: Array<string> = ['Aplicatii ale problemor de tip Stable Matching',
                           'Baze de date de tip graf',
                           'Criptografie pe curbe eliptice',
                           'Sisteme distribuite',
@@ -22,6 +25,6 @@ export class StudentAccountComponent implements OnInit {
   }
 
   removeProject(index: number): void {
-    this.tasks.splice(index, 1);
+    this.projects.splice(index, 1);
   }
 }

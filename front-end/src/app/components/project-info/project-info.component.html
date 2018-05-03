@@ -1,0 +1,25 @@
+<div fxLayout="column" style="margin:20px" class="components-container-gt-xs component-holder" [ngClass.xs]="'components-container-xs'"  fxLayoutGap="20px">
+
+    <mat-toolbar class="header"> 
+        <h1 class="mat-headline center-align"> Aplicatii ale problemelor de tip Stable matching </h1>
+    </mat-toolbar>
+
+    <div class="container">
+        
+            <div fxFlex.xs="100" fxFlex.lg="100" fxFlex.md="100" fxFlex.sm="100" >
+				<h4 class="mat-subheading-2 center-align">Studenti care au aplicat la acest proiect </h4>
+				<mat-divider></mat-divider>
+				    
+                <mat-accordion>
+                    <app-student-details> </app-student-details>
+
+                    <app-student-details> </app-student-details>
+
+                    <app-student-details> </app-student-details>
+                </mat-accordion>    
+
+			</div>        
+
+            
+    </div>
+</div>

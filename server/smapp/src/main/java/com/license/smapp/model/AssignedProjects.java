@@ -1,10 +1,22 @@
 package com.license.smapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.license.smapp.common.EntityIdResolver;
+
 import javax.persistence.*;
 
 
 @Entity
 @Table(name = "assigned_projects")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = AssignedProjects.class
+)
 public class AssignedProjects {
 
     @Id
@@ -12,33 +24,31 @@ public class AssignedProjects {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "assigned_stud_seq")
     private Long id;
 
-    @Column(name = "student_id")
-    private Long studentId;
+    @OneToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-    @Column(name = "project_id")
-    private Long projectId;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Student getStudent() {
+        return student;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public Project getProject() {
+        return project;
     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

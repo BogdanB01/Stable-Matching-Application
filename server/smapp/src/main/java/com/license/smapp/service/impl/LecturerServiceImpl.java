@@ -1,7 +1,5 @@
 package com.license.smapp.service.impl;
 
-import com.license.smapp.controller.LecturerController;
-import com.license.smapp.exception.EmailAlreadyTakenException;
 import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.Lecturer;
 import com.license.smapp.model.Project;
@@ -35,13 +33,6 @@ public class LecturerServiceImpl implements LecturerService{
 
     @Override
     public Lecturer save(Lecturer entity) {
-
-        //check if email is already taken
-        User user = this.userRepository.findByEmail(entity.getEmail());
-        if(user != null) {
-            throw new EmailAlreadyTakenException(user.getEmail(), "Email already taken");
-        }
-
         //get lecturer role from database
         Role role = roleRepository.findOne(2L);
         entity.setRoles(Collections.singletonList(role));
@@ -52,9 +43,6 @@ public class LecturerServiceImpl implements LecturerService{
     @Override
     public Lecturer findById(Long id) {
         Lecturer lecturer = this.lecturerRepository.findOne(id);
-        if(lecturer == null) {
-            throw new ResourceNotFoundException(id, "Lecturer not found!");
-        }
         return lecturer;
     }
 

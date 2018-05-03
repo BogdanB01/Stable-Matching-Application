@@ -1,0 +1,29 @@
+<form [formGroup]="questionsForm" (keydown.enter)="$event.preventDefault()">
+    <mat-horizontal-stepper #stepper="matHorizontalStepper" formArrayName="items">
+        <mat-step *ngFor="let question of questions; let i = index" label="Intrebarea {{i+1}}" formGroupName={{i}}>
+
+
+            {{question.question}}
+            <br>
+            <mat-form-field style="width: 100%;">
+                    <input matInput formControlName="answer">
+            </mat-form-field>
+            
+            <div>
+                <button type="button" mat-button matStepperPrevious *ngIf="i !== 0"> Back </button>
+                <button type="button" mat-button matStepperNext> Next </button>
+            </div>
+        </mat-step>
+        
+        <mat-step>
+            <ng-template matStepLabel> Done </ng-template>
+            
+            <div>
+                <button type="button" mat-button matStepperPrevious> Back </button>
+                <button type="submit" mat-raised-button color="primary" [disabled]="!questionsForm.valid" (click)="submit()"> Aplica </button>
+            </div>
+
+        </mat-step>
+    </mat-horizontal-stepper>
+</form>
+

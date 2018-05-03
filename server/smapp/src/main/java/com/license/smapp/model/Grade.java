@@ -1,6 +1,10 @@
 package com.license.smapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.license.smapp.common.EntityIdResolver;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
@@ -10,6 +14,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "GRADES")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Grade.class
+)
 public class Grade {
 
     @Id
@@ -21,7 +31,6 @@ public class Grade {
     @JoinColumn(name="course_id")
     private Course course;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="stud_id")
     private Student student;

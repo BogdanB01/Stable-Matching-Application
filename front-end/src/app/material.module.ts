@@ -18,7 +18,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatAutocompleteModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -38,7 +40,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCheckboxModule,
     MatSelectModule,
     MatMenuModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule,
+    MatStepperModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatButtonModule,
@@ -57,7 +62,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCheckboxModule,
     MatSelectModule,
     MatMenuModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule,
+    MatStepperModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

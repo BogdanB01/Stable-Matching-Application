@@ -9,21 +9,41 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { StudentAccountComponent } from './components/student-account/student-account.component';
 import { LecturerAccountComponent } from './components/lecturer-account/lecturer-account.component';
 import { AdminAccountComponent } from './components/admin-account/admin-account.component';
+import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
+import { MatchingAreaComponent } from './components/matching-area/matching-area.component';
+import { ProjectInfoComponent } from './components/project-info/project-info.component';
+import { LecturerProjectsComponent } from './components/lecturer-projects/lecturer-projects.component';
+import { CreateProjectComponent } from './components/create-project/create-project.component';
+import { EditLecturerAccountComponent } from './components/edit-lecturer-account/edit-lecturer-account.component';
+import { ProjectDetailsResolve } from './shared/services/project.resolve.service';
 
 const appRoutes: Routes = [
+    { path: 'lecturer-account', component: LecturerAccountComponent,
+      children: [
+        {path: '', redirectTo: 'proposed-projects', pathMatch: 'full'},
+        {path: 'proposed-projects', component: LecturerProjectsComponent},
+        {path: 'add-project', component: CreateProjectComponent},
+        {path: 'account-settings', component: EditLecturerAccountComponent}
+      ]},
+    { path: 'lecturer-account/proposed-projects/project-info', component: ProjectInfoComponent },
     { path: 'projects', component: ProjectListComponent /*, canActivate: [AuthGuard] */},
-    { path: 'login', component: LoginComponent },
-    { path: 'project-details', component: ProjectDetailsComponent /*, canActivate: [AuthGuard] */},
+   // { path: 'login', component: LoginComponent },
+    { path: 'student-settings', component: EditStudentAccountComponent},
+    { path: 'projects/:id', component: ProjectDetailsComponent,
+        resolve: {
+          message: ProjectDetailsResolve
+        }
+    },
     { path: 'student-account', component: StudentAccountComponent },
-    { path: 'lecturer-account', component: LecturerAccountComponent },
-    { path: 'admin-account', component: AdminAccountComponent }
+    { path: 'admin-account', component: AdminAccountComponent },
+    { path: 'matching-area', component: MatchingAreaComponent}
 ];
 
 @NgModule({
     imports: [
       RouterModule.forRoot(
-        appRoutes,
-        { enableTracing: true } // <-- debugging purposes only
+        appRoutes
+      //  { enableTracing: true } // <-- debugging purposes only
       )
     ],
     exports: [

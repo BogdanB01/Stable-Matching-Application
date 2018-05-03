@@ -1,11 +1,21 @@
 package com.license.smapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.license.smapp.common.EntityIdResolver;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bibliographies")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Bibliography.class
+)
 public class Bibliography {
 
     @Id
@@ -16,18 +26,13 @@ public class Bibliography {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
-    @JsonBackReference
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     public Bibliography() {}
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -44,5 +49,18 @@ public class Bibliography {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bibliography that = (Bibliography) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

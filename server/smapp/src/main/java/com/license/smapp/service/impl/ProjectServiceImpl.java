@@ -1,24 +1,71 @@
 package com.license.smapp.service.impl;
 
-import com.license.smapp.model.Project;
+import com.license.smapp.dto.UpdateProjectDTO;
+import com.license.smapp.model.*;
+import com.license.smapp.repository.BibliographyRepository;
 import com.license.smapp.repository.ProjectRepository;
+import com.license.smapp.repository.QuestionRepository;
+import com.license.smapp.repository.TagRepository;
 import com.license.smapp.service.ProjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProjectServiceImpl implements ProjectService{
+    Logger LOGGER = LoggerFactory.getLogger(ProjectServiceImpl.class);
+
+    private static <T> Collection<T> getSymmetricDifference(Collection<T> coll1, Collection<T> coll2){
+        return Stream.concat(
+                coll1.stream().filter( c -> !coll2.contains(c)),
+                coll2.stream().filter( c -> !coll1.contains(c))
+                ).collect(Collectors.toList());
+    }
 
     @Autowired
     ProjectRepository projectRepository;
 
+    @Autowired
+    TagRepository tagRepository;
+
+    @Autowired
+    BibliographyRepository bibliographyRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+
     @Override
     public Project save(Project entity) {
-        return this.projectRepository.save(entity);
+
+        Iterator<Tag> iterator = entity.getTags().iterator();
+
+        List<Tag> existingTags = new ArrayList<>();
+        while (iterator.hasNext()) {
+
+            Tag existingTag = tagRepository.getFirstByName(iterator.next().getName());
+
+            if (existingTag != null) {
+                existingTags.add(existingTag);
+                iterator.remove();
+            }
+        }
+
+        entity.getTags().addAll(existingTags);
+
+        Project project = this.projectRepository.save(entity);
+
+        return project;
     }
 
     @Override
@@ -39,5 +86,53 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public Page<Project> listAllByPage(Pageable pageable) {
         return this.projectRepository.findAll(pageable);
+    }
+
+    @Override
+    public Project update(Project project, Project model) {
+
+        List<Bibliography> bibliographiesToBeDeletedOrAdded = new ArrayList<>(getSymmetricDifference(model.getBibliographies(), project.getBibliographies()));
+
+        for(Bibliography b : bibliographiesToBeDeletedOrAdded) {
+            if (b.getId() != null) {
+                project.removeBibliography(b);
+            } else {
+                project.addBibliography(b);
+            }
+        }
+
+        List<Question> questionsToBeDeletedOrAdded = new ArrayList<>(getSymmetricDifference(model.getQuestions(), project.getQuestions()));
+
+        for(Question q : questionsToBeDeletedOrAdded) {
+            if (q.getId() != null) {
+                project.removeQuestion(q);
+            } else {
+                project.addQuestion(q);
+            }
+        }
+
+        List<Tag> tagsToBeDeletedOrAdded = new ArrayList<>(getSymmetricDifference(model.getTags(), project.getTags()));
+
+        for(Tag t : tagsToBeDeletedOrAdded) {
+            if (t.getId() != null) {
+                LOGGER.error("Am adaugat " + t.getName());
+                project.removeTag(t);
+            } else {
+               // LOGGER.error("Am sters " + t.getName());
+                Tag existingTag = tagRepository.getFirstByName(t.getName());
+                if (existingTag != null) {
+                    project.addTag(existingTag);
+                } else {
+                    project.addTag(t);
+                }
+            }
+        }
+
+        project.setTitle(model.getTitle());
+        project.setCapacity(model.getCapacity());
+        project.setDescription(model.getDescription());
+
+        project.setFile(model.getFile());
+        return projectRepository.save(project);
     }
 }

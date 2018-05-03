@@ -12,6 +12,9 @@ drop table if exists users cascade; --
 drop table if exists students_preferences; 
 drop table if exists assigned_projects;
 drop table if exists bibliographies;
+drop table if exists questions;
+drop table if exists files;
+drop table if exists answers;
 
 
 drop sequence if exists user_seq;
@@ -22,7 +25,9 @@ drop sequence if exists course_seq;
 drop sequence if exists stud_pref_seq;
 drop sequence if exists assigned_stud_seq;
 drop sequence if exists bibliography_seq;
-
+drop sequence if exists question_seq;
+drop sequence if exists file_seq;
+drop sequence if exists answer_seq;
 
 create sequence user_seq START 1;
 create sequence tag_seq START 1;
@@ -32,6 +37,9 @@ create sequence course_seq START 1;
 create sequence stud_pref_seq START 1;
 create sequence assigned_stud_seq START 1;
 create sequence bibliography_seq START 1;
+create sequence question_seq START 1;
+create sequence file_seq START 1;
+create sequence answer_seq START 1;
 
 
 drop extension if exists pgcrypto;
@@ -92,6 +100,7 @@ create table projects(
 	id bigint primary key,
 	description varchar(1000),
 	title varchar(100),
+	capacity integer,
 	lecturer_id bigint references lecturers(id) on delete cascade
 );
 
@@ -127,7 +136,7 @@ create table project_tags(
 );
 
 --tabelul in care vom tine lista de preferinte a studentilor
-create table students_preferences (
+create table preferences (
    id bigint primary key,
    student_id bigint not null references students(id) on delete restrict, 
    project_id bigint not null references projects(id) on delete restrict,
@@ -142,13 +151,35 @@ create table assigned_projects (
  
 );
 
-
+-- tabelul pentru bibliografiile proiectelor
 create table bibliographies (
   id bigint primary key,
   name varchar(255),
   project_id bigint references projects(id) on delete restrict
 );
 
+-- tabelul pentru intrebari asociate proiectelor
+create table questions (
+  id bigint primary key,
+  question varchar(255),
+  project_id bigint references projects(id) on delete restrict
+);
+
+
+-- tabelul in care vom tine raspunsurile la intrebari
+create table answers (
+  id bigint primary key,
+  answer varchar(255),
+  question_id bigint references questions(id) on delete restrict,
+  student_id bigint references students(id) on delete restrict
+);
+
+-- tabelul pentru fisiere asociate proiectelor
+create table files (
+	id bigint primary key,
+	path varchar(255),
+	project_id bigint references projects(id) on delete restrict
+);
 
 insert into courses(id, name, abbreviation, semester, year, code) values (nextval('course_seq'), 'Structuri de date', 'SD', 1, 1, 'CS1101');
 insert into courses(id, name, abbreviation, semester, year, code) values (nextval('course_seq'), 'Arhitectura calculatoarelor si sisteme de operare', 'ACSO', 1, 1, 'CS1102');

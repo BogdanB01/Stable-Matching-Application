@@ -1,7 +1,11 @@
 package com.license.smapp.controller;
 
+import com.license.smapp.model.Student;
 import com.license.smapp.model.User;
 import com.license.smapp.service.UserService;
+import com.license.smapp.service.impl.HibernateSearchServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +19,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     /**
      * Get a list with all the User objects from the database

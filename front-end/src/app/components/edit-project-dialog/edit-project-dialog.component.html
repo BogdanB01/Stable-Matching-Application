@@ -4,35 +4,37 @@
     <mat-dialog-content fxLayout="row">
         <div fxFill>    
             <mat-form-field style="width: 100%">
-                <input matInput placeholder="Titlu" value={{data.project.title}} formControlName="titleControl">
+                <input matInput placeholder="Titlu" value={{project.title}} formControlName="titleControl">
             </mat-form-field>
 
-            <mat-form-field style="width: 100%">
-                <textarea matInput placeholder="Descriere" value={{data.project.description}} formControlName="descriptionControl"> </textarea>
-            </mat-form-field>
+                <!-- <textarea matInput placeholder="Descriere" value={{project.description}} formControlName="descriptionControl"> </textarea> -->
+                <quill-editor [modules]="editorConfig.editorConfig" formControlName="descriptionControl" [style]="{height: '150px'}" [placeholder]="editorConfig.placeholder"> </quill-editor>
+
 
             <mat-form-field style="width: 100%">
                 <mat-chip-list #chipList>
-                    <mat-chip *ngFor="let tag of tags" [selectable]="true" [removable]="true" (remove)="remove(tag)">
-                        {{tag}}
+                    <mat-chip *ngFor="let tag of tags" [selectable]="true" [removable]="true" (remove)="removeTag(tag)">
+                        {{tag.name}}
                         <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                    <input placeholder="Adauga sau sterge taguri"
+                    <input #tag placeholder="Adauga sau sterge taguri"
                         [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="true"
-                        (matChipInputTokenEnd)="add($event)" />
+                        (matChipInputTokenEnd)="addTag($event)" 
+                        (input)="tag.value=$event.target.value.toUpperCase()"
+                        />
                 </mat-chip-list>
             </mat-form-field>
 
             <mat-form-field style="width: 100%">
-                <input matInput placeholder="Numar studenti" value="{{data.project.capacity}}" formControlName="capacityControl">
+                <input matInput placeholder="Numar studenti" value="{{project.capacity}}" formControlName="capacityControl">
             </mat-form-field>
 
             <mat-list>
                 <h3 matSubheader> Referinte </h3>
                 <mat-list-item *ngFor="let reference of references; let i = index">
-                    <h4 matLine> {{reference}}</h4>
+                    <h4 matLine> {{reference.name}}</h4>
                     <button type="button" mat-icon-button (click)="removeReference(i)">
                         <i class="material-icons">close</i>
                     </button>
@@ -47,6 +49,48 @@
                     <i class="material-icons">add</i>
                 </button>
             </div>
+
+            <mat-list>
+                <h3 matSubheader> Intrebari </h3> 
+                
+                <mat-list-item *ngFor="let question of questions; let i = index">
+                    <h4 matLine> {{question.question}} </h4>
+                    <button type="button" mat-icon-button (click)="removeQuestion(i)">
+                        <i class="material-icons"> close </i>
+                    </button>
+                </mat-list-item>
+            </mat-list>
+
+            <div class="row" style="width:100%; margin-left: 3px;">
+                <mat-form-field style="width: calc(100% - 58px) !important;">
+                    <input #question matInput placeholder="Adauga o noua intrebare">
+                </mat-form-field>
+                <button type="button" mat-icon-button (click)="addQuestion(question.value)">
+                    <i class="material-icons"> add </i> 
+                </button>
+            </div>
+
+            <!-- <div class="row" style="width:100%">
+                <input style="display: none;" type="file" #fileInput (change)="fileChange($event)" name="file" />
+                <button mat-button type="button" (click)="fileInput.click()">
+                    <mat-icon> file_upload </mat-icon>
+                    <span> Incarca un fisier </span>
+                </button>
+            </div> -->
+            
+            <div class="row" style="width:100%">
+                <input style="display: none;" type="file" #fileInput (change)="fileChange($event)" name="file" />
+                <button mat-button type="button" (click)="fileInput.click()">
+                    <mat-icon> file_upload </mat-icon>
+                    <span> Incarca un fisier </span>
+                </button>
+               
+                <mat-chip *ngIf="file" [removable]="true" (remove)="removeFile()" (click)="downloadFile(file.path)">
+                    {{file.path}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </div>
+           
         </div>
     </mat-dialog-content>
 

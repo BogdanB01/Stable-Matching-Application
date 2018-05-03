@@ -1,13 +1,13 @@
 <div class="wrapper">
     <button mat-icon-button>
-        <i class="material-icons">arrow_back</i>
+        <i class="material-icons" routerLink="/projects">arrow_back</i>
         <span> Inapoi </span>
     </button>
 
     <mat-card class="project-card">
         <mat-card-header>
-            <mat-card-title>Aplicatii ale problemelor Stable Matching</mat-card-title>
-            <mat-card-subtitle>Propus de: Frasinaru Cristian</mat-card-subtitle>
+            <mat-card-title>{{project.title}}</mat-card-title>
+            <mat-card-subtitle>Propus de: {{project.lecturer.name}} </mat-card-subtitle>
         </mat-card-header>
 
         <hr/>
@@ -18,33 +18,42 @@
             <div class="heading">
                 Descriere:
             </div>
-            <p>
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
-            </p>
+            <div [innerHTML]="project.description | keepHtml"> </div>
 
             <div class="heading">
                 Referinte:
             </div>
 
             <div class="project-references">
-                <a class="project-reference" *ngFor="let reference of references">
-                    {{ reference }}
+                <a class="project-reference" *ngFor="let reference of project.bibliographies">
+                    {{ reference.name }}
                 </a>
             </div>
 
             <div class="heading">
-                Tag-uri:
+                Tag-uri: 
             </div>
-
             <mat-chip-list class="project-tags">
-                <mat-chip *ngFor="let tag of tags" selectable="false">
+                <mat-chip *ngFor="let tag of project.tags" selectable="false">
                     {{tag.name}}
                 </mat-chip>
             </mat-chip-list>
+
+
+            <div class="heading">
+                Fisiere atasate:
+                <mat-chip *ngIf="project.file" selectable="true" (click)="downloadFile()"> 
+                    {{project.file.path}}
+                </mat-chip>
+            </div>
+
+            <div class="heading">
+                Capacitate: {{project.capacity}}
+            </div>
         </mat-card-content>
         
         <mat-card-actions>
-                <button mat-raised-button color="primary">Aplica</button>
+                <button mat-raised-button color="primary" (click)="applyToProject()">Aplica</button>
         </mat-card-actions>
     </mat-card>
 

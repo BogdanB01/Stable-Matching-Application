@@ -1,7 +1,8 @@
 package com.license.smapp.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
+import com.license.smapp.common.EntityIdResolver;
 import jdk.nashorn.internal.ir.PropertyKey;
 import org.hibernate.annotations.Cascade;
 
@@ -14,6 +15,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "LECTURERS")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Lecturer.class
+)
 public class Lecturer extends User{
 
     @Column(name = "lecturer_id")

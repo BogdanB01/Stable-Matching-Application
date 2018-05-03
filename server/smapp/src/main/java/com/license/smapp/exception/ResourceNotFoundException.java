@@ -1,11 +1,12 @@
 package com.license.smapp.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
-
-    private Long resourceId;
-
-    public ResourceNotFoundException(Long resourceId, String message) {
+public class ResourceNotFoundException extends SmappGenericException {
+    
+    public ResourceNotFoundException(String message) {
         super(message);
-        this.resourceId = resourceId;
+    }
+
+    public ResourceNotFoundException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 }

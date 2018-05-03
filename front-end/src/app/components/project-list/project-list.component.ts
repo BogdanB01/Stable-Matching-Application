@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../shared/interfaces/project';
 import { PageEvent } from '@angular/material';
+import { ProjectService } from '../../shared/services/project.service';
 
 @Component({
   selector: 'app-project-list',
@@ -9,54 +10,41 @@ import { PageEvent } from '@angular/material';
 })
 export class ProjectListComponent implements OnInit {
 
-  project: Project;
   projects = [];
 
   // MatPaginator Inputs
-  length = 100;
+  length = 4;
   pageSize = 6;
   pageSizeOptions = [6, 12, 24, 48];
 
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  constructor() {
-    this.project = {
-      title: 'Aplicatii ale problemelor de tip Stable Matching',
-      description: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis \
-                    praesentium voluptatum deleniti atque corrupti quos dolores et quas molestia',
-      tags: [
-        {id: 1, name: 'Web'},
-        {id: 2, name: 'Spring'},
-        {id: 3, name: 'Java'}
-      ],
+  constructor(private projectService: ProjectService) {
 
-      bibliographies: [
-        {id: 1, name: 'www.google.com'},
-        {id: 2, name: 'www.spring.io'},
-        {id: 3, name: 'www.wikipedia.com'}
-      ],
-      lecturer : {
-        name: 'Frasinaru Cristian',
-        email: 'acf@info.uaic.ro',
-        cabinetNumber: 'C201',
-        projects : []
-      }
-    };
   }
 
   ngOnInit() {
-    for (let i = 0; i < this.pageSize; i++) {
-      this.projects.push(this.project);
-    }
+    this.initEvents(0, this.pageSize);
   }
 
-  fakeServerData(event?: PageEvent): void {
-    console.log(event.pageSize);
-    this.project.title = 'Pagina ' + event.pageIndex;
-    this.projects = [];
-    for (let i = 0; i < event.pageSize; i++) {
-      this.projects.push(this.project);
-    }
+  initEvents(pageNumber: number, pageSize: number) {
+    this.projectService.getProjects(pageNumber, pageSize).subscribe((resp: any) => {
+      console.log(resp);
+      this.projects = resp.content;
+      this.length = resp.totalElements;
+    });
   }
+
+  getServerData(event?: PageEvent): void {
+    this.initEvents(event.pageIndex, event.pageSize);
+  }
+  // fakeServerData(event?: PageEvent): void {
+  //   console.log(event.pageSize);
+  //   this.project.title = 'Pagina ' + event.pageIndex;
+  //   this.projects = [];
+  //   for (let i = 0; i < event.pageSize; i++) {
+  //     this.projects.push(this.project);
+  //   }
+  // }
 }

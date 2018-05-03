@@ -12,6 +12,6 @@
     <mat-paginator [length]="length"
                    [pageSize]="pageSize"
                    [pageSizeOptions]="pageSizeOptions"
-                   (page)="pageEvent = fakeServerData($event)">
+                   (page)="pageEvent = getServerData($event)">
     </mat-paginator>
 </div>

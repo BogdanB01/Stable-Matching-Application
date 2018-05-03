@@ -2,7 +2,6 @@ package com.license.smapp.config;
 
 import com.license.smapp.security.TokenHelper;
 import com.license.smapp.security.auth.RestAuthenticationEntryPoint;
-import com.license.smapp.security.auth.TokenAuthenticationFilter;
 import com.license.smapp.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return super.authenticationManagerBean();
     }
 
+
     @Autowired
     TokenHelper tokenHelper;
 
@@ -49,9 +47,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
         http.csrf().disable();*/
        //temporary for testing
-       http.authorizeRequests().antMatchers("**").permitAll();
+       // http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+        //authorizeRequests().antMatchers("**").permitAll();
+        http.authorizeRequests().antMatchers("**").permitAll();
+        http.csrf().disable();
+
     }
 
+//
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+//
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//      //  configuration.addAllowedHeader("Access-Control-Allow-Origin");
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {

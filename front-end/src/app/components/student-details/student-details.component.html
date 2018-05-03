@@ -1,0 +1,38 @@
+<mat-expansion-panel fxLayout="column" class="wrapper">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            Boca Ioan-Bogdan
+        </mat-panel-title>
+                            
+        <mat-panel-description>
+            Informatii suplimentare
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    
+    <div fxLayout="row">
+        <h4 class="mat-subheading-2 center-align"> Data aplicarii : <span> 23-07-2017 </span> </h4> 
+    </div>
+    <h4 class="mat-subheading-2 center-align">Notele studentului</h4>
+    <mat-divider></mat-divider>
+
+
+    <div fxLayout="row" fxLayoutWrap="wrap" class="parent">
+
+        <div *ngFor = "let grade of grades" class="child">
+            {{grade.course}} - {{grade.value}}
+        </div>
+
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="column">
+        <h4 class="mat-subheading-2 center-align">Raspunsurile studentului</h4>
+        <div *ngFor="let question of questions" class="size">
+            <span class="question"> {{question.question}} </span> -  <span class="answer"> {{question.answer}} </span>
+        </div>
+    </div>
+
+    <div fxLayout="row-reverse">
+        <button mat-raised-button color="warn">Respinge</button>
+    </div>
+</mat-expansion-panel>

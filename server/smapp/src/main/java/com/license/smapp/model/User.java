@@ -1,7 +1,12 @@
 package com.license.smapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.license.smapp.common.EntityIdResolver;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +23,12 @@ import java.util.List;
 @Entity
 @Table(name = "USERS")
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = User.class
+)
 public class User implements UserDetails{
 
     @Id
@@ -25,21 +36,23 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private Long id;
 
+    @Field
     private String name;
 
+    @Field
     @Column(unique = true)
     private String email;
 
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="user_roles",
             joinColumns = { @JoinColumn(name = "user_id")},
             inverseJoinColumns = { @JoinColumn(name = "role_id")}
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Role> roles;
 
 

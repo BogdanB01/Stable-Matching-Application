@@ -7,7 +7,7 @@
     <hr/>
 
     <mat-card-content>
-        <p> {{ project.description }} </p>
+        <p [innerHTML]="project.description | keepHtml"> </p>
         <mat-chip-list class="project-tags">
             <mat-chip *ngFor="let tag of project.tags" selected="true">
               {{tag.name}}
@@ -17,7 +17,7 @@
 
     <mat-card-actions>
         <button mat-button> Aplica </button>
-        <button mat-button routerLink="/project-details"> Detalii </button>
+        <button mat-button [routerLink]="['/projects', project.id]"> Detalii </button>
     </mat-card-actions>
 
 </mat-card>

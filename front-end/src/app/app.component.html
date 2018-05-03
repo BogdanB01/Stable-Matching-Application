@@ -1,6 +1,6 @@
- <app-login> </app-login>
+ <!--<app-login> </app-login> -->
 <!-- *ngIf="isLoggedIn$ | async" -->
-<div *ngIf="isLoggedIn$ | async" class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
     <mat-toolbar class="class.mat-elevation-z4" class="example-toolbar"> 
         
         <div class="test" fxLayout="row">
@@ -28,9 +28,9 @@
                    [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
         
         <img src="assets/img/fii.png">
-        <div class="menu-link">
+        <div class="menu-link" fxLayout="column">
             
-            <button mat-button routerLink="/projects">
+            <!-- <button mat-button routerLink="/projects">
                 <mat-icon> dashboard </mat-icon>
                 <span> Proiecte </span>
             </button>
@@ -48,15 +48,16 @@
             <button mat-button routerLink="/admin-account">
               <mat-icon> build </mat-icon>
               <span> Cont admin </span>
-            </button> 
-
+            </button>  -->
+            
+          <app-sidemenu-item *ngFor="let menu of menus" [menu]="menu"></app-sidemenu-item> 
            
 
         </div>
 
-        <div class="menu-bottom">
+        <!-- <div class="menu-bottom">
 
-        </div>
+        </div> -->
       </mat-sidenav>
   
       <mat-sidenav-content fxFlex>

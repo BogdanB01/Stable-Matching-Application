@@ -1,36 +1,6 @@
-<!-- 
-<div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="10px" fxFlexFill stype="padding: 20px;">
-    <div fxLayout="column"  style="padding: 20px;" fxLayoutAlign="space-between stretch" fxLayoutGap="10px"  fxFlexFill>	
-        <div fxFlexFill>
-            <div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column">
-                <div class="mat-elevation-z4" fxFlex="35">
-                    <mat-toolbar>
-                        <h5 class="mat-title">Proiecte la care am aplicat:</h5>
-                        
-                        <button mat-raised-button color="primary">Salveaza</button>
-                    </mat-toolbar>
-                    <div class="projects" fxFlexFill dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="tasks">
-                        <mat-nav-list>
-                            <mat-list-item fxLayout="column" fxLayoutAlign="space-between stretch" *ngFor="let item of tasks; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">
-                                {{ item }}
-                                
-                                <button mat-icon-button>
-                                    <i class="material-icons">close</i>
-                                </button>
-                            </mat-list-item>
-                        </mat-nav-list>
-                    </div>
+<!--
 
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div> -->
-
-<mat-tab-group fxLayout="column" style="padding: 20px;" class="components-container-gt-xs" [ngClass.xs]="'components-container-xs'"  fxLayoutGap="20px">
-    <mat-tab>
-        <ng-template mat-tab-label>
+  <ng-template mat-tab-label>
             <strong> Aplicarile mele </strong>
         </ng-template>
 
@@ -39,11 +9,11 @@
                 <h1 class="mat headline center-align"> Proiectele la care am aplicat </h1>
             </mat-toolbar>
         </div> 
-
-        <div class="list-container">
-            <div class="projects" fxFlexFill dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="tasks">
-                <mat-nav-list>
-                    <mat-list-item fxLayout="column" fxLayoutAlign="space-between stretch" *ngFor="let item of tasks; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">
+        
+        <div fxFlex class="list-container">
+            <div class="projects" fxFlexFill dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="projects">
+                <mat-nav-list fxFlex>
+                    <mat-list-item class="shake" fxLayout="column wrap" fxLayoutAlign="space-between stretch" *ngFor="let item of projects; let i = index" class="list-group-item" [dragEnabled]="false" dnd-sortable [sortableIndex]="i">
                         <p class="number">{{i + 1}}</p> {{ item }}
                         
                         <button mat-icon-button>
@@ -53,13 +23,44 @@
                 </mat-nav-list>
             </div>
         </div>
-    </mat-tab>
 
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <strong> Setarile contului </strong>
-        </ng-template>
-        <app-edit-student-account></app-edit-student-account> 
-    </mat-tab>
+-->
 
-</mat-tab-group>
+<div fxFlex fxLayout="column">
+
+   
+    <h1 class="title"> Proiectele la care am aplicat </h1>
+     
+                
+    <div style="margin: auto">
+        <button mat-button color="primary" (click)="draggable = !draggable">
+            <mat-icon> low_priority </mat-icon>
+            Reordoneaza lista
+        </button>
+        <button mat-button color="primary" (click)="draggable = false">
+            <mat-icon> save </mat-icon>
+            Salveaza modificarile
+        </button>
+    </div>
+    <div fxFlex class="container"> 
+
+        <div class="projects"  dnd-sortable-container [sortableData]="projects">
+
+            <mat-nav-list fxLayout="column">
+
+                <mat-list-item [ngClass]="{'shake': draggable}" *ngFor="let item of projects; let i = index" [dragEnabled]="draggable" dnd-sortable [sortableIndex]="i">
+                        <p class="number">{{i + 1}}</p> {{ item }}
+                        
+                        <button mat-icon-button>
+                            <i class="material-icons" (click)="removeProject(i)">close</i>
+                        </button>
+                </mat-list-item>
+
+            </mat-nav-list>
+        
+        </div>
+
+    </div>
+
+</div>
+

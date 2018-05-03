@@ -1,11 +1,7 @@
 package com.license.smapp.service.impl;
 
-import com.license.smapp.exception.EmailAlreadyTakenException;
 import com.license.smapp.exception.ResourceNotFoundException;
-import com.license.smapp.model.Grade;
-import com.license.smapp.model.Role;
-import com.license.smapp.model.Student;
-import com.license.smapp.model.User;
+import com.license.smapp.model.*;
 import com.license.smapp.repository.RoleRepository;
 import com.license.smapp.repository.StudentRepository;
 import com.license.smapp.repository.UserRepository;
@@ -35,13 +31,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student save(Student entity)
     {
-        //check if email is already taken
-        User user = this.userRepository.findByEmail(entity.getEmail());
-
-        if(user != null) {
-            throw new EmailAlreadyTakenException(user.getEmail(), "Email already taken");
-        }
-
         //get student role from database
         Role role = roleRepository.findOne(3L);
         entity.setRoles(Collections.singletonList(role));
@@ -52,9 +41,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student findById(Long id) {
         Student student = studentRepository.findOne(id);
-        if(student == null) {
-            throw new ResourceNotFoundException(id, "Student not found");
-        }
         return student;
     }
 
@@ -65,9 +51,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Long id) {
-        if(findById(id) != null) {
-            studentRepository.delete(id);
-        }
+        studentRepository.delete(id);
     }
 
     @Override
@@ -75,4 +59,16 @@ public class StudentServiceImpl implements StudentService {
         Student student = findById(id);
         return student.getGrades();
     }
+
+    @Override
+    public Student findStudentByName(String name) {
+        return this.studentRepository.findByName(name);
+    }
+
+    @Override
+    public void update(Student student) {
+        studentRepository.save(student);
+    }
+
+
 }

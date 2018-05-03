@@ -1,6 +1,9 @@
 package com.license.smapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.license.smapp.common.EntityIdResolver;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,6 +14,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "courses")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Course.class
+)
 public class Course {
 
     @Id
