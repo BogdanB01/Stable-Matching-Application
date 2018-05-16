@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StudentService } from '../../shared/services/student.service';
 
 @Component({
   selector: 'app-student-account',
@@ -9,22 +10,35 @@ export class StudentAccountComponent implements OnInit {
 
 
   draggable = false;
+  preferences = null;
 
-  projects: Array<string> = ['Aplicatii ale problemor de tip Stable Matching',
-                          'Baze de date de tip graf',
-                          'Criptografie pe curbe eliptice',
-                          'Sisteme distribuite',
-                          'Dreseaza-l pe cutzu virtual',
-                          'Inca un proiect de licenta',
-                          'Alt proiect',
-                          'La fel'
-                        ];
-  constructor() { }
+  constructor(private studentService: StudentService) { }
 
   ngOnInit() {
+    this.studentService.getPreferences().subscribe(res => {
+      this.preferences = res;
+      console.log(res);
+    }, err => {
+      console.log('eroare');
+    });
   }
 
   removeProject(index: number): void {
-    this.projects.splice(index, 1);
+    this.studentService.removePreference(this.preferences[index].id).subscribe(res => {
+      console.log(res);
+      this.preferences.splice(index, 1);
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  saveOrder(): void {
+    console.log(this.preferences);
+    this.studentService.reorderPreference(this.preferences).subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    });
   }
 }
+

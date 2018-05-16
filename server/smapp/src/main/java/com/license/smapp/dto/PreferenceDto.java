@@ -1,38 +1,44 @@
 package com.license.smapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.license.smapp.model.Answer;
-
-import java.util.List;
+import java.util.Date;
 
 public class PreferenceDto {
-    private Long studentId;
-    private Long projectId;
 
-  //  @JsonProperty("answers")
-    //private List<AnswerDto> answers;
+    private Long id;
+    private StudentDto student;
+    private ProjectDto project;
 
-    public Long getStudentId() {
-        return studentId;
+    public Date getSubmittedAt() {
+        return submittedAt;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setSubmittedAt(Date submittedAt) {
+        this.submittedAt = submittedAt;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    private Date submittedAt;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-//    public List<AnswerDto> getAnswers() {
-//        return answers;
-//    }
-//
-//    public void setAnswers(List<AnswerDto> answers) {
-//        this.answers = answers;
-//    }
+    public StudentDto getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentDto student) {
+        this.student = student;
+    }
+
+    public ProjectDto getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectDto project) {
+        this.project = project;
+    }
 }

@@ -58,6 +58,7 @@ public class FileUploadController {
 //        if(mimeType == null) {
 //            mimeType = "application/octet-stream";
 //        }
+        LOGGER.error(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .header("Access-Control-Expose-Headers", "Content-Disposition")

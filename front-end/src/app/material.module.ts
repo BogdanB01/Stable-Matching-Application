@@ -21,6 +21,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatAutocompleteModule } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 @NgModule({
   imports: [
@@ -43,7 +48,12 @@ import { MatAutocompleteModule } from '@angular/material';
     MatPaginatorModule,
     MatExpansionModule,
     MatStepperModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatRadioModule
   ],
   exports: [
     MatButtonModule,
@@ -65,7 +75,12 @@ import { MatAutocompleteModule } from '@angular/material';
     MatPaginatorModule,
     MatExpansionModule,
     MatStepperModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatRadioModule
   ]
 })
 export class MaterialModule { }

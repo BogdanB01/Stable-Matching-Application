@@ -42,4 +42,9 @@ public class PreferenceServiceImpl implements PreferenceService {
 
         return count;
     }
+
+    @Override
+    public List<Preference> findAllByProject(Project project) {
+        return preferenceRepository.findAllByProject(project);
+    }
 }

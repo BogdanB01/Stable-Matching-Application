@@ -84,8 +84,8 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public Page<Project> listAllByPage(Pageable pageable) {
-        return this.projectRepository.findAll(pageable);
+    public Page<Project> listAllByPage(String filter, Pageable pageable) {
+        return projectRepository.findAllByLecturerNameContainingOrTitleContaining(filter, filter, pageable);
     }
 
     @Override
@@ -134,5 +134,30 @@ public class ProjectServiceImpl implements ProjectService{
 
         project.setFile(model.getFile());
         return projectRepository.save(project);
+    }
+
+    @Override
+    public List<Project> getProjectsForLecturer(Lecturer lecturer, boolean active) {
+        return projectRepository.findAllByLecturerAndActive(lecturer, active);
+    }
+
+    @Override
+    public Page<Project> listAllProjectsByActive(boolean active, Pageable pageable) {
+        return projectRepository.findAllByActive(active, pageable);
+    }
+
+    @Override
+    public Page<Project> filterActiveProjectsByProjectTitle(boolean active, String filter, Pageable pageable) {
+        return projectRepository.findAllByActiveAndTitleStartingWith(active, filter, pageable);
+    }
+
+    @Override
+    public Page<Project> filterActiveProjectsByLecturerName(boolean active, String filter, Pageable pageable) {
+        return projectRepository.findAllByActiveAndLecturerNameStartingWith(active, filter, pageable);
+    }
+
+    @Override
+    public Page<Project> filterActiveProjectsByTagName(boolean active, String filter, Pageable pageable) {
+        return projectRepository.findAllByActiveAndTags_NameStartingWith(active, filter, pageable);
     }
 }

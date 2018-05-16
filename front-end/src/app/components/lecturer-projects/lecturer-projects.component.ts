@@ -7,7 +7,9 @@ import { ProjectService } from '../../shared/services/project.service';
 import { StudentService } from '../../shared/services/student.service';
 import { DataSource } from '@angular/cdk/collections';
 import { DeleteDialogComponent } from '../../dialogs/delete/delete.dialog.component';
-
+import { Router, ActivatedRoute } from '@angular/router';
+import { SnackBarService } from '../../shared/services/snackbar.service';
+import { PastProjectsComponent } from '../../dialogs/past-projects/past-projects.component';
 @Component({
     selector: 'app-lecturer-projects',
     templateUrl: './lecturer-projects.component.html',
@@ -25,7 +27,10 @@ export class LecturerProjectsComponent implements OnInit {
 
     constructor(public dialog: MatDialog,
                 private studentService: StudentService,
-                private projectService: ProjectService) {}
+                private projectService: ProjectService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private snackBarService: SnackBarService) {}
 
     unassignStudent(studentId, projectId): void {
       this.projectService.unassignStudent(projectId, studentId).subscribe(data => {
@@ -33,8 +38,10 @@ export class LecturerProjectsComponent implements OnInit {
         const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === projectId);
         this.exampleDatabase.dataChange.value[foundIndex] = data;
         this.projectService.dataChange.next(this.projectService.dataChange.value);
+        this.snackBarService.showSnackBar('Studentul a fost sters cu succes!');
       }, err => {
         console.log(err);
+        this.snackBarService.showSnackBar('A aparut o eroare la stergerea studentului!');
       });
     }
 
@@ -111,6 +118,27 @@ export class LecturerProjectsComponent implements OnInit {
         width: '600px'
       });
     }
+
+    goToProjectDetails(project: any): void {
+      this.router.navigate([project.id, 'info'], {relativeTo: this.route});
+    }
+
+    openPastProjectsDialog(): void {
+      const dialogRef = this.dialog.open(PastProjectsComponent, {
+        width: '600px',
+        autoFocus: false
+      });
+
+      const sub = dialogRef.componentInstance.updatedProjects.subscribe((data) => {
+        this.exampleDatabase.dataChange.value.push(...data);
+        this.projectService.dataChange.next(this.projectService.dataChange.value);
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        sub.unsubscribe();
+      });
+    }
+
 }
 
 import { Observable } from 'rxjs/Observable';
@@ -129,7 +157,7 @@ export class ProjectDataSource extends DataSource<any> {
       this.projectService.dataChange
     ];
 
-    this.projectService.getProjectsForLecturer();
+    this.projectService.getActiveProjectsForLecturer();
     return Observable.merge(...changes).map(() => {
       this.renderedData = this.projectService.data;
       return this.renderedData;

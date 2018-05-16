@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './shared/services/auth.service';
@@ -16,6 +16,7 @@ export class AppComponent {
 
   mobileQuery: MediaQueryList;
   searchOpen = false;
+  private searchTerm = '';
 
   private _mobileQueryListener: () => void;
 

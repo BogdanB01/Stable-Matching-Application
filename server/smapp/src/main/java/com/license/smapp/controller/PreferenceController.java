@@ -37,30 +37,32 @@ public class PreferenceController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> addPreferenceToStudent(@RequestBody PreferenceDto preferenceDto) throws ResourceNotFoundException, URISyntaxException {
 
-        Student student = studentService.findById(preferenceDto.getStudentId());
+//        Student student = studentService.findById(preferenceDto.getStudentId());
+//
+//        if (student == null) {
+//            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", preferenceDto.getStudentId()));
+//        }
+//
+//        Project project = projectService.findById(preferenceDto.getProjectId());
+//
+//        if (project == null) {
+//            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", preferenceDto.getProjectId()));
+//        }
+//
+//        modelMapper.typeMap(PreferenceDto.class, Preference.class).addMappings(mp -> {
+//            mp.<Long>map(src -> src.getProjectId(), (dest, v) -> dest.getProject().setId(v));
+//            mp.<Long>map(src -> src.getStudentId(), (dest, v) -> dest.getStudent().setId(v));
+//        });
+//
+//        Preference preference = modelMapper.map(preferenceDto, Preference.class);
+//
+//        // set submission date
+//        preference.setSubmittedAt(new Date());
+//
+//        Preference newPreference = preferenceService.save(preference);
+//        return ResponseEntity.created(new URI("/preferences/" + newPreference.getId())).build();
 
-        if (student == null) {
-            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", preferenceDto.getStudentId()));
-        }
-
-        Project project = projectService.findById(preferenceDto.getProjectId());
-
-        if (project == null) {
-            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", preferenceDto.getProjectId()));
-        }
-
-        modelMapper.typeMap(PreferenceDto.class, Preference.class).addMappings(mp -> {
-            mp.<Long>map(src -> src.getProjectId(), (dest, v) -> dest.getProject().setId(v));
-            mp.<Long>map(src -> src.getStudentId(), (dest, v) -> dest.getStudent().setId(v));
-        });
-
-        Preference preference = modelMapper.map(preferenceDto, Preference.class);
-
-        // set submission date
-        preference.setSubmittedAt(new Date());
-
-        Preference newPreference = preferenceService.save(preference);
-        return ResponseEntity.created(new URI("/preferences/" + newPreference.getId())).build();
+        return null;
     }
 
 }

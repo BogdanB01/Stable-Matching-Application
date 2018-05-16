@@ -1,7 +1,17 @@
 package com.license.smapp.dto;
 
-public class FileDTO {
+public class FileDto {
+    private Long id;
+
     private String path;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getPath() {
         return path;

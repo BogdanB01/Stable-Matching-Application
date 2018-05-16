@@ -9,17 +9,20 @@ import { Project } from '../../shared/interfaces/project';
 export class ProjectCardComponent implements OnInit {
   @Input() project: Project;
   color: string;
+  div: any;
 
-  // availableColors = [
-  //   { name: 'Web', color: '' },
-  //   { name: 'Java', color: 'primary' },
-  //   { name: 'PostgreSQL', color: 'accent' },
-  //   { name: 'Rest', color: 'warn' }
-  // ];
-
-  constructor() { }
+  constructor() {
+    // this.div = document.createElement('div');
+    // this.div.innerHTML = this.project.description;
+  }
 
   ngOnInit() {
+    this.div = document.createElement('div');
+    this.div.innerHTML = this.project.description;
+  }
+
+  searchByTag(tag: any) {
+    console.log(tag);
   }
 
 }

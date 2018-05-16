@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { StudentService } from '../../shared/services/student.service';
 
 @Component({
     selector: 'app-student-details',
@@ -7,29 +8,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentDetailsComponent implements OnInit {
 
+    expandedFirstTime = false;
+    details = null;
+
+    @Input() projectId: any;
+    @Input() preference: any;
+    constructor(private studentService: StudentService) {}
 
     grades = [
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
-        {'course': 'Structuri de date', 'value' : 10 },
+
     ];
 
     questions = [
-        {'question': 'Care e materia ta preferata?', 'answer': 'Machine Learning'},
-        {'question': 'Care e materia cel mai putin preferata?', 'answer': 'Matematica'},
-        {'question': 'Ai vreo restanta', 'answer': 'nu'}
-    ];
-    ngOnInit(): void {
 
+    ];
+
+    ngOnInit(): void {
+        console.log(this.preference);
+    }
+
+    expandedPanel() {
+        if (this.expandedFirstTime === false) {
+            this.studentService.getDetails(this.preference.student.id, this.projectId).subscribe(res => {
+                this.details = res;
+                console.log(res);
+            });
+
+        }
+        this.expandedFirstTime = true;
     }
 }

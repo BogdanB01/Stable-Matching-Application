@@ -1,0 +1,18 @@
+<h2 mat-dialog-title> Proiecte din anii trecuti </h2>
+<mat-dialog-content>
+
+    <div *ngIf="!projects || !projects.length"> 
+        Nu exista proiecte din anii trecuti.
+    </div>
+
+    <mat-selection-list [(ngModel)]="selectedOptions">
+        <mat-list-option *ngFor="let project of projects; let i = index" [value]="i">
+            {{project.title}}
+        </mat-list-option>
+    </mat-selection-list>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" style="margin-top:30px;"> 
+    <button mat-button mat-dialog-close> Anuleaza </button>
+    <button mat-button (click)="activateProjects()"> Adauga </button>
+</mat-dialog-actions>

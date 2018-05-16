@@ -11,4 +11,5 @@ public interface StudentService extends CrudService<Student>{
     List<Grade> getGradesForStudent(Long id);
     Student findStudentByName(String name);
     void update(Student student);
+    List<Student> searchStudent(String searchTerm);
 }

@@ -9,13 +9,13 @@ drop table if exists students cascade; --
 drop table if exists tags cascade; --
 drop table if exists user_roles cascade; --
 drop table if exists users cascade; --
-drop table if exists students_preferences; 
+drop table if exists preferences; 
 drop table if exists assigned_projects;
 drop table if exists bibliographies;
 drop table if exists questions;
 drop table if exists files;
 drop table if exists answers;
-
+drop table if exists project_preferences;
 
 drop sequence if exists user_seq;
 drop sequence if exists tag_seq;
@@ -28,6 +28,7 @@ drop sequence if exists bibliography_seq;
 drop sequence if exists question_seq;
 drop sequence if exists file_seq;
 drop sequence if exists answer_seq;
+drop sequence if exists proj_pref;
 
 create sequence user_seq START 1;
 create sequence tag_seq START 1;
@@ -40,7 +41,7 @@ create sequence bibliography_seq START 1;
 create sequence question_seq START 1;
 create sequence file_seq START 1;
 create sequence answer_seq START 1;
-
+create sequence proj_pref START 1;
 
 drop extension if exists pgcrypto;
 
@@ -101,6 +102,7 @@ create table projects(
 	description varchar(1000),
 	title varchar(100),
 	capacity integer,
+	active boolean,
 	lecturer_id bigint references lecturers(id) on delete cascade
 );
 
@@ -138,9 +140,19 @@ create table project_tags(
 --tabelul in care vom tine lista de preferinte a studentilor
 create table preferences (
    id bigint primary key,
-   student_id bigint not null references students(id) on delete restrict, 
-   project_id bigint not null references projects(id) on delete restrict,
+   student_id bigint not null references students(id) on delete cascade, 
+   project_id bigint not null references projects(id) on delete cascade,
+   index integer,
+   avg double precision,
+   post integer,
    submitted_at timestamp not null 
+);
+
+--tabelul in care vom tine lista de preferinte a proiectelor
+create table project_preferences (
+	id bigint primary key,
+	project_id bigint not null references projects(id) on delete cascade,
+	student_id bigint not null references students(id) on delete cascade,
 );
 
 --tabelul in care vom tine lista de studenti -> proiecte asignate

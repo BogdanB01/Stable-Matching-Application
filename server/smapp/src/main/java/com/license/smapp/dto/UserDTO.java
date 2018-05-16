@@ -2,12 +2,20 @@ package com.license.smapp.dto;
 
 import java.util.List;
 
-public class UserDTO {
+public class UserDto {
 
+    private Long id;
     private String name;
     private String email;
-    private String password;
     private List<RoleDTO> roles;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -23,14 +31,6 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public List<RoleDTO> getRoles() {

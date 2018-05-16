@@ -1,7 +1,7 @@
-<mat-expansion-panel fxLayout="column" class="wrapper">
+<mat-expansion-panel fxLayout="column" class="wrapper" (opened)="expandedPanel()">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            Boca Ioan-Bogdan
+            {{ preference.student.name}}
         </mat-panel-title>
                             
         <mat-panel-description>
@@ -9,30 +9,33 @@
         </mat-panel-description>
     </mat-expansion-panel-header>
     
-    <div fxLayout="row">
-        <h4 class="mat-subheading-2 center-align"> Data aplicarii : <span> 23-07-2017 </span> </h4> 
-    </div>
-    <h4 class="mat-subheading-2 center-align">Notele studentului</h4>
-    <mat-divider></mat-divider>
+
+    <ng-template matExpansionPanelContent>
+
+        <div fxLayout="row">
+            <h4 class="mat-subheading-2 center-align"> Data aplicarii : <span> {{ preference.submittedAt | date:'medium' }} </span> </h4> 
+        </div>
+        <h4 class="mat-subheading-2 center-align">Notele studentului</h4>
+        <mat-divider></mat-divider>
 
 
-    <div fxLayout="row" fxLayoutWrap="wrap" class="parent">
+        <div *ngIf="details && details.grades" fxLayout="row" fxLayoutWrap="wrap" class="parent">
+            <div *ngFor = "let el of details.grades" class="child">
+                {{el.course.name}} - {{el.value}}
+            </div>
+        </div>
+        <mat-divider></mat-divider>
 
-        <div *ngFor = "let grade of grades" class="child">
-            {{grade.course}} - {{grade.value}}
+        <div *ngIf="details && details.answers" fxLayout="column">
+            <h4 class="mat-subheading-2 center-align">Raspunsurile studentului</h4>
+
+            <div *ngFor="let el of details.answers" class="size">
+                <span class="question"> {{el.question.question}} </span> -  <span class="answer"> {{el.answer}} </span>
+            </div>
         </div>
 
-    </div>
-    <mat-divider></mat-divider>
-
-    <div fxLayout="column">
-        <h4 class="mat-subheading-2 center-align">Raspunsurile studentului</h4>
-        <div *ngFor="let question of questions" class="size">
-            <span class="question"> {{question.question}} </span> -  <span class="answer"> {{question.answer}} </span>
+        <div fxLayout="row-reverse">
+            <button mat-raised-button color="warn">Respinge</button>
         </div>
-    </div>
-
-    <div fxLayout="row-reverse">
-        <button mat-raised-button color="warn">Respinge</button>
-    </div>
+    </ng-template>
 </mat-expansion-panel>

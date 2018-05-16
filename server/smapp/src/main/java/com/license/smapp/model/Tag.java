@@ -13,20 +13,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tags")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = Tag.class
-)
-@JsonIgnoreProperties({"projects"})
 public class Tag {
 
     @Id
     @SequenceGenerator(name = "tag_seq", sequenceName = "tag_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_seq")
     private Long id;
-    @JsonUnwrapped
+
     private String name;
 
     @ManyToMany(mappedBy = "tags")

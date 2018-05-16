@@ -1,7 +1,10 @@
 package com.license.smapp.controller;
 
+import com.google.common.reflect.TypeToken;
 import com.license.smapp.dto.CreateLecturerDTO;
 import com.license.smapp.dto.CreateProjectDTO;
+import com.license.smapp.dto.LecturerDto;
+import com.license.smapp.dto.ProjectDto;
 import com.license.smapp.exception.BadRequestException;
 import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.File;
@@ -34,25 +37,21 @@ public class LecturerController {
     @Autowired
     private LecturerService lecturerService;
 
-
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private StorageService storageService;
-
-    @Autowired
     private ProjectService projectService;
 
-    private Logger LOGGER = LoggerFactory.getLogger(LecturerController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LecturerController.class);
 
     /**
      * Get a list with all the Lecturer objects from the database
      * @return List with the Lecturer Objects and a message if the request was successfully
      */
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<List<Lecturer>> getAllLecturers() {
-        List<Lecturer> all = lecturerService.findAll();
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<List<LecturerDto>> getAllLecturers() {
+        List<LecturerDto> all = modelMapper.map(lecturerService.findAll(), new TypeToken<List<LecturerDto>>() {}.getType());
         return ResponseEntity.ok(all);
     }
 
@@ -63,13 +62,13 @@ public class LecturerController {
      * @return An Lecturer Object / message if the object was successfully found or not
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Lecturer> getLecturerById(@PathVariable Long id) {
+    public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = lecturerService.findById(id);
-        if (lecturer != null) {
-            return ResponseEntity.ok(lecturer); // return 200, with json body
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 with null body
+
+        if (lecturer == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
         }
+        return ResponseEntity.ok(modelMapper.map(lecturer, LecturerDto.class));
     }
 
     /**
@@ -79,10 +78,11 @@ public class LecturerController {
      * @return message if the object was successfully deleted
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Lecturer> deleteLecturerById(@PathVariable Long id) {
+    public ResponseEntity<Lecturer> deleteLecturerById(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = lecturerService.findById(id);
-        if(lecturer == null) {
-            return ResponseEntity.notFound().build();
+
+        if (lecturer == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
         }
 
         lecturerService.delete(id);
@@ -122,7 +122,7 @@ public class LecturerController {
      */
     @RequestMapping(value = "/{id}/projects", method = RequestMethod.POST)
     public ResponseEntity<Project> addProject(@PathVariable Long id,
-                                              @RequestBody CreateProjectDTO projectDTO) throws URISyntaxException, ResourceNotFoundException {
+                                              @RequestBody ProjectDto projectDto) throws URISyntaxException, ResourceNotFoundException {
 
 
         Lecturer lecturer = lecturerService.findById(id);
@@ -131,7 +131,8 @@ public class LecturerController {
             throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!"));
         }
 
-        Project project = modelMapper.map(projectDTO, Project.class);
+        Project project = modelMapper.map(projectDto, Project.class);
+
         project.setLecturer(lecturer);
 
         Project newProject = this.projectService.save(project);
@@ -143,10 +144,58 @@ public class LecturerController {
      * Get a List with Project Objects proposed by the Lecturer
      * @param: the id of the Lecturer to search by
      */
-    @RequestMapping(value = "{id}/projects", method = RequestMethod.GET)
-    public ResponseEntity<List<Project>> getProjects(@PathVariable Long id) {
+    @RequestMapping(value = "{id}/activeProjects", method = RequestMethod.GET)
+    public ResponseEntity<List<ProjectDto>> getActiveProjects(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = this.lecturerService.findById(id);
-        List<Project> projects = lecturer.getProjects();
-        return ResponseEntity.ok(projects);
+
+        if (lecturer == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        List<Project> projects = this.projectService.getProjectsForLecturer(lecturer, true);
+
+        return ResponseEntity.ok(modelMapper.map(projects,  new TypeToken<List<ProjectDto>>() {}.getType()));
+    }
+
+    @RequestMapping(value = "{id}/inactiveProjects", method = RequestMethod.GET)
+    public ResponseEntity<?> getInactiveProjects(@PathVariable Long id) throws ResourceNotFoundException {
+        Lecturer lecturer = this.lecturerService.findById(id);
+
+        if (lecturer == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        List<Project> projects = this.projectService.getProjectsForLecturer(lecturer, false);
+
+        return ResponseEntity.ok(modelMapper.map(projects, new TypeToken<List<ProjectDto>>() {}.getType()));
+    }
+
+    @RequestMapping(value = "{id}/projects", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateProjects(@PathVariable Long id,
+                                            @RequestBody List<ProjectDto> projects) throws ResourceNotFoundException, BadRequestException {
+        Lecturer lecturer = this.lecturerService.findById(id);
+
+        if (lecturer == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+
+        for (ProjectDto project : projects) {
+            Project dbProject = projectService.findById(project.getId());
+
+            if (dbProject == null) {
+                throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", id));
+            }
+
+            if (dbProject.getLecturer() != lecturer) {
+                throw new BadRequestException(String.format("Nu poti edita un proiect care nu iti apartine %s", dbProject.getId()));
+            }
+
+            modelMapper.map(project, dbProject);
+
+            projectService.save(dbProject);
+        }
+        return ResponseEntity.noContent().build();
     }
 }

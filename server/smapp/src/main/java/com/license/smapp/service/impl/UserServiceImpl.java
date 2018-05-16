@@ -7,6 +7,9 @@ import com.license.smapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,5 +40,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public void delete(Long id) {
         this.userRepository.delete(id);
+    }
+
+
+    @Override
+    public Page<User> listAllByPage(String filter, Pageable pageable) {
+        // return this.userRepository.findAllByNameStartingWith(filter);
+     //  return new PageImpl<User>(this.userRepository.findAllByNameStartingWith(filter));
+        return this.userRepository.findAllByEmailStartingWith(filter, pageable);
     }
 }

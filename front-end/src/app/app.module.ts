@@ -27,6 +27,8 @@ import { StudentDetailsComponent } from './components/student-details/student-de
 import { LecturerProjectsComponent } from './components/lecturer-projects/lecturer-projects.component';
 import { ApplyDialogComponent } from './components/apply-dialog/apply-dialog.component';
 import { SearchStudentDialogComponent } from './components/lecturer-projects/search-student-dialog.component';
+import { SearchProjectsComponent } from './components/search-projects/search-projects.component';
+
 import { MaterialModule } from './material.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -37,6 +39,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { DndModule } from 'ng2-dnd';
 
 import { DeleteDialogComponent } from './dialogs/delete/delete.dialog.component';
+import { PastProjectsComponent } from './dialogs/past-projects/past-projects.component';
+
 
 // services
 import { AuthService } from './shared/services/auth.service';
@@ -45,9 +49,13 @@ import { SearchService } from './shared/services/search.service';
 import { ProjectService } from './shared/services/project.service';
 import { UploadService } from './shared/services/upload.service';
 import { StudentService } from './shared/services/student.service';
+import { UserService } from './shared/services/user.service';
+import { SnackBarService } from './shared/services/snackbar.service';
 
 // resolvers
 import { ProjectDetailsResolve } from './shared/services/project.resolve.service';
+import { ProjectInfoResolve } from './shared/services/project.info.resolve.service';
+
 
 // pipes
 import { EscapeHtmlPipe } from './shared/pipes/keep-html.pipe';
@@ -57,7 +65,6 @@ import { EscapeHtmlPipe } from './shared/pipes/keep-html.pipe';
 import { QuillModule } from 'ngx-quill';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-
 
 @NgModule({
   declarations: [
@@ -83,7 +90,9 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     LecturerProjectsComponent,
     EscapeHtmlPipe,
     ApplyDialogComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    PastProjectsComponent,
+    SearchProjectsComponent
   ],
   imports: [
     HttpClientModule,
@@ -102,7 +111,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     EditProjectDialogComponent,
     StatisticsDialogComponent,
     ApplyDialogComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    PastProjectsComponent
   ],
   providers: [
     MediaMatcher,
@@ -111,8 +121,11 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     UploadService,
     ProjectService,
     ProjectDetailsResolve,
+    ProjectInfoResolve,
     SearchService,
-    StudentService
+    StudentService,
+    UserService,
+    SnackBarService
   ],
   bootstrap: [AppComponent]
 })

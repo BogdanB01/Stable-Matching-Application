@@ -2,6 +2,7 @@ package com.license.smapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.license.smapp.common.EntityIdResolver;
 
@@ -15,12 +16,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name="questions")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = Question.class
-)
 public class Question {
 
     @Id

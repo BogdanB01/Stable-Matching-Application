@@ -2,7 +2,17 @@ package com.license.smapp.dto;
 
 public class BibliographyDTO {
 
+    private Long id;
+
     private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

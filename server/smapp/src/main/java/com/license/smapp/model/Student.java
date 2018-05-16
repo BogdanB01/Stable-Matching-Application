@@ -2,10 +2,9 @@ package com.license.smapp.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.license.smapp.common.EntityIdResolver;
-import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,15 +14,8 @@ import java.util.List;
  * The Student JPA entity
  */
 
-@Indexed
 @Entity
 @Table(name="STUDENTS")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = Student.class
-)
 public class Student extends User{
 
     @Column(name="registration_number")
@@ -32,7 +24,8 @@ public class Student extends User{
     @OneToMany(mappedBy = "student")
     private List<Grade> grades;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderColumn(name ="index")
     private List<Preference> preferences;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
@@ -108,5 +101,10 @@ public class Student extends User{
         if (answer != null) {
             answer.setStudent(null);
         }
+    }
+
+    @Transient
+    public Double getAvg() {
+        return this.grades.stream().mapToInt(g -> g.getValue()).average().getAsDouble();
     }
 }

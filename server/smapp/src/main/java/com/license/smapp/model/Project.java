@@ -3,11 +3,14 @@ package com.license.smapp.model;
 import com.fasterxml.jackson.annotation.*;
 import com.license.smapp.common.EntityIdResolver;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.SortComparator;
+import org.hibernate.annotations.SortNatural;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * The Project JPA Entity
@@ -31,9 +34,6 @@ public class Project {
     private String description;
     private Integer capacity;
 
-//    @OneToMany(mappedBy = "project")
-//    private List<StudentPreferences> studentPreferences;
-
     @ManyToOne
     @JoinColumn(name = "lecturer_id")
     private Lecturer lecturer;
@@ -41,7 +41,7 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Bibliography> bibliographies;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(
             name="project_tags",
             joinColumns = @JoinColumn(name = "project_id"),
@@ -55,11 +55,19 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private File file;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<AssignedProjects> assignedProjects;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @SortNatural
+    private SortedSet<Preference> preferences;
+
+    private boolean active;
 
     @PrePersist
     private void prePersist() {
+        this.active = true;
+
         if (bibliographies != null) {
             bibliographies.forEach(c -> c.setProject(this));
         }
@@ -112,14 +120,6 @@ public class Project {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
-
-//    public List<StudentPreferences> getStudentPreferences() {
-//        return studentPreferences;
-//    }
-//
-//    public void setStudentPreferences(List<StudentPreferences> studentPreferences) {
-//        this.studentPreferences = studentPreferences;
-//    }
 
     public List<Bibliography> getBibliographies() {
         return bibliographies;
@@ -203,6 +203,22 @@ public class Project {
         if(assigned != null) {
             assigned.setProject(null);
         }
+    }
+
+    public SortedSet<Preference> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(SortedSet<Preference> preferences) {
+        this.preferences = preferences;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

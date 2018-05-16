@@ -11,12 +11,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "assigned_projects")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = AssignedProjects.class
-)
 public class AssignedProjects {
 
     @Id

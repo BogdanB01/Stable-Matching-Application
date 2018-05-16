@@ -1,16 +1,23 @@
 package com.license.smapp.controller;
 
-import com.license.smapp.model.Student;
+import com.license.smapp.dto.UserDto;
+import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.User;
 import com.license.smapp.service.UserService;
-import com.license.smapp.service.impl.HibernateSearchServiceImpl;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @RestController
@@ -20,6 +27,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     /**
@@ -27,9 +37,21 @@ public class UserController {
      * @return List with the User Objects and a message if the request was successfully
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> all = userService.findAll();
-        return new ResponseEntity<List<User>>(all, HttpStatus.OK);
+    public ResponseEntity<?> getAllUsers() {
+        List<UserDto> users = modelMapper.map(userService.findAll(), new TypeToken<List<UserDto>>() {}.getType());
+        return ResponseEntity.ok(users);
+    }
+
+    /**
+     * Get a paginated list of User object from the database
+     * @return a List with User object
+     */
+    @RequestMapping(value = "/filter", method = RequestMethod.GET)
+    Page<UserDto> getUsersByPage(@RequestParam(value = "email", required = false, defaultValue = "") String email,
+                                 Pageable pageable) {
+        Page<User> page = userService.listAllByPage(email, pageable);
+        Type targetListType = new TypeToken<List<UserDto>>() {}.getType();
+        return new PageImpl<>(modelMapper.map(page.getContent(), targetListType), pageable, page.getTotalElements());
     }
 
     /**
@@ -40,13 +62,14 @@ public class UserController {
      * @return An User Object / message if the object was successfully found or not
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable Long id) throws ResourceNotFoundException {
         User user = userService.findById(id);
-        if (user != null) {
-            return new ResponseEntity<User>(user, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+
+        if (user == null) {
+            throw new ResourceNotFoundException(String.format("Utilizatorul cu id-ul=%s nu a fost gasit!"));
         }
+
+        return ResponseEntity.ok(user);
     }
 
     /**
@@ -56,9 +79,16 @@ public class UserController {
      * @return message if the object was successfully deleted
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteUserById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) throws ResourceNotFoundException {
+
+        User user = userService.findById(id);
+
+        if (user == null) {
+            throw new ResourceNotFoundException(String.format("Utilizatorul cu id-ul=%s nu a fost gasit!", id));
+        }
         userService.delete(id);
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Project } from '../../shared/interfaces/project';
 import { PageEvent } from '@angular/material';
 import { ProjectService } from '../../shared/services/project.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatPaginator } from '@angular/material';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-list',
@@ -11,40 +14,33 @@ import { ProjectService } from '../../shared/services/project.service';
 export class ProjectListComponent implements OnInit {
 
   projects = [];
+  length = 0;
 
-  // MatPaginator Inputs
-  length = 4;
-  pageSize = 6;
-  pageSizeOptions = [6, 12, 24, 48];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  // MatPaginator Output
-  pageEvent: PageEvent;
-
-  constructor(private projectService: ProjectService) {
-
-  }
+  constructor(private projectService: ProjectService) {}
 
   ngOnInit() {
-    this.initEvents(0, this.pageSize);
+    this.initEvents(0, 'all', '');
+
+    this.paginator.page
+      .pipe(
+        tap(() => this.loadProjectsPage())
+      )
+      .subscribe();
   }
 
-  initEvents(pageNumber: number, pageSize: number) {
-    this.projectService.getProjects(pageNumber, pageSize).subscribe((resp: any) => {
-      console.log(resp);
+  initEvents(pageNumber: number, type: string, filter: string) {
+    this.projectService.getProjects(pageNumber, this.paginator.pageSize, type, filter).subscribe((resp: any) => {
       this.projects = resp.content;
       this.length = resp.totalElements;
     });
   }
 
-  getServerData(event?: PageEvent): void {
-    this.initEvents(event.pageIndex, event.pageSize);
+  loadProjectsPage() {
+    this.projectService.getProjects(this.paginator.pageIndex, this.paginator.pageSize, '', '').subscribe(resp => {
+      this.projects = resp.content;
+    });
   }
-  // fakeServerData(event?: PageEvent): void {
-  //   console.log(event.pageSize);
-  //   this.project.title = 'Pagina ' + event.pageIndex;
-  //   this.projects = [];
-  //   for (let i = 0; i < event.pageSize; i++) {
-  //     this.projects.push(this.project);
-  //   }
-  // }
+
 }

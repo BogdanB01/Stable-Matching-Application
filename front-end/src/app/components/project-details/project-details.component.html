@@ -42,7 +42,7 @@
 
             <div class="heading">
                 Fisiere atasate:
-                <mat-chip *ngIf="project.file" selectable="true" (click)="downloadFile()"> 
+                <mat-chip *ngIf="project.file" selectable="true" (click)="downloadFile(project.file.path)"> 
                     {{project.file.path}}
                 </mat-chip>
             </div>

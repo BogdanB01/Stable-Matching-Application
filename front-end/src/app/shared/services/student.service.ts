@@ -13,7 +13,7 @@ export class StudentService {
     }
 
     public checkIfStudentCanApply(projectId) {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/14/apply`, {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/11/apply`, {
             params: {
                 projectId: projectId,
             }
@@ -21,7 +21,27 @@ export class StudentService {
     }
 
     public addPreference(request) {
-        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/14/preferences`, request);
+        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences`, request);
+    }
+
+    public getDetails(studentId, projectId) {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + studentId + '/details', {
+            params: {
+                projectId: projectId
+            }
+        });
+    }
+
+    public getPreferences() {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/15/preferences`);
+    }
+
+    public removePreference(preferenceId) {
+        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/15/preferences/` + preferenceId);
+    }
+
+    public reorderPreference(body) {
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/15/preferences/reorder`, body);
     }
 }
 

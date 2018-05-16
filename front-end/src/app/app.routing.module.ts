@@ -16,6 +16,8 @@ import { LecturerProjectsComponent } from './components/lecturer-projects/lectur
 import { CreateProjectComponent } from './components/create-project/create-project.component';
 import { EditLecturerAccountComponent } from './components/edit-lecturer-account/edit-lecturer-account.component';
 import { ProjectDetailsResolve } from './shared/services/project.resolve.service';
+import { ProjectInfoResolve } from './shared/services/project.info.resolve.service';
+import { SearchProjectsComponent } from './components/search-projects/search-projects.component';
 
 const appRoutes: Routes = [
     { path: 'lecturer-account', component: LecturerAccountComponent,
@@ -23,9 +25,13 @@ const appRoutes: Routes = [
         {path: '', redirectTo: 'proposed-projects', pathMatch: 'full'},
         {path: 'proposed-projects', component: LecturerProjectsComponent},
         {path: 'add-project', component: CreateProjectComponent},
-        {path: 'account-settings', component: EditLecturerAccountComponent}
+        {path: 'account-settings', component: EditLecturerAccountComponent},
       ]},
-    { path: 'lecturer-account/proposed-projects/project-info', component: ProjectInfoComponent },
+    { path: 'lecturer-account/proposed-projects/:id/info', component: ProjectInfoComponent,
+      resolve: {
+        message: ProjectDetailsResolve
+      }
+    },
     { path: 'projects', component: ProjectListComponent /*, canActivate: [AuthGuard] */},
    // { path: 'login', component: LoginComponent },
     { path: 'student-settings', component: EditStudentAccountComponent},
@@ -34,6 +40,7 @@ const appRoutes: Routes = [
           message: ProjectDetailsResolve
         }
     },
+    { path: 'search', component: SearchProjectsComponent },
     { path: 'student-account', component: StudentAccountComponent },
     { path: 'admin-account', component: AdminAccountComponent },
     { path: 'matching-area', component: MatchingAreaComponent}

@@ -5,6 +5,7 @@ import { FormGroup, FormControl, FormGroupDirective, NgForm, FormBuilder, Valida
 import { EditorConfig } from './editor-config';
 import { UploadService } from '../../shared/services/upload.service';
 import { ProjectService } from '../../shared/services/project.service';
+import { SnackBarService } from '../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-create-project',
@@ -26,7 +27,10 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput: ElementRef;
 
   createProjectForm: FormGroup;
-  constructor(private fb: FormBuilder, private uploadService: UploadService, private projectService: ProjectService) {
+  constructor(private fb: FormBuilder,
+              private uploadService: UploadService,
+              private projectService: ProjectService,
+              private snackBarService: SnackBarService) {
     this.createForm();
   }
 
@@ -93,10 +97,11 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
 
   createProject(): void {
     const project = this.prepareCreateProject();
-    // console.log(project);
+    console.log(project);
     this.projectService.createProject(project).subscribe(
       res => {
         // clear form
+        this.snackBarService.showSnackBar('Proiectul a fost adaugat!');
         this.createProjectForm.reset();
         this.tags = [];
         this.references = [];
@@ -105,6 +110,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
         console.log(res);
       },
       err => {
+        this.snackBarService.showSnackBar('Proiectul nu a putut fi adaugat!');
         console.log(err);
       }
     );
@@ -119,6 +125,7 @@ export class CreateProjectComponent implements OnInit, OnDestroy {
         console.log(this.file);
       }, err => {
         console.log('Failed to upload file');
+        this.snackBarService.showSnackBar('Fisierul nu a putut fi uploadat!');
       });
     }
   }

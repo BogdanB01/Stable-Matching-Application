@@ -70,5 +70,9 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.save(student);
     }
 
+    @Override
+    public List<Student> searchStudent(String searchTerm) {
+        return studentRepository.findTop10ByNameIsContaining(searchTerm);
+    }
 
 }

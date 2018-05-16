@@ -9,12 +9,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "answers")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = Answer.class
-)
 public class Answer {
 
     @Id

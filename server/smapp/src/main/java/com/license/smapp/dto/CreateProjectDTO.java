@@ -3,9 +3,7 @@ package com.license.smapp.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.license.smapp.model.Bibliography;
 import com.license.smapp.model.File;
-import com.license.smapp.model.Question;
 import com.license.smapp.model.Tag;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +15,7 @@ public class CreateProjectDTO {
     private String description;
     private List<Tag> tags;
     private List<Bibliography> bibliographies;
-    private List<QuestionDTO> questions;
+    private List<QuestionDto> questions;
     @JsonProperty("file")
     private File file;
 
@@ -61,11 +59,11 @@ public class CreateProjectDTO {
         this.bibliographies = bibliographies;
     }
 
-    public List<QuestionDTO> getQuestions() {
+    public List<QuestionDto> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<QuestionDTO> questions) {
+    public void setQuestions(List<QuestionDto> questions) {
         this.questions = questions;
     }
 

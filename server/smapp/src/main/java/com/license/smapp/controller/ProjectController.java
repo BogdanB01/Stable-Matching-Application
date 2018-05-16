@@ -1,25 +1,28 @@
 package com.license.smapp.controller;
 
-import com.license.smapp.dto.GetProjectDTO;
-import com.license.smapp.dto.UpdateProjectDTO;
+import com.license.smapp.dto.*;
 import com.license.smapp.exception.BadRequestException;
 import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.*;
 import com.license.smapp.service.PreferenceService;
 import com.license.smapp.service.ProjectService;
 import com.license.smapp.service.StudentService;
-import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,6 +38,9 @@ public class ProjectController {
     private StudentService studentService;
 
     @Autowired
+    private PreferenceService preferenceService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     /**
@@ -42,31 +48,43 @@ public class ProjectController {
      * @return List with the Project Objects and a message if the request was successfully
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<List<GetProjectDTO>> getAllProjects() {
+    public ResponseEntity<List<ProjectDto>> getAllProjects() {
         List<Project> all = projectService.findAll();
 
         java.lang.reflect.Type targetListType = new TypeToken<List<GetProjectDTO>>() {}.getType();
-        List<GetProjectDTO> allProjects = modelMapper.map(all, targetListType);
+        List<ProjectDto> allProjects = modelMapper.map(all, targetListType);
 
         return  ResponseEntity.ok(allProjects);
     }
 
     /**
      * Get a paginated list of Projects from database
-     * @param page Results page you want to retrieve
-     * @param size Number of records per page
      * @return A Page object with the requested items
      */
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<Page<Project>> list(@RequestParam(value="page") int page,
-                                              @RequestParam(value="size") int size) {
-        Page<Project> projects = projectService.listAllByPage(new PageRequest(page, size));
+    public ResponseEntity<Page<?>> listProjects(@RequestParam(value = "type", required = false, defaultValue = "all") String type,
+                                                         @RequestParam(value = "filter", required = false, defaultValue = "") String filter,
+                                                         Pageable pageable) throws BadRequestException {
 
-        return ResponseEntity.ok(projects);
+        Type targetListType = new TypeToken<List<ProjectDto>>() {}.getType();
+        switch (type) {
+            case "all":
+                Page<Project> page = projectService.listAllProjectsByActive(true, pageable);
+                return ResponseEntity.ok(new PageImpl<>(modelMapper.map(page.getContent(), targetListType), pageable, page.getTotalElements()));
+            case "title":
+                Page<Project> filteredProjectsByTitle = projectService.filterActiveProjectsByProjectTitle(true, filter, pageable);
+                return ResponseEntity.ok(new PageImpl<>(modelMapper.map(filteredProjectsByTitle.getContent(), targetListType), pageable, filteredProjectsByTitle.getTotalElements()));
+            case "lecturer":
+                Page<Project> filteredProjectsByLecturerName = projectService.filterActiveProjectsByLecturerName(true, filter, pageable);
+                return ResponseEntity.ok(new PageImpl<>(modelMapper.map(filteredProjectsByLecturerName.getContent(), targetListType), pageable, filteredProjectsByLecturerName.getTotalElements()));
+            case "tag":
+                Page<Project> filteredProjectsByTagName = projectService.filterActiveProjectsByTagName(true, filter, pageable);
+                return ResponseEntity.ok(new PageImpl<>(modelMapper.map(filteredProjectsByTagName.getContent(), targetListType), pageable, filteredProjectsByTagName.getTotalElements()));
+            default:
+                throw new BadRequestException("Tip necunoscut");
+        }
     }
-
-
 
     /**
      * Find a Project by id
@@ -75,13 +93,13 @@ public class ProjectController {
      * @return An Project Object / message if the object was successfully found or not
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Project> getProjectById(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) throws ResourceNotFoundException {
         Project project = projectService.findById(id);
 
         if (project == null) {
             throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", id));
         }
-        return ResponseEntity.ok(project); // return 200, with json body
+        return ResponseEntity.ok(modelMapper.map(project, ProjectDto.class)); // return 200, with json body
     }
 
     /**
@@ -107,7 +125,7 @@ public class ProjectController {
      * @param id the id of the object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Project> updateProject(@RequestBody UpdateProjectDTO projectDTO, @PathVariable Long id) throws ResourceNotFoundException, BadRequestException {
+    public ResponseEntity<ProjectDto> updateProject(@RequestBody UpdateProjectDTO projectDTO, @PathVariable Long id) throws ResourceNotFoundException, BadRequestException {
         // validate request
         if (!projectDTO.getId().equals(id)) {
             throw new BadRequestException(String.format("Id-ul obiectului %s nu este acelasi cu id-ul primit ca parametru %s", projectDTO.getId(), id));
@@ -121,12 +139,11 @@ public class ProjectController {
 
         Project updatedProject = projectService.update(project, modelMapper.map(projectDTO, Project.class));
 
-        return ResponseEntity.ok(updatedProject);
-  //      return null;
+        return ResponseEntity.ok(modelMapper.map(updatedProject, ProjectDto.class));
     }
 
     @RequestMapping(value = "/{id}/delete", method = RequestMethod.PATCH)
-    public ResponseEntity<Project> unassignStudentFromProject(@PathVariable Long id, @RequestBody Student student) throws BadRequestException, ResourceNotFoundException {
+    public ResponseEntity<ProjectDto> unassignStudentFromProject(@PathVariable Long id, @RequestBody Student student) throws BadRequestException, ResourceNotFoundException {
         Student studentDb = studentService.findById(student.getId());
         Project projectDb = projectService.findById(id);
 
@@ -149,12 +166,12 @@ public class ProjectController {
         projectDb.unnasignStudent(assignedProjects);
         Project updatedProject = projectService.save(projectDb);
 
-        return ResponseEntity.ok(updatedProject);
+        return ResponseEntity.ok(modelMapper.map(updatedProject, ProjectDto.class));
     }
 
 
     @RequestMapping(value = "/{id}/assign", method = RequestMethod.PATCH)
-    public ResponseEntity<Project> assignStudentToProject(@PathVariable Long id, @RequestBody Student student) throws BadRequestException, ResourceNotFoundException {
+    public ResponseEntity<ProjectDto> assignStudentToProject(@PathVariable Long id, @RequestBody StudentDto student) throws BadRequestException, ResourceNotFoundException {
         Student studentDb = studentService.findStudentByName(student.getName());
         Project projectDb = projectService.findById(id);
 
@@ -179,7 +196,45 @@ public class ProjectController {
 
         Project updatedProject = projectService.save(projectDb);
 
-        return ResponseEntity.ok(updatedProject);
+        return ResponseEntity.ok(modelMapper.map(updatedProject, ProjectDto.class));
     }
 
+    @RequestMapping(value = "/{id}/preferences", method = RequestMethod.GET)
+    public ResponseEntity<List<PreferenceDto>> getPreferencesForProject(@PathVariable Long id) throws ResourceNotFoundException {
+        Project project = projectService.findById(id);
+
+        if (project == null) {
+            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!"));
+        }
+
+        Type targetListType = new TypeToken<List<PreferenceDto>>() {}.getType();
+        List<Preference> preferences = new ArrayList<>(project.getPreferences());
+        return ResponseEntity.ok(modelMapper.map(preferences, targetListType));
+    }
+
+    @RequestMapping(value = "/{id}/preferences", method = RequestMethod.PUT)
+    public ResponseEntity<?> reorderPreferencesForProject(@PathVariable Long id,
+                                                          @RequestBody List<PreferenceDto> preferences) throws ResourceNotFoundException, BadRequestException {
+        Project project = projectService.findById(id);
+
+        if (project == null) {
+            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        SortedSet<Preference> preferencesDb = project.getPreferences();
+
+        for (Preference p : preferencesDb) {
+            PreferenceDto preference = preferences.stream().filter(pref -> pref.getId().equals(p.getId())).findFirst().orElse(null);
+
+            if (preference == null) {
+                throw new BadRequestException(String.format("Preferinta cu id-ul=%s nu se afla in lista de preferinte a proiectului", preference.getId()));
+            }
+
+            p.setPos(preferences.indexOf(preference));
+        }
+
+        projectService.save(project);
+
+        return ResponseEntity.noContent().build();
+    }
 }

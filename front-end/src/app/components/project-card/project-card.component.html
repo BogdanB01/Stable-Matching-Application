@@ -7,10 +7,10 @@
     <hr/>
 
     <mat-card-content>
-        <p [innerHTML]="project.description | keepHtml"> </p>
+        <p [innerHTML]="div.innerText"> </p>
         <mat-chip-list class="project-tags">
-            <mat-chip *ngFor="let tag of project.tags" selected="true">
-              {{tag.name}}
+            <mat-chip *ngFor="let tag of project.tags" selected="true" (click)="searchByTag(tag)">
+              {{ tag.name }}              
             </mat-chip>
         </mat-chip-list>
     </mat-card-content>

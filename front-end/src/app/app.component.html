@@ -8,15 +8,12 @@
           <h2> Inscrierea la licenta FII </h2>
         </div>
         <div>      
-          <button mat-icon-button (click) = "searchOpen = !searchOpen" fxHide="true" [fxHide.gt-xs]="false">
-            <i class="material-icons">search</i>
-          </button>
-    
-          <mat-form-field class="search" [ngClass]="{'search-open': searchOpen == true}">
-            <input matInput autocomplete="off">
-          </mat-form-field>
-
-          
+        
+          <a routerLink='/search'>
+            <button mat-icon-button fxHide="true" [fxHide.gt-xs]="false">
+              <i class="material-icons">search</i>
+            </button>
+          </a>
           
         </div>
     </mat-toolbar>

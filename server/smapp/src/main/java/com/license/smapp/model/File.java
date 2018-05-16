@@ -10,12 +10,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = File.class
-)
 public class File {
 
     @Id

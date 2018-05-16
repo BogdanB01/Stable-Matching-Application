@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import { SearchService } from '../../shared/services/search.service';
 import { DataSource } from '@angular/cdk/table';
 import { ProjectService } from '../../shared/services/project.service';
+import { SnackBarService } from '../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-search-student-dialog',
@@ -24,7 +25,8 @@ export class SearchStudentDialogComponent {
     private searchService: SearchService,
     private projectService: ProjectService,
     public dialogRef: MatDialogRef<SearchStudentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private snackBarService: SnackBarService) {
 
       this.projectId = data.projectId;
       this.searchTerm.valueChanges
@@ -48,8 +50,10 @@ export class SearchStudentDialogComponent {
     if (name !== '') {
       this.projectService.assignStudent(this.projectId, name).subscribe(res => {
         this.onAssign.emit(res);
+        this.snackBarService.showSnackBar('Studentul a fost adaugat cu succes!');
         this.dialogRef.close();
       }, err => {
+        this.snackBarService.showSnackBar(err.error.message);
         console.log(err);
       }
     );

@@ -14,12 +14,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id",
-        resolver = EntityIdResolver.class,
-        scope = Role.class
-)
 public class Role implements GrantedAuthority{
 
     @Id

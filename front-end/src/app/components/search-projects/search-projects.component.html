@@ -1,0 +1,30 @@
+<div fxLayout="column" class="components-container-gt-xs" [ngClass.xs]="'components-container-xs'" fxLayoutGap="20px" style="padding: 10px;">
+    
+    <form class="example-form">
+        
+        <div  [fxLayout]="direction" fxLayoutAlign="center center" class="search">
+            <mat-form-field floatPlaceholder="never">
+                <input matInput placeholder="Cauta proiecte" #input>
+            </mat-form-field>   
+            <button type="submit" mat-icon-button fxHide="true" [fxHide.gt-xs]="false">
+                <i class="material-icons">search</i>
+            </button>
+        </div>
+
+        <mat-radio-group [(ngModel)]="searchType" fxLayout="row" fxLayoutGap=40px [fxLayout]="direction" fxLayoutAlign="center center" name="test">
+            <mat-radio-button value="title">
+                Titlu
+            </mat-radio-button>
+
+            <mat-radio-button value="tag">
+                    Tag
+            </mat-radio-button>
+            
+            <mat-radio-button value="lecturer">
+                Profesor
+            </mat-radio-button>
+        </mat-radio-group>
+    </form>
+
+</div>
+<app-project-list #child></app-project-list>

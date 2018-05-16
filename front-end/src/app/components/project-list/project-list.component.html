@@ -2,6 +2,10 @@
 
     <div class="test" fxLayout="row" style="padding: 20px;">
         
+        <div *ngIf="!projects">
+            Nu a fost gasit nici un proiect!
+        </div>
+
         <div class="card" *ngFor="let proj of projects">
             <app-project-card [project]="proj"> </app-project-card>
         </div>
@@ -10,8 +14,7 @@
 
     
     <mat-paginator [length]="length"
-                   [pageSize]="pageSize"
-                   [pageSizeOptions]="pageSizeOptions"
-                   (page)="pageEvent = getServerData($event)">
+                   [pageSize]="6"
+                   [pageSizeOptions]="[6, 12, 24]">
     </mat-paginator>
 </div>
