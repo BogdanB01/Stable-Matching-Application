@@ -16,6 +16,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name="questions")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Question.class
+)
 public class Question {
 
     @Id

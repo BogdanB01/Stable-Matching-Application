@@ -29,18 +29,24 @@ export class ProjectDetailsComponent implements OnInit {
 
 
   applyToProject() {
-    this.studentService.checkIfStudentCanApply(this.project.id).subscribe(res => {
-      if (res === true) {
-        if (this.project.questions !== null) {
-          const dialogRef = this.dialog.open(ApplyDialogComponent, {
-            width: '600px',
-            data: {
-              projectId: this.project.id,
-              questions: this.project.questions
-            }
-          });
-        }
-      }
+    // this.studentService.checkIfStudentCanApply(this.project.id).subscribe(res => {
+    //   if (res === true) {
+    //     if (this.project.questions !== null) {
+    //       const dialogRef = this.dialog.open(ApplyDialogComponent, {
+    //         width: '600px',
+    //         data: {
+    //           projectId: this.project.id,
+    //           questions: this.project.questions
+    //         }
+    //       });
+    //     }
+    //   }
+    // }, err => {
+    //   console.log(err);
+    // });
+
+    this.studentService.addPreference(this.project.id).subscribe(res => {
+      console.log(res);
     }, err => {
       console.log(err);
     });

@@ -20,8 +20,13 @@ export class StudentService {
         });
     }
 
-    public addPreference(request) {
-        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences`, request);
+    public addPreference(projectId) {
+        console.log(projectId);
+        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences`, null,  {
+            params: {
+                projectId: projectId
+            }
+        });
     }
 
     public getDetails(studentId, projectId) {
@@ -33,15 +38,15 @@ export class StudentService {
     }
 
     public getPreferences() {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/15/preferences`);
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences`);
     }
 
     public removePreference(preferenceId) {
-        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/15/preferences/` + preferenceId);
+        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences/` + preferenceId);
     }
 
     public reorderPreference(body) {
-        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/15/preferences/reorder`, body);
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences/reorder`, body);
     }
 }
 

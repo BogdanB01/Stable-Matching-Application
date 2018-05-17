@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class User implements UserDetails{
             inverseJoinColumns = { @JoinColumn(name = "role_id")}
     )
     @JsonIgnore
-    private List<Role> roles;
+    protected List<Role> roles = new ArrayList<>();
 
 
   //  @Column(name = "enabled")

@@ -10,4 +10,5 @@ import java.util.List;
 public interface StudentRepository extends JpaRepository<Student, Long>{
     Student findByName(String name);
     List<Student> findTop10ByNameIsContaining(String searchTerm);
+    Student findByRegistrationNumber(String registrationNumber);
 }

@@ -1,12 +1,60 @@
-<h1>Matching area</h1>
+<div fxLayout="column">
 
+    <div fxLayout="column" class="service-card-content">
 
-<button mat-button type="button">
-    <mat-icon> file_upload </mat-icon>
-    <span> Match studenti-proiecte </span>
-</button>
+        <div fxLayout="row" class="service-card-container" fxLayout.lt-md="column" fxLayoutGap="20px">
+            
+			<div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card " >
+                <img src="/assets/img/student.png" fxFlex>
+                
+                <h3 class="mat-title" fxFlex>Importa studentii</h3>
+                <input style="display: none" type="file" (change)="uploadStudentsFile($event)" #studentsFile>
+                <button mat-button type="button" (click)="studentsFile.click()">
+                    <mat-icon> unarchive </mat-icon>
+                    <span> Upload </span>
+                </button>
+            </div>
 
-<button mat-button type="button">
-    <mat-icon> file_upload </mat-icon>
-    <span> Importa Note </span>
-</button>
+		
+
+			<div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
+				<img src="/assets/img/teacher.png" fxFlex>
+
+                <h3 class="mat-title" fxFlex>Importa profesorii</h3>
+               
+                <input style="display: none" type="file" (change)="uploadLecturersFile($event)" #lecturersFile>
+                <button mat-button type="button" (click)="lecturersFile.click()">
+                    <mat-icon> unarchive </mat-icon>
+                    <span> Upload </span>
+                </button>
+
+			</div>
+
+			<div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
+				<img src="/assets/img/grades.png" fxFlex>
+
+                <h3 class="mat-title"  fxFlex>Importa notele</h3>
+                
+                <input style="display: none" type="file" (change)="uploadGradesFile($event)" #gradesFile>
+                <button mat-button type="button" (click)="gradesFile.click()">
+                    <mat-icon> unarchive </mat-icon>
+                    <span> Upload </span>
+                </button>            
+            </div>
+            
+            <div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
+				<img src="/assets/img/prototype.png" fxFlex>
+
+                <h3 class="mat-title"  fxFlex>Importa cursurile</h3>
+
+                <input style="display: none" type="file" (change)="uploadCoursesFile($event)" #coursesFile>
+                <button mat-button type="button" (click)="coursesFile.click()">
+                    <mat-icon> unarchive </mat-icon>
+                    <span> Upload </span>
+                </button>		
+            </div>
+        </div>
+
+    </div>
+
+</div>

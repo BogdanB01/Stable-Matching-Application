@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long>{
-
+    Course findByAbbreviation(String abbreviation);
 }

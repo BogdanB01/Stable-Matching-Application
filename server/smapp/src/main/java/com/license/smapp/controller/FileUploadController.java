@@ -1,5 +1,8 @@
 package com.license.smapp.controller;
 
+import com.license.smapp.exception.BadRequestException;
+import com.license.smapp.exception.ResourceNotFoundException;
+import com.license.smapp.service.CsvService;
 import com.license.smapp.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 
+import javax.persistence.PreUpdate;
 import java.io.IOException;
 import java.net.URLConnection;
 
@@ -26,6 +30,8 @@ public class FileUploadController {
     @Autowired
     private StorageService storageService;
 
+    @Autowired
+    private CsvService csvService;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
@@ -39,6 +45,34 @@ public class FileUploadController {
             message = "FAIL to upload " + file.getOriginalFilename() + "!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
+    }
+
+    @RequestMapping(value = "/entities", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadFile(@RequestParam("type") String type,
+                                        @RequestParam("file") MultipartFile file) throws BadRequestException, ResourceNotFoundException {
+
+
+        LOGGER.error(type);
+
+        switch (type) {
+            case "students":
+                csvService.parseStudentsFile(file);
+                break;
+            case "lecturers":
+                csvService.parseLecturersFile(file);
+                break;
+            case "grades":
+                csvService.parseGradesFile(file);
+                break;
+            case "courses":
+                csvService.parseCoursesFile(file);
+                break;
+            default:
+                throw new BadRequestException("Tip necunoscut de fisier!");
+
+        }
+
+        return new ResponseEntity<HttpStatus>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{filename:.+}", method = RequestMethod.DELETE)

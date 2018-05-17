@@ -1,6 +1,7 @@
 package com.license.smapp.controller;
 
 import com.license.smapp.dto.PreferenceDto;
+import com.license.smapp.exception.BadRequestException;
 import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.Preference;
 import com.license.smapp.model.Project;
@@ -34,35 +35,28 @@ public class PreferenceController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<?> addPreferenceToStudent(@RequestBody PreferenceDto preferenceDto) throws ResourceNotFoundException, URISyntaxException {
 
-//        Student student = studentService.findById(preferenceDto.getStudentId());
-//
-//        if (student == null) {
-//            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", preferenceDto.getStudentId()));
-//        }
-//
-//        Project project = projectService.findById(preferenceDto.getProjectId());
-//
-//        if (project == null) {
-//            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", preferenceDto.getProjectId()));
-//        }
-//
-//        modelMapper.typeMap(PreferenceDto.class, Preference.class).addMappings(mp -> {
-//            mp.<Long>map(src -> src.getProjectId(), (dest, v) -> dest.getProject().setId(v));
-//            mp.<Long>map(src -> src.getStudentId(), (dest, v) -> dest.getStudent().setId(v));
-//        });
-//
-//        Preference preference = modelMapper.map(preferenceDto, Preference.class);
-//
-//        // set submission date
-//        preference.setSubmittedAt(new Date());
-//
-//        Preference newPreference = preferenceService.save(preference);
-//        return ResponseEntity.created(new URI("/preferences/" + newPreference.getId())).build();
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity<?> createPreference(@RequestBody PreferenceDto preference) throws ResourceNotFoundException, BadRequestException {
+        Student student = studentService.findById(preference.getStudent().getId());
+        Project project = projectService.findById(preference.getProject().getId());
+
+        if (student == null) {
+            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", preference.getStudent().getId()));
+        }
+
+        if (project == null) {
+            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", preference.getProject().getId()));
+        }
+
+        Integer count = preferenceService.countAllByProjectAndStudent(project, student);
+
+        if (count != 0) {
+            throw new BadRequestException("Nu poti aplica de doua ori la acelasi proiect!");
+        }
 
         return null;
     }
+
 
 }

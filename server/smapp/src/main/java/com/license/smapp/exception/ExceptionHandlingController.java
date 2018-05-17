@@ -35,12 +35,12 @@ public class ExceptionHandlingController {
         return this.generateErrorDto(HttpStatus.NOT_FOUND, ex);
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorDto defaultHandler(Exception ex) {
-        LOGGER.error(ex.getMessage());
-        return this.generateErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, ex);
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ErrorDto defaultHandler(Exception ex) {
+//        LOGGER.error(ex.getMessage());
+//        return this.generateErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, ex);
+//    }
 
 
     private ErrorDto generateErrorDto(HttpStatus status, Exception ex)

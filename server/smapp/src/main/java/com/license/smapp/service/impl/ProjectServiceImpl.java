@@ -148,16 +148,16 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Page<Project> filterActiveProjectsByProjectTitle(boolean active, String filter, Pageable pageable) {
-        return projectRepository.findAllByActiveAndTitleStartingWith(active, filter, pageable);
+        return projectRepository.findAllByActiveAndTitleStartingWithIgnoreCase(active, filter, pageable);
     }
 
     @Override
     public Page<Project> filterActiveProjectsByLecturerName(boolean active, String filter, Pageable pageable) {
-        return projectRepository.findAllByActiveAndLecturerNameStartingWith(active, filter, pageable);
+        return projectRepository.findAllByActiveAndLecturerNameStartingWithIgnoreCase(active, filter, pageable);
     }
 
     @Override
     public Page<Project> filterActiveProjectsByTagName(boolean active, String filter, Pageable pageable) {
-        return projectRepository.findAllByActiveAndTags_NameStartingWith(active, filter, pageable);
+        return projectRepository.findAllByActiveAndTags_NameStartingWithIgnoreCase(active, filter, pageable);
     }
 }

@@ -16,6 +16,12 @@ import java.util.List;
 
 @Entity
 @Table(name="STUDENTS")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id",
+        resolver = EntityIdResolver.class,
+        scope = Student.class
+)
 public class Student extends User{
 
     @Column(name="registration_number")
@@ -83,6 +89,18 @@ public class Student extends User{
         }
     }
 
+    public void addGrade(Grade grade) {
+        grade.setStudent(this);
+        grades.add(grade);
+    }
+
+    public void removeGrade(Grade grade) {
+        this.grades.remove(grade);
+        if (grade != null) {
+            grade.setStudent(null);
+        }
+    }
+
     public List<Answer> getAnswers() {
         return answers;
     }
@@ -101,6 +119,10 @@ public class Student extends User{
         if (answer != null) {
             answer.setStudent(null);
         }
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     @Transient

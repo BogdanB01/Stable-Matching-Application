@@ -14,7 +14,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     Page<Project> findAllByLecturerNameContainingOrTitleContaining(String lecturer, String title, Pageable pageable);
     List<Project> findAllByLecturerAndActive(Lecturer lecturer, boolean active);
     Page<Project> findAllByActive(boolean active, Pageable pageable);
-    Page<Project> findAllByActiveAndTitleStartingWith(boolean active, String filter, Pageable pageable);
-    Page<Project> findAllByActiveAndLecturerNameStartingWith(boolean active, String filter, Pageable pageable);
-    Page<Project> findAllByActiveAndTags_NameStartingWith(boolean active, String filter, Pageable pageable);
+    Page<Project> findAllByActiveAndTitleStartingWithIgnoreCase(boolean active, String filter, Pageable pageable);
+    Page<Project> findAllByActiveAndLecturerNameStartingWithIgnoreCase(boolean active, String filter, Pageable pageable);
+    Page<Project> findAllByActiveAndTags_NameStartingWithIgnoreCase(boolean active, String filter, Pageable pageable);
 }
