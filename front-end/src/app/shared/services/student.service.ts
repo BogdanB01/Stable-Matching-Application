@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class StudentService {
 
+    studentId = 21;
     constructor (private http: HttpClient) {}
 
     getStudentByName(name: string) {
@@ -13,20 +14,19 @@ export class StudentService {
     }
 
     public checkIfStudentCanApply(projectId) {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/11/apply`, {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/apply`, {
             params: {
                 projectId: projectId,
             }
         });
     }
 
-    public addPreference(projectId) {
-        console.log(projectId);
-        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences`, null,  {
-            params: {
-                projectId: projectId
-            }
-        });
+    public getAssignedProjectForStudent() {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/${this.studentId}/project`);
+    }
+
+    public addPreference(requestBody) {
+        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences`, requestBody);
     }
 
     public getDetails(studentId, projectId) {
@@ -38,15 +38,15 @@ export class StudentService {
     }
 
     public getPreferences() {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences`);
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences`);
     }
 
     public removePreference(preferenceId) {
-        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences/` + preferenceId);
+        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences/` + preferenceId);
     }
 
     public reorderPreference(body) {
-        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/11/preferences/reorder`, body);
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences/reorder`, body);
     }
 }
 

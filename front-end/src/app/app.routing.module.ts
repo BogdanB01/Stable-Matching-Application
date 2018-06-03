@@ -9,7 +9,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { StudentAccountComponent } from './components/student-account/student-account.component';
 import { LecturerAccountComponent } from './components/lecturer-account/lecturer-account.component';
 import { AdminAccountComponent } from './components/admin-account/admin-account.component';
-import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
+// import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
 import { MatchingAreaComponent } from './components/matching-area/matching-area.component';
 import { ProjectInfoComponent } from './components/project-info/project-info.component';
 import { LecturerProjectsComponent } from './components/lecturer-projects/lecturer-projects.component';
@@ -18,22 +18,27 @@ import { EditLecturerAccountComponent } from './components/edit-lecturer-account
 import { ProjectDetailsResolve } from './shared/services/project.resolve.service';
 import { ProjectInfoResolve } from './shared/services/project.info.resolve.service';
 import { SearchProjectsComponent } from './components/search-projects/search-projects.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
+
 
 const appRoutes: Routes = [
+    { path: 'login', component: LoginComponent },
+  //  { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'lecturer-account', component: LecturerAccountComponent,
       children: [
-        {path: '', redirectTo: 'proposed-projects', pathMatch: 'full'},
-        {path: 'proposed-projects', component: LecturerProjectsComponent},
-        {path: 'add-project', component: CreateProjectComponent},
-        {path: 'account-settings', component: EditLecturerAccountComponent},
-      ]},
+        { path: '', redirectTo: 'proposed-projects', pathMatch: 'full' },
+        { path: 'proposed-projects', component: LecturerProjectsComponent },
+        { path: 'add-project', component: CreateProjectComponent },
+        { path: 'account-settings', component: EditLecturerAccountComponent },
+      ]
+    },
     { path: 'lecturer-account/proposed-projects/:id/info', component: ProjectInfoComponent,
       resolve: {
         message: ProjectDetailsResolve
       }
     },
-    { path: 'projects', component: ProjectListComponent /*, canActivate: [AuthGuard] */},
-   // { path: 'login', component: LoginComponent },
+    { path: 'projects', component: ProjectListComponent , /* canActivate: [AuthGuard] */},
     { path: 'student-settings', component: EditStudentAccountComponent},
     { path: 'projects/:id', component: ProjectDetailsComponent,
         resolve: {
@@ -43,7 +48,9 @@ const appRoutes: Routes = [
     { path: 'search', component: SearchProjectsComponent },
     { path: 'student-account', component: StudentAccountComponent },
     { path: 'admin-account', component: AdminAccountComponent },
-    { path: 'matching-area', component: MatchingAreaComponent}
+    { path: 'matching-area', component: MatchingAreaComponent},
+    { path: 'not-found', component: NotFoundComponent },
+    { path: '**', redirectTo: 'not-found' }
 ];
 
 @NgModule({

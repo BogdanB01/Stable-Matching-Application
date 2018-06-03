@@ -1,8 +1,6 @@
 package com.license.smapp.controller;
 
 import com.google.common.reflect.TypeToken;
-import com.license.smapp.dto.CreateLecturerDTO;
-import com.license.smapp.dto.CreateProjectDTO;
 import com.license.smapp.dto.LecturerDto;
 import com.license.smapp.dto.ProjectDto;
 import com.license.smapp.exception.BadRequestException;
@@ -78,7 +76,7 @@ public class LecturerController {
      * @return message if the object was successfully deleted
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Lecturer> deleteLecturerById(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<?> deleteLecturer(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = lecturerService.findById(id);
 
         if (lecturer == null) {
@@ -94,25 +92,32 @@ public class LecturerController {
      * @param lecturer the object to be saved
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Lecturer> createUser(@RequestBody @Valid CreateLecturerDTO lecturer) throws URISyntaxException {
+    public ResponseEntity<Lecturer> createUser(@RequestBody LecturerDto lecturer) throws URISyntaxException {
 
         Lecturer newLecturer = lecturerService.save(modelMapper.map(lecturer, Lecturer.class));
         return ResponseEntity.created(new URI("/lecturers/" + newLecturer.getId())).build();
     }
 
     /**
-     * Update a particular Student Object
+     * Update a particular Lecturer Object
      * @param lecturer the object that needs to be updated
      * @param id the id of the object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> updateLecturer(@RequestBody Lecturer lecturer, @PathVariable Long id) {
-        Lecturer updatedLecturer = this.lecturerService.findById(id);
-        if(updatedLecturer == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateLecturer(@RequestBody LecturerDto lecturer, @PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
+
+        if (lecturer.getId() != id) {
+            throw new BadRequestException("Id-ul obiectului nu este la fel cu id-ul din path!");
         }
-        lecturerService.save(updatedLecturer);
-        return ResponseEntity.noContent().build();
+
+        Lecturer lecturerDb = this.lecturerService.findById(id);
+
+        if (lecturerDb == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
+        }
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(lecturer, lecturerDb);
+        return ResponseEntity.ok(lecturerService.save(lecturerDb));
     }
 
     /**
@@ -121,7 +126,7 @@ public class LecturerController {
      * @param  - the project to add to the lecturer's list
      */
     @RequestMapping(value = "/{id}/projects", method = RequestMethod.POST)
-    public ResponseEntity<Project> addProject(@PathVariable Long id,
+    public ResponseEntity<ProjectDto> addProject(@PathVariable Long id,
                                               @RequestBody ProjectDto projectDto) throws URISyntaxException, ResourceNotFoundException {
 
 
@@ -136,7 +141,8 @@ public class LecturerController {
         project.setLecturer(lecturer);
 
         Project newProject = this.projectService.save(project);
-        return ResponseEntity.created(new URI("/projects/" + newProject.getId())).body(newProject);
+        ProjectDto newProjectDto = modelMapper.map(newProject, ProjectDto.class);
+        return ResponseEntity.created(new URI("/projects/" + newProject.getId())).body(newProjectDto);
 
     }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { ProjectService } from './project.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -9,7 +9,8 @@ import 'rxjs/add/observable/empty';
 @Injectable()
 export class ProjectDetailsResolve implements Resolve<any> {
 
-    constructor(private projectService: ProjectService) {
+    constructor(private projectService: ProjectService,
+                private router: Router) {
     }
 
     resolve(route: ActivatedRouteSnapshot, rstate: RouterStateSnapshot): Observable<any> {
@@ -18,7 +19,9 @@ export class ProjectDetailsResolve implements Resolve<any> {
            // return Observable.of('data not available at this time');
 
             if (res.status === 404) {
+                this.router.navigate(['/not-found]']);
                 console.log('not found! redirect to 404');
+
             } else {
                 return Observable.empty();
             }

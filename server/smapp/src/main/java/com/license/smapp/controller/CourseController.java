@@ -1,7 +1,10 @@
 package com.license.smapp.controller;
 
 
-import com.license.smapp.dto.CreateCourseDTO;
+import com.google.common.reflect.TypeToken;
+import com.license.smapp.dto.CourseDto;
+import com.license.smapp.exception.BadRequestException;
+import com.license.smapp.exception.ResourceNotFoundException;
 import com.license.smapp.model.Course;
 import com.license.smapp.service.CourseService;
 import org.modelmapper.ModelMapper;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -31,9 +35,11 @@ public class CourseController {
      * @return List with the Course Objects and a message if the request was successfully
      */
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<List<Course>> getAllCourses() {
+    public ResponseEntity<List<CourseDto>> getAllCourses() {
         List<Course> all = courseService.findAll();
-        return ResponseEntity.ok(all);
+        Type targetListType = new TypeToken<List<CourseDto>>() {}.getType();
+
+        return ResponseEntity.ok(modelMapper.map(all, targetListType));
     }
 
 
@@ -45,13 +51,13 @@ public class CourseController {
      * @return An Course Object / message if the object was successfully found or not
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
+    public ResponseEntity<CourseDto> getCourseById(@PathVariable Long id) throws ResourceNotFoundException {
         Course course = courseService.findById(id);
-        if (course != null) {
-            return ResponseEntity.ok(course); // return 200, with json body
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 with null body
+
+        if (course == null) {
+            throw new ResourceNotFoundException(String.format("Cursul cu id-ul=%s nu a fost gasit!", id));
         }
+        return ResponseEntity.ok(modelMapper.map(course, CourseDto.class));
     }
 
     /**
@@ -61,10 +67,11 @@ public class CourseController {
      * @return message if the object was successfully deleted
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Course> deleteUserById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) throws ResourceNotFoundException {
         Course course = courseService.findById(id);
-        if(course == null) {
-            return ResponseEntity.notFound().build();
+
+        if (course == null) {
+            throw new ResourceNotFoundException(String.format("Cursul cu id-ul=%s nu a fost gasit!", id));
         }
 
         courseService.delete(id);
@@ -77,12 +84,10 @@ public class CourseController {
      * @param course the object to be saved
      */
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<Course> createUser(@RequestBody @Valid CreateCourseDTO course) throws URISyntaxException {
+    public ResponseEntity<Course> createUser(@RequestBody CourseDto course) {
 
         Course newCourse = courseService.save(modelMapper.map(course, Course.class));
-        return ResponseEntity.created(new URI("/users/" + newCourse.getId())).build();
-
-        //if resource already exists -> return ResponseEntity.status(HTTPStatus.Conflict).build();
+        return ResponseEntity.created(URI.create("/courses/" + newCourse.getId())).build();
     }
 
     /**
@@ -91,13 +96,23 @@ public class CourseController {
      * @param id the id of the object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> updateCourse(@RequestBody Course course, @PathVariable Long id) {
-        Course updatedCourse = this.courseService.findById(id);
-        if(updatedCourse == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateCourse(@RequestBody CourseDto course, @PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
+
+        if (course.getId() != id) {
+            throw new BadRequestException("Id-ul obiectului nu este acelasi cu id-ul din path!");
         }
 
+        Course updatedCourse = this.courseService.findById(id);
+
+        if(updatedCourse == null) {
+            throw new ResourceNotFoundException(String.format("Cursul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+
+        modelMapper.map(course, updatedCourse);
+
         courseService.save(updatedCourse);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(updatedCourse);
     }
 }

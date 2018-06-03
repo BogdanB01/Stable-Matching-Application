@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadService } from '../../shared/services/upload.service';
+import { HistoryService } from '../../shared/services/history.service';
 
 @Component({
     selector: 'app-matching-area',
@@ -8,10 +9,17 @@ import { UploadService } from '../../shared/services/upload.service';
 })
 export class MatchingAreaComponent implements OnInit {
 
-    constructor(private uploadService: UploadService) {}
+    selectedYear: number;
+
+    years = [];
+
+    constructor(private uploadService: UploadService,
+                private historyService: HistoryService) {}
 
     ngOnInit(): void {
-
+        this.historyService.getYears().subscribe(data => {
+            this.years = data;
+        });
     }
 
     uploadStudentsFile($event) {
@@ -46,4 +54,14 @@ export class MatchingAreaComponent implements OnInit {
         }
     }
 
+    match() {
+        this.uploadService.matchStudentsToProjectsAndGetReport();
+    }
+
+    viewHistoryForYear() {
+        if (this.selectedYear !== undefined) {
+            console.log(this.selectedYear);
+            this.historyService.getReportForYear(this.selectedYear);
+        }
+    }
 }

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { StudentService } from '../../shared/services/student.service';
+import { SnackBarService } from '../../shared/services/snackbar.service';
 
 @Component({
     selector: 'app-apply-dialog-component',
@@ -15,6 +16,7 @@ export class ApplyDialogComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<ApplyDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private fb: FormBuilder,
+                private snackBarService: SnackBarService,
                 private studentService: StudentService) {
                     this.questions = data.questions;
                 }
@@ -27,8 +29,6 @@ export class ApplyDialogComponent implements OnInit {
         for (let i = 0; i < this.questions.length; i++) {
             this.addItem();
         }
-
-        // const control: FormArray = this.questionsForm.get('items') as FormArray;
     }
 
     createItem(): FormGroup {
@@ -45,10 +45,13 @@ export class ApplyDialogComponent implements OnInit {
     submit(): void {
         const request = this.prepareSubmit();
 
+        console.log(request);
+
         this.studentService.addPreference(request).subscribe(res => {
-            console.log(res);
+            this.snackBarService.showSnackBar('Ai aplicat cu succes la acest proiect!');
+            this.dialogRef.close();
         }, err => {
-            console.log(err);
+            this.snackBarService.showSnackBar('A intervenit o eroare in timpul aplicarii la proiect!');
         });
     }
 
@@ -67,8 +70,6 @@ export class ApplyDialogComponent implements OnInit {
                 answer: formModel.items[i].answer
             });
         }
-
-        console.log(request);
 
         return request;
     }

@@ -5,6 +5,7 @@ import { UploadService } from '../../shared/services/upload.service';
 import { ApplyDialogComponent } from '../apply-dialog/apply-dialog.component';
 import { MatDialog } from '@angular/material';
 import { StudentService } from '../../shared/services/student.service';
+import { SnackBarService } from '../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-project-details',
@@ -18,6 +19,7 @@ export class ProjectDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private uploadService: UploadService,
     private studentService: StudentService,
+    private snackBarService: SnackBarService,
     public dialog: MatDialog) {
       this.project = this.route.snapshot.data.message;
       console.log(this.project);
@@ -29,27 +31,30 @@ export class ProjectDetailsComponent implements OnInit {
 
 
   applyToProject() {
-    // this.studentService.checkIfStudentCanApply(this.project.id).subscribe(res => {
-    //   if (res === true) {
-    //     if (this.project.questions !== null) {
-    //       const dialogRef = this.dialog.open(ApplyDialogComponent, {
-    //         width: '600px',
-    //         data: {
-    //           projectId: this.project.id,
-    //           questions: this.project.questions
-    //         }
-    //       });
-    //     }
-    //   }
-    // }, err => {
-    //   console.log(err);
-    // });
-
-    this.studentService.addPreference(this.project.id).subscribe(res => {
-      console.log(res);
+    this.studentService.checkIfStudentCanApply(this.project.id).subscribe(res => {
+      if (res === true) {
+        if (this.project.questions !== null) {
+          const dialogRef = this.dialog.open(ApplyDialogComponent, {
+            width: '600px',
+            data: {
+              title: this.project.title,
+              projectId: this.project.id,
+              questions: this.project.questions
+            }
+          });
+        }
+      } else {
+        this.snackBarService.showSnackBar('Nu poti aplica de 2 ori la acelasi proiect!');
+      }
     }, err => {
       console.log(err);
     });
+
+    // this.studentService.addPreference(this.project.id).subscribe(res => {
+    //   console.log(res);
+    // }, err => {
+    //   console.log(err);
+    // });
   }
 
   downloadFile(filename: string) {

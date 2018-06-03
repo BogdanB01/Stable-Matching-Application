@@ -1,6 +1,5 @@
 package com.license.smapp.service.impl;
 
-import com.license.smapp.dto.UpdateProjectDTO;
 import com.license.smapp.model.*;
 import com.license.smapp.repository.BibliographyRepository;
 import com.license.smapp.repository.ProjectRepository;
@@ -158,6 +157,6 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Page<Project> filterActiveProjectsByTagName(boolean active, String filter, Pageable pageable) {
-        return projectRepository.findAllByActiveAndTags_NameStartingWithIgnoreCase(active, filter, pageable);
+        return projectRepository.findDistinctByActiveAndTags_NameStartingWithIgnoreCase(active, filter, pageable);
     }
 }

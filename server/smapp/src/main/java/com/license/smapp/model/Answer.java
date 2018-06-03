@@ -4,6 +4,9 @@ package com.license.smapp.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.license.smapp.common.EntityIdResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
 
 import javax.persistence.*;
 
@@ -72,4 +75,5 @@ public class Answer {
                 ", answer='" + answer + '\'' +
                 '}';
     }
+
 }

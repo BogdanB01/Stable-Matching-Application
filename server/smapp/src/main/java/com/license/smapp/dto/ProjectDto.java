@@ -1,7 +1,8 @@
 package com.license.smapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import com.license.smapp.common.EntityIdResolver;
+import com.license.smapp.model.Project;
 import com.license.smapp.model.Tag;
 
 import java.util.List;
@@ -17,7 +18,8 @@ public class ProjectDto {
     private List<QuestionDto> questions;
     private List<BibliographyDTO> bibliographies;
     private List<TagDto> tags;
-    private List<AssignedProjectsDto> assignedProjects;
+    @JsonManagedReference
+    private List<StudentDto> students;
     private FileDto file;
     private boolean active;
 
@@ -85,12 +87,12 @@ public class ProjectDto {
         this.tags = tags;
     }
 
-    public List<AssignedProjectsDto> getAssignedProjects() {
-        return assignedProjects;
+    public List<StudentDto> getStudents() {
+        return students;
     }
 
-    public void setAssignedProjects(List<AssignedProjectsDto> assignedProjects) {
-        this.assignedProjects = assignedProjects;
+    public void setStudents(List<StudentDto> students) {
+        this.students = students;
     }
 
     public FileDto getFile() {

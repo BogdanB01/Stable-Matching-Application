@@ -2,16 +2,21 @@ package com.license.smapp.controller;
 
 
 import com.license.smapp.common.DeviceProvider;
+import com.license.smapp.dto.UserDto;
 import com.license.smapp.model.User;
 import com.license.smapp.model.UserTokenState;
 import com.license.smapp.security.TokenHelper;
 import com.license.smapp.security.auth.JwtAuthenticationRequest;
 import com.license.smapp.service.impl.CustomUserDetailsService;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -35,10 +40,15 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
     private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private DeviceProvider deviceProvider;
+
+    private Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(
@@ -62,7 +72,10 @@ public class AuthenticationController {
         User user = (User)authentication.getPrincipal();
         String jws = tokenHelper.generateToken( user.getUsername(), device);
         int expiresIn = tokenHelper.getExpiredIn(device);
-        // Return the token
-        return ResponseEntity.ok(new UserTokenState(jws, Long.valueOf(expiresIn)));
+        // Return user basic info and token to store on client side
+        UserTokenState userTokenState = modelMapper.map(user, UserTokenState.class);
+        userTokenState.setAccessToken(jws);
+        userTokenState.setExpiresIn(Long.valueOf(expiresIn));
+        return ResponseEntity.ok(userTokenState);
     }
 }

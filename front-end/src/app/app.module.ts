@@ -17,7 +17,6 @@ import { EditProjectDialogComponent } from './components/edit-project-dialog/edi
 import { CreateProjectComponent } from './components/create-project/create-project.component';
 import { EditLecturerAccountComponent } from './components/edit-lecturer-account/edit-lecturer-account.component';
 import { ProjectListComponent } from './components/project-list/project-list.component';
-import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
 import { AdminAccountComponent } from './components/admin-account/admin-account.component';
 import { StatisticsDialogComponent } from './components/lecturer-project-statistics-dialog/statistics-dialog-component';
 import { SidemenuItemComponent } from './components/sidemenu-item/sidemenu-item.component';
@@ -28,7 +27,8 @@ import { LecturerProjectsComponent } from './components/lecturer-projects/lectur
 import { ApplyDialogComponent } from './components/apply-dialog/apply-dialog.component';
 import { SearchStudentDialogComponent } from './components/lecturer-projects/search-student-dialog.component';
 import { SearchProjectsComponent } from './components/search-projects/search-projects.component';
-
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
 import { MaterialModule } from './material.module';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -51,6 +51,7 @@ import { UploadService } from './shared/services/upload.service';
 import { StudentService } from './shared/services/student.service';
 import { UserService } from './shared/services/user.service';
 import { SnackBarService } from './shared/services/snackbar.service';
+import { HistoryService } from './shared/services/history.service';
 
 // resolvers
 import { ProjectDetailsResolve } from './shared/services/project.resolve.service';
@@ -65,6 +66,11 @@ import { EscapeHtmlPipe } from './shared/pipes/keep-html.pipe';
 import { QuillModule } from 'ngx-quill';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ApiInterceptor } from './shared/interceptors/api-interceptor';
+import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
+import { LoaderService } from './components/loader/loader.service';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +86,6 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     CreateProjectComponent,
     EditLecturerAccountComponent,
     ProjectListComponent,
-    EditStudentAccountComponent,
     AdminAccountComponent,
     StatisticsDialogComponent,
     SidemenuItemComponent,
@@ -92,7 +97,10 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     ApplyDialogComponent,
     DeleteDialogComponent,
     PastProjectsComponent,
-    SearchProjectsComponent
+    SearchProjectsComponent,
+    LoaderComponent,
+    EditStudentAccountComponent,
+    NotFoundComponent
   ],
   imports: [
     HttpClientModule,
@@ -125,7 +133,19 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     SearchService,
     StudentService,
     UserService,
-    SnackBarService
+    SnackBarService,
+    LoaderService,
+    HistoryService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

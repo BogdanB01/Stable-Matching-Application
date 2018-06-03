@@ -3,17 +3,15 @@ package com.license.smapp.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
-import javax.xml.ws.Response;
+import javax.servlet.http.HttpServletResponse;
+
 
 @ControllerAdvice
 public class ExceptionHandlingController {
@@ -33,6 +31,12 @@ public class ExceptionHandlingController {
     public ErrorDto handleResourceNotFoundException(ResourceNotFoundException ex) {
         LOGGER.error(ex.getMessage());
         return this.generateErrorDto(HttpStatus.NOT_FOUND, ex);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorDto> handleBadCredentialsException(BadCredentialsException ex) {
+        LOGGER.error(ex.getMessage());
+        return new ResponseEntity<>(this.generateErrorDto(HttpStatus.UNAUTHORIZED, ex), HttpStatus.UNAUTHORIZED);
     }
 
 //    @ExceptionHandler(Exception.class)

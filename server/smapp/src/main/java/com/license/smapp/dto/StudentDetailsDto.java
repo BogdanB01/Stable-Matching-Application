@@ -7,22 +7,22 @@ import java.util.List;
 
 public class StudentDetailsDto {
 
-    List<Answer> answers;
-    List<Grade> grades;
+    private List<FullAnswerDto> answers;
+    private List<GradeDto> grades;
 
-    public List<Answer> getAnswers() {
+    public List<FullAnswerDto> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public void setAnswers(List<FullAnswerDto> answers) {
         this.answers = answers;
     }
 
-    public List<Grade> getGrades() {
+    public List<GradeDto> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<Grade> grades) {
+    public void setGrades(List<GradeDto> grades) {
         this.grades = grades;
     }
 }

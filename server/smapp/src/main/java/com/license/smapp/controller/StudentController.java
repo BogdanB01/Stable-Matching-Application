@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.rmi.runtime.Log;
 
 import javax.validation.Valid;
+import java.lang.reflect.AnnotatedWildcardType;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,7 +42,6 @@ public class StudentController {
     @Autowired
     private QuestionService questionService;
 
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -63,9 +64,9 @@ public class StudentController {
      * @return An Student Object / message if the object was successfully found or not
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
         Student student = studentService.findById(id);
-        return ResponseEntity.ok(student); //return 200 with json body
+        return ResponseEntity.ok(modelMapper.map(student, StudentDto.class)); //return 200 with json body
     }
 
     /**
@@ -99,10 +100,10 @@ public class StudentController {
      * @param id the id of the object
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> updateStudent(@RequestBody Student student, @PathVariable Long id) {
+    public ResponseEntity<Void> updateStudent(@RequestBody Student student, @PathVariable Long id) throws ResourceNotFoundException {
         Student updatedStudent = this.studentService.findById(id);
         if(updatedStudent == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", id));
         }
 
         studentService.save(updatedStudent);
@@ -122,7 +123,7 @@ public class StudentController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<List<Student>> search(@RequestParam(value = "search", required = false) String searchTerm) {
+    public ResponseEntity<List<StudentDto>> search(@RequestParam(value = "search", required = false) String searchTerm) {
 
         List<Student> students = studentService.searchStudent(searchTerm);
         Type targetListType = new TypeToken<List<StudentDto>>() {}.getType();
@@ -157,7 +158,7 @@ public class StudentController {
         Integer count = preferenceService.countAllByProjectAndStudent(project, student);
 
         if (count != 0) {
-            throw new BadRequestException("Nu poti aplica de 2 ori la acelasi proiect!");
+            return ResponseEntity.ok(false);
         }
 
         return ResponseEntity.ok(true);
@@ -176,88 +177,67 @@ public class StudentController {
 
         StudentDetailsDto studentDetails = new StudentDetailsDto();
         // notele studentului
-        studentDetails.setGrades(student.getGrades());
+        studentDetails.setGrades(modelMapper.map(student.getGrades(), new TypeToken<List<GradeDto>>() {}.getType()));
 
         // raspunsurile la intrebarile proiectului
-        studentDetails.setAnswers(student.getAnswers().stream().filter(a -> a.getQuestion().getProject().getId().equals(projectId)).collect(Collectors.toList()));
-
-        // student.getPreferences().stream().filter(p -> p.getProject())
-
+        List<Answer> answers = student.getAnswers().stream().filter(a -> a.getQuestion().getProject().getId().equals(projectId)).collect(Collectors.toList());
+        studentDetails.setAnswers(modelMapper.map(answers, new TypeToken<List<FullAnswerDto>>() {}.getType()));
         return ResponseEntity.ok(studentDetails);
     }
 
-    @RequestMapping(value = "/{id}/preferences", method = RequestMethod.POST)
-    public ResponseEntity<?> addPreferenceToStudent(@PathVariable Long id,
-                                                    @RequestParam Long projectId) throws ResourceNotFoundException, BadRequestException {
-
+    @RequestMapping(value = "/{id}/project", method = RequestMethod.GET)
+    public ResponseEntity<?> getAssignedProjectForStudent(@PathVariable Long id) throws ResourceNotFoundException {
         Student student = studentService.findById(id);
+
         if (student == null) {
             throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", id));
         }
 
-        Project project = projectService.findById(projectId);
-
-        if (project == null) {
-            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", projectId));
-        }
-
-        // check if student already applied to this project
-
-        Integer count = preferenceService.countAllByProjectAndStudent(project, student);
-
-        if (count != 0) {
-            throw new BadRequestException("Nu poti aplica de 2 ori la acelasi proiect!");
-        }
-        Preference preference = new Preference() {{setProject(project); }};
-        student.addPreference(preference);
-        studentService.update(student);
-
-        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
+        ProjectDto projectDto = modelMapper.map(student.getProject(), ProjectDto.class);
+        return ResponseEntity.ok(projectDto);
     }
 
-
     // TODO: refactor this
-//    @RequestMapping(value = "/{id}/preferences", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-//    public ResponseEntity<?> addPreferenceToStudent(@PathVariable Long id,
-//                                                    @RequestBody CreatePreferenceDTO preferenceDto) throws ResourceNotFoundException, URISyntaxException {
-//
-//        Student student = studentService.findById(id);
-//
-//        if (student == null) {
-//            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", id));
-//        }
-//
-//
-//        Project project = projectService.findById(preferenceDto.getProjectId());
-//
-//        if (project == null) {
-//            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", preferenceDto.getProjectId()));
-//        }
-//
-//
-//        modelMapper.typeMap(AnswerDto.class, Answer.class).addMappings(mp -> {
-//            mp.<Long>map(src -> src.getQuestionId(), (dest, v) -> dest.getQuestion().setId(v));
-//        });
-//
-//        LOGGER.error(student.getAvg().toString());
-//
-//        List<Answer> answers = modelMapper.map(preferenceDto.getAnswers(), new TypeToken<List<Answer>>() {}.getType());
-//
-//        for(Answer answer : answers) {
-//            Question question = questionService.findById(answer.getQuestion().getId());
-//            if (question == null) {
-//                throw new ResourceNotFoundException(String.format("Intrebarea cu id-ul=%s nu a fost gasita!", question.getId()));
-//            }
-//            answer.setQuestion(question);
-//            student.addAnswer(answer);
-//        }
-//
-//        student.addPreference(new Preference() {{setProject(project); }});
-//
-//        studentService.update(student);
-//
-//      return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/{id}/preferences", method = RequestMethod.POST)
+    public ResponseEntity<?> addPreferenceToStudent(@PathVariable Long id,
+                                                    @RequestBody CreatePreferenceDTO preferenceDto) throws ResourceNotFoundException, URISyntaxException {
+
+        LOGGER.error("SALUT");
+        Student student = studentService.findById(id);
+
+        if (student == null) {
+            throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        Project project = projectService.findById(preferenceDto.getProjectId());
+
+        if (project == null) {
+            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul=%s nu a fost gasit!", preferenceDto.getProjectId()));
+        }
+
+        modelMapper.typeMap(AnswerDto.class, Answer.class).addMappings(mp -> {
+            mp.<Long>map(src -> src.getQuestionId(), (dest, v) -> dest.getQuestion().setId(v));
+        });
+
+        LOGGER.error(student.getAvg().toString());
+
+        List<Answer> answers = modelMapper.map(preferenceDto.getAnswers(), new TypeToken<List<Answer>>() {}.getType());
+
+        for(Answer answer : answers) {
+            Question question = questionService.findById(answer.getQuestion().getId());
+            if (question == null) {
+                throw new ResourceNotFoundException(String.format("Intrebarea cu id-ul=%s nu a fost gasita!", question.getId()));
+            }
+            answer.setQuestion(question);
+            student.addAnswer(answer);
+        }
+
+        student.addPreference(new Preference() {{setProject(project); }});
+
+        studentService.update(student);
+
+      return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+    }
 
 
     @RequestMapping(value = "/{id}/preferences", method = RequestMethod.GET)
@@ -268,16 +248,14 @@ public class StudentController {
         if (student == null) {
             throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", id));
         }
-
-        List<PreferenceDto> preferences = modelMapper.map(student.getPreferences(), new TypeToken<List<PreferenceDto>>() {}.getType());
+        List<Preference> dbPreferences = student.getPreferences().stream().filter(a -> a != null).collect(Collectors.toList());
+        List<PreferenceDto> preferences = modelMapper.map(dbPreferences, new TypeToken<List<PreferenceDto>>() {}.getType());
         return ResponseEntity.ok(preferences);
     }
 
     @RequestMapping(value = "/{id}/preferences/{preferenceId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePreferenceFromStudent(@PathVariable Long id,
                                                          @PathVariable Long preferenceId) throws ResourceNotFoundException, BadRequestException {
-
-        LOGGER.error("STUDENT ID " + id);
 
         Student student = studentService.findById(id);
 
@@ -291,13 +269,17 @@ public class StudentController {
             throw new ResourceNotFoundException(String.format("Preferinta cu id-ul=%s nu a fost gasita!", id));
         }
 
-        boolean exists = student.getPreferences().stream().anyMatch(p -> p.getId().equals(preferenceId));
+        boolean exists = student.getPreferences().stream().filter(p -> p != null).anyMatch(p -> p.getId().equals(preferenceId));
 
         if (!exists) {
             throw new BadRequestException(String.format("Preferinta cu id-ul=%s nu apartine studentului cu id-ul=%s", preferenceId, id));
         }
 
         student.removePreference(preference);
+
+        // get answers of student if any
+        List<Answer> answers = student.getAnswers().stream().filter(a -> a.getQuestion().getProject().equals(preference.getProject())).collect(Collectors.toList());
+        answers.forEach(a -> student.removeAnswer(a));
 
         studentService.update(student);
 

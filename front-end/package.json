@@ -31,6 +31,7 @@
     "file-saver": "^1.3.8",
     "hammerjs": "^2.0.8",
     "jquery": "^3.3.1",
+    "ng-http-loader": "^1.0.2",
     "ng2-dnd": "^5.0.2",
     "ngx-bootstrap": "^2.0.3",
     "ngx-editor": "^3.3.0-rc.13",

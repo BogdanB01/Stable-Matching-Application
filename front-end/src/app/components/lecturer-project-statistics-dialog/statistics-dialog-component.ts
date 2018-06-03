@@ -23,13 +23,25 @@ export class StatisticsDialogComponent implements  OnInit {
                          ['Criptografie', 'avansata'],
                          ['Stable', 'matching'],
                          ['Partajarea', 'secretelor'],
+                         ['Proiect de', 'licenta'],
+                         ['Aplicatii', 'ale', 'stable', 'matching'],
+                         ['Baze de', 'date de', 'tip graf'],
+                         ['Criptografie', 'avansata'],
+                         ['Stable', 'matching'],
+                         ['Partajarea', 'secretelor'],
+                         ['Proiect de', 'licenta'],
+                         ['Aplicatii', 'ale', 'stable', 'matching'],
+                         ['Baze de', 'date de', 'tip graf'],
+                         ['Criptografie', 'avansata'],
+                         ['Stable', 'matching'],
+                         ['Partajarea', 'secretelor'],
                          ['Proiect de', 'licenta']
                         ],
                 datasets: [
                     {
                         backgroundColor: '#7E57C2',
                         borderColor: '#7E57C2',
-                        data: [0, 1, 2, 4, 2, 1],
+                        data: [0, 1, 2, 4, 2, 1, 0, 1, 2, 4, 2, 1,0, 1, 2, 4, 2, 1],
                         label: 'Numar studenti',
                         fill: 'false'
                     },

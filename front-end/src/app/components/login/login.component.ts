@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
+import { User } from '../../shared/interfaces/user';
 
 
 @Component({
@@ -25,8 +26,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService.login({email: 'ana', password: 'mere'});
-    this.submitted = true;
+
+    const formModel = this.loginForm.value;
+    const user: User = {
+      email: formModel.email as string,
+      password: formModel.password as string
+    };
+    this.authService.login(user);
+
   }
 
 }

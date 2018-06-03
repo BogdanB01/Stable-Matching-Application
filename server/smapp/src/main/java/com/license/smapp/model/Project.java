@@ -7,10 +7,11 @@ import org.hibernate.annotations.SortComparator;
 import org.hibernate.annotations.SortNatural;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.expression.spel.ast.Assign;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * The Project JPA Entity
@@ -55,10 +56,11 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private File file;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<AssignedProjects> assignedProjects;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Student> students;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @SortNatural
     private SortedSet<Preference> preferences;
 
@@ -153,12 +155,12 @@ public class Project {
         this.file = file;
     }
 
-    public List<AssignedProjects> getAssignedProjects() {
-        return assignedProjects;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public void setAssignedProjects(List<AssignedProjects> assignedProjects) {
-        this.assignedProjects = assignedProjects;
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     public void addBibliography(Bibliography newBibliography) {
@@ -185,6 +187,18 @@ public class Project {
         }
     }
 
+    public void addStudent(Student student) {
+        student.setProject(this);
+        students.add(student);
+    }
+
+    public void removeStudent(Student student) {
+        students.remove(student);
+        if (student != null) {
+            student.setProject(null);
+        }
+    }
+
     public void addTag(Tag newTag) {
         tags.add(newTag);
     }
@@ -193,17 +207,6 @@ public class Project {
         tags.remove(tag);
     }
 
-    public void assignProject(AssignedProjects assignedProjects) {
-        assignedProjects.setProject(this);
-        this.assignedProjects.add(assignedProjects);
-    }
-
-    public void unnasignStudent(AssignedProjects assigned) {
-        assignedProjects.remove(assigned);
-        if(assigned != null) {
-            assigned.setProject(null);
-        }
-    }
 
     public SortedSet<Preference> getPreferences() {
         return preferences;
@@ -221,19 +224,44 @@ public class Project {
         this.active = active;
     }
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", capacity=" + capacity +
-                ", lecturer=" + lecturer +
-                ", bibliographies=" + bibliographies +
-                ", tags=" + tags +
-                ", questions=" + questions +
-                ", file=" + file +
-                ", assignedProjects=" + assignedProjects +
-                '}';
+
+    /*
+     * SPA helper methods
+     */
+    public boolean isOverSubscribed() {
+        return (capacity - students.size()) < 0;
     }
+
+    public boolean isFull() {
+        return (capacity - students.size()) == 0;
+    }
+
+    public Student getWorstAssignedStudent() {
+        Student worstStudent = null;
+
+        for (Preference preference : preferences){
+            if (preference.getStudent().getProject() == null) {
+                continue;
+            }
+            if (preference.getStudent().getProject().getId().equals(this.getId())) {
+                worstStudent = preference.getStudent();
+            }
+        }
+
+        return worstStudent;
+    }
+
+    public void deleteSuccessors(Student student) {
+        boolean canDelete = false;
+        for (Preference preference : preferences) {
+            if (canDelete) {
+                preference.getStudent().removeProject(this);
+            }
+            if (preference.getStudent().equals(student)) {
+                canDelete = true;
+            }
+        }
+    }
+
+
 }

@@ -1,18 +1,19 @@
 package com.license.smapp;
 
 import com.license.smapp.service.StorageService;
-import org.apache.coyote.http11.AbstractHttp11Protocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
 
 @SpringBootApplication
 public class SmappApplication implements CommandLineRunner{
+
+	Logger LOGGER = LoggerFactory.getLogger(SmappApplication.class);
 
 	@Resource
 	StorageService storageService;

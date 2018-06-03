@@ -1,19 +1,20 @@
 package com.license.smapp.dto;
 
-import javax.validation.constraints.NotNull;
-
-public class CreateCourseDTO {
-
-    @NotNull
+public class CourseDto {
+    private Long id;
     private String abbreviation;
-    @NotNull
     private String name;
-    @NotNull
     private int year;
-    @NotNull
     private int semester;
-    @NotNull
     private String code;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getAbbreviation() {
         return abbreviation;

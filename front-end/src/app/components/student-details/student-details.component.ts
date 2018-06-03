@@ -15,14 +15,6 @@ export class StudentDetailsComponent implements OnInit {
     @Input() preference: any;
     constructor(private studentService: StudentService) {}
 
-    grades = [
-
-    ];
-
-    questions = [
-
-    ];
-
     ngOnInit(): void {
         console.log(this.preference);
     }
@@ -31,10 +23,10 @@ export class StudentDetailsComponent implements OnInit {
         if (this.expandedFirstTime === false) {
             this.studentService.getDetails(this.preference.student.id, this.projectId).subscribe(res => {
                 this.details = res;
+                this.expandedFirstTime = true;
                 console.log(res);
             });
 
         }
-        this.expandedFirstTime = true;
     }
 }

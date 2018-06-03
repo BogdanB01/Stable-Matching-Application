@@ -9,6 +9,7 @@ import { SnackBarService } from './snackbar.service';
 export class ProjectService {
 
     dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+    lecturerId = 31;
 
     constructor(private http: HttpClient,
                 private snackBarService: SnackBarService) {}
@@ -18,7 +19,6 @@ export class ProjectService {
     }
 
     public getProjects(pageNumber: any, pageSize: any, type: any, filter: any): Observable<any> {
-        console.log('salut');
         return this.http.get(`${APP_CONSTANTS.ENDPOINT}/projects`, {
             params: {
                 type: type,
@@ -30,16 +30,16 @@ export class ProjectService {
     }
 
     public createProject(project: any): Observable<any> {
-        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/lecturers/300/projects`, project);
+        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/projects`, project);
     }
 
     public updateProjects(projects: any): Observable<any> {
-        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/lecturers/300/projects`, projects);
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/projects`, projects);
     }
 
     public getActiveProjectsForLecturer(): void {
 
-        this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/300/activeProjects`).subscribe(data => {
+        this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/activeProjects`).subscribe(data => {
             this.dataChange.next(data);
         },
         (error: HttpErrorResponse) => {
@@ -48,7 +48,7 @@ export class ProjectService {
     }
 
     public getInactiveProjectsForLecturer(): Observable<any> {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/300/inactiveProjects`);
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/inactiveProjects`);
     }
 
     public getProject(id: number): Observable<any> {

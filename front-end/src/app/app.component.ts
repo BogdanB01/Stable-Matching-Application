@@ -85,6 +85,12 @@ export class AppComponent {
         }
       ]
     },
+    {
+      'name': 'LogOut',
+      'icon': 'exit_to_app',
+      'link': true,
+      'open': false
+    }
   ];
 
 
@@ -97,6 +103,8 @@ export class AppComponent {
       this._mobileQueryListener = () => changeDetectorRef.detectChanges();
       this.mobileQuery.addListener(this._mobileQueryListener);
       this.isLoggedIn$ = this.authService.isLoggedIn;
+
+      console.log(this.isLoggedIn$);
 
   }
 

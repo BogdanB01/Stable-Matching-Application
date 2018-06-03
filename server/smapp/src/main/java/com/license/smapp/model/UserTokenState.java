@@ -1,6 +1,9 @@
 package com.license.smapp.model;
 
 public class UserTokenState {
+    private Long id;
+    private String email;
+    private String name;
     private String accessToken;
     private Long expiresIn;
 
@@ -28,5 +31,29 @@ public class UserTokenState {
 
     public void setExpiresIn(Long expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

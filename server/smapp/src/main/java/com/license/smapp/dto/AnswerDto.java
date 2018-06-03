@@ -1,7 +1,5 @@
 package com.license.smapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class AnswerDto {
     private Long id;
 

@@ -2,11 +2,26 @@
     <mat-toolbar class="table-header">
         <h1 class="mat-headline center-align">Proiecte propuse</h1>
 
-        <button mat-button type="button" (click)="openPastProjectsDialog()">
+        <!-- <button mat-button type="button" (click)="openPastProjectsDialog()">
             <mat-icon> unarchive </mat-icon>
             <span> Proiecte din anii trecuti </span>
-        </button>
+        </button> -->
 
+        <mat-menu #appMenu="matMenu">
+           
+            <button mat-menu-item (click)="openPastProjectsDialog()">
+                Proiecte din anii trecuti
+            </button>
+
+            <button mat-menu-item (click)="openStatisticsDialog()">
+                Statistici proiecte
+            </button>
+                     
+        </mat-menu>
+
+        <button mat-icon-button [matMenuTriggerFor]="appMenu"> 
+            <mat-icon> more_vert </mat-icon> 
+        </button>
         <!-- <button mat-button type="button" (click)="openStatisticsDialog()">
             <mat-icon> assessment </mat-icon>
             <span> Statistici proiecte </span>
@@ -33,15 +48,13 @@
                     
                     <mat-cell *matCellDef="let element; let i = index"> 
                         
-                        <div *ngIf="!element.assignedProjects.length">
+                        <div *ngIf="!element.students.length">
                             None
                         </div> 
 
                         <mat-chip-list #chipList>
-                            <mat-chip *ngFor="let stud of element.assignedProjects; let j = index"
-                            [removable]="true" (remove)="unassignStudent(stud.student.id, element.id)">
-                                {{stud.student.name}}
-                                <mat-icon matChipRemove>cancel</mat-icon>
+                            <mat-chip *ngFor="let stud of element.students; let j = index">
+                                {{stud.name}}
                             </mat-chip>
                         </mat-chip-list>
 

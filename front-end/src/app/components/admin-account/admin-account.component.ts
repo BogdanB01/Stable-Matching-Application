@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 import { Observable } from 'rxjs/Observable';
 import { UserService } from '../../shared/services/user.service';
 import { tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, MatDialog } from '@angular/material';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 
 @Component({
@@ -12,13 +12,14 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 })
 export class AdminAccountComponent implements OnInit, AfterViewInit {
 
-  displayedColumns = ['email', 'role', 'actions'];
+  displayedColumns = ['email', 'name', 'role', 'actions'];
   dataSource: UsersDataSource;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('input') input: ElementRef;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+              public dialog: MatDialog) {}
 
   ngOnInit() {
     this.dataSource = new UsersDataSource(this.userService);
@@ -57,17 +58,24 @@ export class AdminAccountComponent implements OnInit, AfterViewInit {
 
   removeUser(user): void {
     console.log(user);
-    this.userService.deleteUser(user.id).subscribe(res => {
-      console.log('l-am sters pe fraer');
-      this.refreshTable();
-    }, err => {
-      console.log(err);
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '350px',
+      data: {
+        title: user.name
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 1) {
+        this.userService.deleteUser(user.id).subscribe(res => {
+          this.refreshTable();
+        }, err => {
+          console.log(err);
+        });
+      }
     });
   }
 
-  updateUser(user): void {
-    console.log(user);
-  }
 
   private refreshTable(): void {
 
@@ -90,6 +98,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { DeleteDialogComponent } from '../../dialogs/delete/delete.dialog.component';
 
 export interface Page {
   content: Array<any>;

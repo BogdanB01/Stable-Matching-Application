@@ -13,10 +13,7 @@
                     <input matInput placeholder="Cauta utilizatori" #input>
                 </mat-input-container>
             </div>
-            <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-                <mat-spinner></mat-spinner>
-            </div>
-
+           
             <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
 
                 <ng-container matColumnDef="email">
@@ -24,6 +21,11 @@
                     <mat-cell *matCellDef="let element">{{element.email}}</mat-cell>
                 </ng-container>
             
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef>name</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                </ng-container>
+
                 <ng-container matColumnDef="role">
                     <mat-header-cell *matHeaderCellDef>role</mat-header-cell>
                     <mat-cell class="description-cell"
@@ -40,9 +42,6 @@
                             <i class="material-icons" (click)="removeUser(element)">delete</i>
                         </button>
 
-                        <button mat-icon-button *ngIf="element.roles[0].name !== 'ROLE_ADMIN'">
-                            <i class="material-icons" (click)="updateUser(element)"> mode_edit </i>
-                        </button>
                     </mat-cell>
                 </ng-container>
             

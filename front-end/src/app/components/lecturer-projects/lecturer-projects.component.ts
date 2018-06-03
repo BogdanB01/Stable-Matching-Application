@@ -32,18 +32,18 @@ export class LecturerProjectsComponent implements OnInit {
                 private router: Router,
                 private snackBarService: SnackBarService) {}
 
-    unassignStudent(studentId, projectId): void {
-      this.projectService.unassignStudent(projectId, studentId).subscribe(data => {
+    // unassignStudent(studentId, projectId): void {
+    //   this.projectService.unassignStudent(projectId, studentId).subscribe(data => {
 
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === projectId);
-        this.exampleDatabase.dataChange.value[foundIndex] = data;
-        this.projectService.dataChange.next(this.projectService.dataChange.value);
-        this.snackBarService.showSnackBar('Studentul a fost sters cu succes!');
-      }, err => {
-        console.log(err);
-        this.snackBarService.showSnackBar('A aparut o eroare la stergerea studentului!');
-      });
-    }
+    //     const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === projectId);
+    //     this.exampleDatabase.dataChange.value[foundIndex] = data;
+    //     this.projectService.dataChange.next(this.projectService.dataChange.value);
+    //     this.snackBarService.showSnackBar('Studentul a fost sters cu succes!');
+    //   }, err => {
+    //     console.log(err);
+    //     this.snackBarService.showSnackBar('A aparut o eroare la stergerea studentului!');
+    //   });
+    // }
 
     removeProject(id: number): void {
 
@@ -115,7 +115,7 @@ export class LecturerProjectsComponent implements OnInit {
 
     openStatisticsDialog(): void {
       const dialogRef = this.dialog.open(StatisticsDialogComponent, {
-        width: '600px'
+        width: '1000px'
       });
     }
 

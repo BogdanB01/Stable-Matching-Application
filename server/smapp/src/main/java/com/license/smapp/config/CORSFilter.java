@@ -12,14 +12,14 @@ import java.io.IOException;
  * Source: https://stackoverflow.com/questions/39565438/no-access-control-allow-origin-error-with-spring-restful-hosted-in-pivotal-web
  */
 @Component
-public class CORSFilter implements Filter {
+public class CorsFilter implements Filter {
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
         chain.doFilter(req, res);
     }
 

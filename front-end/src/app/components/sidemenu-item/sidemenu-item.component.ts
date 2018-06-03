@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
     selector: 'app-sidemenu-item',
@@ -11,7 +12,7 @@ export class SidemenuItemComponent implements OnInit {
     @Input() iconOnly;
     @Input() secondaryMenu = false;
 
-    constructor() { }
+    constructor(private authService: AuthService) { }
 
     ngOnInit() {
 
@@ -34,5 +35,14 @@ export class SidemenuItemComponent implements OnInit {
 
     chechForChildMenu() {
         return (this.menu && this.menu.sub) ? true : false;
+    }
+
+    click() {
+        this.menu.open = !this.menu.open;
+        console.log(this.menu);
+        if (this.menu.name === 'LogOut') {
+            console.log('salut');
+            this.authService.logout();
+        }
     }
 }

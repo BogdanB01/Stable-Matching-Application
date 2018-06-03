@@ -1,37 +1,58 @@
-<div fxFlex fxLayout="column">
+<div fxLayout="column" style="margin-bottom: 60px">
 
-   
-    <h1 class="title"> Proiectele la care am aplicat </h1>
-     
-                
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+        <h1> Aplicarile mele </h1>           
+    </div>
     <div style="margin: auto">
-        <button mat-button color="primary" (click)="draggable = !draggable">
+        <button mat-raised-button color="primary" (click)="draggable = !draggable">
             <mat-icon> low_priority </mat-icon>
             Reordoneaza lista
         </button>
-        <button mat-button color="primary" (click)="draggable = false" (click) = "saveOrder()">
+        <button mat-raised-button color="primary" (click)="draggable = false" (click) = "saveOrder()">
             <mat-icon> save </mat-icon>
             Salveaza modificarile
         </button>
     </div>
-    <div fxFlex class="container"> 
 
-        <div class="projects"  dnd-sortable-container [sortableData]="preferences">
+    <div fxLayout="row" class="container"> 
 
-            <mat-nav-list fxLayout="column">
+        <div class="projects"  dnd-sortable-container [sortableData]="preferences" fxFlex>
+
+            <mat-nav-list fxLayout="column"> 
 
                 <mat-list-item [ngClass]="{'shake': draggable}" *ngFor="let item of preferences; let i = index" [dragEnabled]="draggable" dnd-sortable [sortableIndex]="i">
-                        <p class="number">{{i + 1}}</p> {{ item.project.title }}
                         
-                        <button mat-icon-button>
-                            <i class="material-icons" (click)="removeProject(i)">close</i>
-                        </button>
+                       
+                            <div>
+                              <span>{{i + 1}}</span> {{ item.project.title }}
+                            </div>
+
+                            <div fxFlex fxLayoutAlign="end">
+                                <button mat-icon-button [routerLink]="['/projects', item.project.id]">
+                                    <i class="material-icons"> open_in_new </i>
+                                </button>
+                                <button mat-icon-button>
+                                    <i class="material-icons" (click)="removeProject(i)">close</i>
+                                </button>
+                            </div>
                 </mat-list-item>
 
             </mat-nav-list>
         
         </div>
 
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center" style="margin-top: 40px" *ngIf="project"> 
+        <mat-card style="width: 80%" >
+            <mat-card-header> 
+                <div mat-card-title> Proiectul asignat </div>
+            </mat-card-header>
+
+            <mat-card-content>
+                
+            </mat-card-content>
+        </mat-card>
     </div>
 
 </div>

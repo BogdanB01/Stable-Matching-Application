@@ -4,6 +4,7 @@ import { tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { ProjectListComponent } from '../project-list/project-list.component';
 
+
 @Component({
     selector: 'app-search-projects',
     templateUrl: './search-projects.component.html',
@@ -17,6 +18,10 @@ export class SearchProjectsComponent implements AfterViewInit {
   @ViewChild('child')
   private child: ProjectListComponent;
 
+
+  constructor() {
+  }
+
   ngAfterViewInit(): void {
 
     fromEvent(this.input.nativeElement, 'keyup')
@@ -28,6 +33,5 @@ export class SearchProjectsComponent implements AfterViewInit {
         })
     )
     .subscribe();
-
   }
 }

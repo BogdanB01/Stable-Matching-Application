@@ -193,6 +193,13 @@ create table files (
 	project_id bigint references projects(id) on delete restrict
 );
 
+create table history (
+	id bigint primary key,
+	student_name varchar(255),
+	project_title varchar(255), 
+	year integer
+);
+
 insert into courses(id, name, abbreviation, semester, year, code) values (nextval('course_seq'), 'Structuri de date', 'SD', 1, 1, 'CS1101');
 insert into courses(id, name, abbreviation, semester, year, code) values (nextval('course_seq'), 'Arhitectura calculatoarelor si sisteme de operare', 'ACSO', 1, 1, 'CS1102');
 insert into courses(id, name, abbreviation, semester, year, code) values (nextval('course_seq'), 'Logica pentru informatica', '', 1, 1, 'CS1103');

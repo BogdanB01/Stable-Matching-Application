@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.license.smapp.common.EntityIdResolver;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.method.P;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +15,7 @@ import java.util.logging.Logger;
 
 @Entity
 @Table(name = "preferences")
-public class Preference implements Comparable<Preference>{
+public class Preference implements Comparable<Preference>, Cloneable{
 
     @Id
     @SequenceGenerator(name = "stud_pref_seq", sequenceName = "stud_pref_seq")
@@ -112,6 +114,7 @@ public class Preference implements Comparable<Preference>{
 
     @Override
     public int compareTo(Preference preference) {
+
         final int BEFORE = -1;
         final int EQUAL = 0;
         final int AFTER = 1;
@@ -138,4 +141,16 @@ public class Preference implements Comparable<Preference>{
             }
         }
     }
+
+    @Override
+    public Preference clone() {
+        Preference clone = null;
+        try {
+            clone = (Preference) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        return clone;
+    }
+
 }

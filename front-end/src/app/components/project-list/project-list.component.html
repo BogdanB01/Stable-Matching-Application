@@ -1,6 +1,6 @@
-<div class="wrapper"> 
+<div class="wrapper" fxLayout="column"> 
 
-    <div class="test" fxLayout="row" style="padding: 20px;">
+    <!-- <div class="test" fxLayout="row" style="padding: 20px;">
         
         <div *ngIf="!projects">
             Nu a fost gasit nici un proiect!
@@ -10,9 +10,23 @@
             <app-project-card [project]="proj"> </app-project-card>
         </div>
 
-    </div>
+    </div> -->
 
-    
+    <!-- <div fxLayout="row wrap" fxLayoutGap="20px" style="padding: 20px" fxLayoutAlign="center center">
+        <app-project-card fxFlex.gt="calc(25% - 20px)" 
+                          fxFlex.md="calc(33% - 20px)"
+                          fxFlex.sm="calc(50% - 20px)"
+                          fxFlex.xs="calc(100% - 20px)"
+                        
+        *ngFor="let proj of projects" [project]="proj"> </app-project-card>
+    </div> -->
+    <mat-grid-list rowHeight="300px" [cols]="cols | async" gutterSize="16px" style="margin-top: 20px">
+        <mat-grid-tile *ngFor="let proj of projects" fxLayoutAlign="center center">
+            <app-project-card fxLayoutAlign="center" fxFlex="grow" [project]="proj"> </app-project-card>
+        </mat-grid-tile>
+      
+    </mat-grid-list>
+
     <mat-paginator [length]="length"
                    [pageSize]="6"
                    [pageSizeOptions]="[6, 12, 24]">

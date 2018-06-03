@@ -1,26 +1,25 @@
 <div fxLayout="column" class="components-container-gt-xs" [ngClass.xs]="'components-container-xs'" fxLayoutGap="20px" style="padding: 10px;">
     
-    <form class="example-form">
+    <form class="example-form" fxLayout="column">
         
-        <div  [fxLayout]="direction" fxLayoutAlign="center center" class="search">
-            <mat-form-field floatPlaceholder="never">
+        <div class="search" fxLayout="row" fxLayoutAlign="center center">
+
+            <mat-form-field floatPlaceholder="never" fxLayout="column" style="width: 50%">
                 <input matInput placeholder="Cauta proiecte" #input>
             </mat-form-field>   
-            <button type="submit" mat-icon-button fxHide="true" [fxHide.gt-xs]="false">
-                <i class="material-icons">search</i>
-            </button>
+        
         </div>
 
-        <mat-radio-group [(ngModel)]="searchType" fxLayout="row" fxLayoutGap=40px [fxLayout]="direction" fxLayoutAlign="center center" name="test">
-            <mat-radio-button value="title">
+        <mat-radio-group [(ngModel)]="searchType" fxLayout="row" fxLayoutGap=40px fxLayoutAlign="center center" name="test">
+            <mat-radio-button value="title" color="primary">
                 Titlu
             </mat-radio-button>
 
-            <mat-radio-button value="tag">
+            <mat-radio-button value="tag" color="primary">
                     Tag
             </mat-radio-button>
             
-            <mat-radio-button value="lecturer">
+            <mat-radio-button value="lecturer" color="primary">
                 Profesor
             </mat-radio-button>
         </mat-radio-group>

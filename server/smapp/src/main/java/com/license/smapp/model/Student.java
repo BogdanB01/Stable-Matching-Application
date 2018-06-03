@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.license.smapp.common.EntityIdResolver;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Student JPA entity
@@ -22,7 +24,7 @@ import java.util.List;
         resolver = EntityIdResolver.class,
         scope = Student.class
 )
-public class Student extends User{
+public class Student extends User implements Serializable{
 
     @Column(name="registration_number")
     private String registrationNumber;
@@ -30,26 +32,27 @@ public class Student extends User{
     @OneToMany(mappedBy = "student")
     private List<Grade> grades;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @OrderColumn(name ="index")
     private List<Preference> preferences;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 
-    @OneToOne(mappedBy = "student")
-    private AssignedProjects assignedProject;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public Student() {
 
     }
 
-    public AssignedProjects getAssignedProject() {
-        return assignedProject;
+    public Project getProject() {
+        return project;
     }
 
-    public void setAssignedProject(AssignedProjects assignedProject) {
-        this.assignedProject = assignedProject;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public String getRegistrationNumber() {
@@ -127,6 +130,25 @@ public class Student extends User{
 
     @Transient
     public Double getAvg() {
+        if (this.grades == null || this.grades.size() == 0) {
+            return Double.valueOf(0);
+        }
         return this.grades.stream().mapToInt(g -> g.getValue()).average().getAsDouble();
     }
+
+    /**
+     *  SPA algorithm helper methods
+     */
+    public boolean isFree() {
+        return project == null;
+    }
+
+    public Project getFirstProject() {
+        return this.preferences.get(0).getProject();
+    }
+
+    public void removeProject(Project project) {
+        preferences.removeIf(p -> p.getProject().equals(project));
+    }
+
 }
