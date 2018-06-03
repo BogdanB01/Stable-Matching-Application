@@ -1,8 +1,8 @@
 package com.license.smapp.util.solver;
 
-import com.license.smapp.model.*;
-import com.license.smapp.repository.ProjectRepository;
-import com.license.smapp.repository.StudentRepository;
+import com.license.smapp.entity.model.*;
+import com.license.smapp.entity.repository.ProjectRepository;
+import com.license.smapp.entity.repository.StudentRepository;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;

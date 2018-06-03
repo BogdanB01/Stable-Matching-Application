@@ -4,9 +4,9 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.license.smapp.model.History;
-import com.license.smapp.model.Project;
-import com.license.smapp.model.Student;
+import com.license.smapp.entity.model.History;
+import com.license.smapp.entity.model.Project;
+import com.license.smapp.entity.model.Student;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

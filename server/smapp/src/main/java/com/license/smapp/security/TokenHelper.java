@@ -2,7 +2,7 @@ package com.license.smapp.security;
 
 
 import com.license.smapp.common.TimeProvider;
-import com.license.smapp.model.User;
+import com.license.smapp.entity.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

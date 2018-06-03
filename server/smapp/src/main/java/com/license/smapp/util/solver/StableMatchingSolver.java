@@ -1,7 +1,7 @@
 package com.license.smapp.util.solver;
 
-import com.license.smapp.model.Project;
-import com.license.smapp.model.Student;
+import com.license.smapp.entity.model.Project;
+import com.license.smapp.entity.model.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

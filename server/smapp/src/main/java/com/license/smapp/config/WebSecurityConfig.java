@@ -2,8 +2,7 @@ package com.license.smapp.config;
 
 import com.license.smapp.security.TokenHelper;
 import com.license.smapp.security.auth.RestAuthenticationEntryPoint;
-import com.license.smapp.security.auth.TokenAuthenticationFilter;
-import com.license.smapp.service.impl.CustomUserDetailsService;
+import com.license.smapp.control.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.session.SessionManagementFilter;
 
 @Configuration
 @EnableWebSecurity
