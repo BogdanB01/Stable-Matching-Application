@@ -24,11 +24,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this._mobileQueryListener = () => changeDetectorRef.detectChanges();
       this.mobileQuery.addListener(this._mobileQueryListener);
   }
-
-  ngOnInit() {
-    this.isLoggedIn$ = this.authService.isLoggedIn;
-  }
-
+  ngOnInit() {}
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }

@@ -8,4 +8,5 @@ import java.util.Map;
 public interface MatchingService {
 
     Map<Student, Project> match();
+    void saveSolution(Map<Student, Project> matches);
 }

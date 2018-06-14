@@ -1,7 +1,7 @@
-<mat-card class="project-card">
+<mat-card class="project-card" fxFlex>
     <mat-card-header>
         <mat-card-title>{{project.title}}</mat-card-title>
-        <mat-card-subtitle> Propus de: {{project.lecturer.name}} </mat-card-subtitle>
+        <mat-card-subtitle> {{'PROJECTS.PROPOSER' | translate }}: {{project.lecturer.name}} </mat-card-subtitle>
     </mat-card-header>
 
     <hr/>
@@ -9,15 +9,15 @@
     <mat-card-content>
         <p [innerHTML]="div.innerText"> </p>
         <mat-chip-list class="project-tags">
-            <mat-chip *ngFor="let tag of project.tags" selected="true" (click)="searchByTag(tag)">
+            <mat-chip *ngFor="let tag of project.tags" selected="true">
               {{ tag.name }}              
             </mat-chip>
         </mat-chip-list>
     </mat-card-content>
 
     <mat-card-actions>
-        <button mat-button > Aplica </button>
-        <button mat-button [routerLink]="['/projects', project.id]"> Detalii </button>
+        <button *ngIf="(authService.role | async) === 'ROLE_STUDENT'" mat-button (click)="apply()"> {{ 'PROJECTS.APPLY' | translate }} </button>
+        <button mat-button [routerLink]="['/projects', project.id]"> {{ 'PROJECTS.DETAILS' | translate }} </button>
     </mat-card-actions>
 
 </mat-card>

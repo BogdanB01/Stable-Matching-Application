@@ -36,7 +36,7 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Bibliography> bibliographies;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name="project_tags",
             joinColumns = @JoinColumn(name = "project_id"),
@@ -47,7 +47,7 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Question> questions;
 
-    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private File file;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -76,6 +76,13 @@ public class Project {
     }
 
     public Project() {}
+
+    public void removePreference(Preference preference) {
+        preferences.remove(preference);
+        if (preference != null) {
+            preference.setProject(null);
+        }
+    }
 
     public Long getId() {
         return id;
@@ -149,12 +156,22 @@ public class Project {
         this.file = file;
     }
 
+    public void addFile(File file) {
+        this.file = file;
+        file.setProject(this);
+    }
     public List<Student> getStudents() {
         return students;
     }
 
     public void setStudents(List<Student> students) {
         this.students = students;
+    }
+
+    public void removeFile() {
+        if (file != null) {
+            file.setProject(null);
+        }
     }
 
     public void addBibliography(Bibliography newBibliography) {
@@ -257,5 +274,22 @@ public class Project {
         }
     }
 
+    /**
+     * method used for lecturers statistics
+     */
+    @Transient
+    public Double getAverageStudentMean() {
+        return preferences.stream().mapToDouble(p -> p.getAvg()).average().orElse(0);
+    }
+
+    @Transient
+    public Integer getNumberOfStudentsThatAppliedForProject() {
+        return preferences.size();
+    }
+
+    @Transient
+    public Double getAveragePositionInStudentsPreferences() {
+        return preferences.stream().mapToDouble(p -> p.getIndex()).average().orElse(0);
+    }
 
 }

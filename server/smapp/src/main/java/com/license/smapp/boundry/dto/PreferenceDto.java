@@ -7,6 +7,15 @@ public class PreferenceDto {
     private Long id;
     private StudentDto student;
     private ProjectDto project;
+    private String personalNote;
+
+    public String getPersonalNote() {
+        return personalNote;
+    }
+
+    public void setPersonalNote(String personalNote) {
+        this.personalNote = personalNote;
+    }
 
     public Date getSubmittedAt() {
         return submittedAt;

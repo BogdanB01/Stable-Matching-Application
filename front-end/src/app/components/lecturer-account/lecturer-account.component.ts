@@ -11,15 +11,15 @@ export class LecturerAccountComponent {
   navLinks = [
     {
       'path': '/lecturer-account/proposed-projects',
-      'label': 'Proiecte propuse'
+      'label': 'LECTURERS.ACCOUNT.PROPOSED_PROJECTS'
     },
     {
       'path': '/lecturer-account/add-project',
-      'label': 'Adauga un proiect'
+      'label': 'LECTURERS.ACCOUNT.ADD_PROJECT'
     },
     {
       'path': '/lecturer-account/account-settings',
-      'label': 'Setarile contului'
+      'label': 'LECTURERS.ACCOUNT.ACCOUNT_SETTINGS'
     }
   ];
 }

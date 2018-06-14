@@ -12,6 +12,7 @@ export class ApplyDialogComponent implements OnInit {
 
     questions: Array<any>;
     questionsForm: FormGroup;
+    personalNote = null;
 
     constructor(public dialogRef: MatDialogRef<ApplyDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
@@ -61,7 +62,8 @@ export class ApplyDialogComponent implements OnInit {
         // deep copy of form model questions
         const request = {
             projectId : this.data.projectId,
-            answers : []
+            answers : [],
+            personalNote: this.personalNote as string
         };
 
         for (let i = 0; i < this.questions.length; i++) {

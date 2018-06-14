@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Aplica la {{data.title}}</h2>
+<h2 mat-dialog-title> {{'APPLY.AT' | translate }} {{data.title}}</h2>
 <mat-dialog-content>
     <form [formGroup]="questionsForm" (keydown.enter)="$event.preventDefault()">
         <mat-horizontal-stepper #stepper="matHorizontalStepper" formArrayName="items">
@@ -17,12 +17,23 @@
                 </div>
             </mat-step>
             
+            <mat-step label="Adauga o nota personala">
+                
+                <mat-form-field style="width: 100%">
+                    <textarea matInput [(ngModel)]="personalNote" [ngModelOptions]="{standalone: true}" placeholder="Adauga o nota persoanala"></textarea>
+                </mat-form-field>
+                <div fxLayoutAlign="space-between center">
+                    <button type="button" mat-button matStepperPrevious *ngIf="questions.length !== 0"> Back </button>
+                    <button type="button" mat-button matStepperNext> Next </button>
+                </div>               
+            </mat-step>
+
             <mat-step>
-                <ng-template matStepLabel> Aplica </ng-template>
+                <ng-template matStepLabel> {{'PROJECTS.APPLY' | translate}} </ng-template>
                 
                 <div fxLayoutAlign="space-between center">
                     <button type="button" mat-button matStepperPrevious> Back </button>
-                    <button type="submit" mat-raised-button color="primary" [disabled]="!questionsForm.valid" (click)="submit()"> Aplica </button>
+                    <button type="submit" mat-raised-button color="primary" [disabled]="!questionsForm.valid" (click)="submit()"> {{'PROJECTS.APPLY' | translate}} </button>
                 </div>
 
             </mat-step>

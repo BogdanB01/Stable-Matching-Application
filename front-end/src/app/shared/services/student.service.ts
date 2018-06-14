@@ -2,19 +2,17 @@ import { Injectable } from '@angular/core';
 import { APP_CONSTANTS } from '../app.constants';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class StudentService {
 
-    studentId = 21;
-    constructor (private http: HttpClient) {}
-
-    getStudentByName(name: string) {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/filter?name=` + name);
-    }
+    constructor (private http: HttpClient,
+                private authService: AuthService) {
+                }
 
     public checkIfStudentCanApply(projectId) {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/apply`, {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + this.authService.currentUser.id + `/apply`, {
             params: {
                 projectId: projectId,
             }
@@ -22,11 +20,11 @@ export class StudentService {
     }
 
     public getAssignedProjectForStudent() {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/${this.studentId}/project`);
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/${this.authService.currentUser.id}/project`);
     }
 
     public addPreference(requestBody) {
-        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences`, requestBody);
+        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/students/` + this.authService.currentUser.id + `/preferences`, requestBody);
     }
 
     public getDetails(studentId, projectId) {
@@ -38,15 +36,19 @@ export class StudentService {
     }
 
     public getPreferences() {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences`);
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/` + this.authService.currentUser.id + `/preferences`);
     }
 
     public removePreference(preferenceId) {
-        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences/` + preferenceId);
+        return this.http.delete(`${APP_CONSTANTS.ENDPOINT}/students/` + this.authService.currentUser.id + `/preferences/` + preferenceId);
     }
 
     public reorderPreference(body) {
-        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/` + this.studentId + `/preferences/reorder`, body);
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/students/` + this.authService.currentUser.id + `/preferences/reorder`, body);
+    }
+
+    public getStudentInfo(studentId) {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/students/${studentId}`);
     }
 }
 

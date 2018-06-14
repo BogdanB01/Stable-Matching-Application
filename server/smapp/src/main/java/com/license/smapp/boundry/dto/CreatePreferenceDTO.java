@@ -8,6 +8,16 @@ public class CreatePreferenceDTO {
 
     private List<AnswerDto> answers;
 
+    private String personalNote;
+
+    public String getPersonalNote() {
+        return personalNote;
+    }
+
+    public void setPersonalNote(String personalNote) {
+        this.personalNote = personalNote;
+    }
+
     public Long getProjectId() {
         return projectId;
     }

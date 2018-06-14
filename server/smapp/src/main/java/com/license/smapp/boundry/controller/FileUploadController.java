@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
@@ -28,6 +29,7 @@ public class FileUploadController {
     @Autowired
     private CsvService csvService;
 
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         String message = "";
@@ -42,6 +44,8 @@ public class FileUploadController {
         }
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/entities", method = RequestMethod.POST)
     public ResponseEntity<?> uploadFile(@RequestParam("type") String type,
                                         @RequestParam("file") MultipartFile file) throws BadRequestException, ResourceNotFoundException {
@@ -70,6 +74,7 @@ public class FileUploadController {
         return new ResponseEntity<HttpStatus>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "/{filename:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteFile(@PathVariable String filename) {
 
@@ -79,6 +84,8 @@ public class FileUploadController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "/{filename:.+}", method = RequestMethod.GET)
     public ResponseEntity<Resource> getFile(@PathVariable String filename) throws IOException {
         Resource file = storageService.load(filename);

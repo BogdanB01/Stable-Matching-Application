@@ -34,7 +34,7 @@ export class AdminAccountComponent implements OnInit, AfterViewInit {
                 distinctUntilChanged(),
                 tap(() => {
                     this.paginator.pageIndex = 0;
-
+                    console.log('aicia');
                     this.loadUsersPage();
                 })
             )
@@ -58,10 +58,11 @@ export class AdminAccountComponent implements OnInit, AfterViewInit {
 
   removeUser(user): void {
     console.log(user);
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
       data: {
-        title: user.name
+        title: user.name,
+        positiveButton: 'Delete'
       }
     });
 
@@ -87,8 +88,9 @@ export class AdminAccountComponent implements OnInit, AfterViewInit {
       this.paginator.nextPage();
     } else {
       const aux = this.input.nativeElement.value;
-      this.input.nativeElement.value = '';
-      this.input.nativeElement.value = aux;
+     // this.input.nativeElement.keyup();
+     this.input.nativeElement.dispatchEvent(new KeyboardEvent('keyup', {'key' : 'a'}));
+     this.input.nativeElement.value = aux;
     }
   }
 
@@ -98,7 +100,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { DeleteDialogComponent } from '../../dialogs/delete/delete.dialog.component';
+import { ConfirmDialogComponent } from '../../dialogs/confirm/confirm.dialog.component';
 
 export interface Page {
   content: Array<any>;

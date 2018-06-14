@@ -9,9 +9,9 @@
       <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg"/>
     </div>
 
-    <form class="login-form"  [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <input type="text" placeholder="email" formControlName="email"/>
-      <input type="password" placeholder="password" formControlName="password"/>
+    <form class="login-form"  [formGroup]="loginForm" (ngSubmit)="loginForm.valid && onSubmit()">
+        <input type="email" placeholder="email" formControlName="email" required="required"/>
+        <input type="password" placeholder="password" formControlName="password"/>
       <button> Login </button>
     </form>
   </div>

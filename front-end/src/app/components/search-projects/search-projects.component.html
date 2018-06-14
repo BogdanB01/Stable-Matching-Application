@@ -5,22 +5,22 @@
         <div class="search" fxLayout="row" fxLayoutAlign="center center">
 
             <mat-form-field floatPlaceholder="never" fxLayout="column" style="width: 50%">
-                <input matInput placeholder="Cauta proiecte" #input>
+                <input matInput placeholder="{{'SEARCH.PROJECTS' | translate}}" #input>
             </mat-form-field>   
         
         </div>
 
         <mat-radio-group [(ngModel)]="searchType" fxLayout="row" fxLayoutGap=40px fxLayoutAlign="center center" name="test">
             <mat-radio-button value="title" color="primary">
-                Titlu
+                {{'SEARCH.BY_TITLE' | translate}}
             </mat-radio-button>
 
             <mat-radio-button value="tag" color="primary">
-                    Tag
+                {{'SEARCH.BY_TAG' | translate}}
             </mat-radio-button>
             
             <mat-radio-button value="lecturer" color="primary">
-                Profesor
+                {{'SEARCH.BY_LECTURER' | translate}}
             </mat-radio-button>
         </mat-radio-group>
     </form>

@@ -4,6 +4,7 @@ import com.license.smapp.entity.model.Project;
 import com.license.smapp.entity.model.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.util.locale.provider.LocaleServiceProviderPool;
 
 import java.util.Map;
 
@@ -19,6 +20,8 @@ public class StableMatchingSolver {
     public Map<Student, Project> solve() {
         while(problem.thereIsAFreeStudentWithNoEmptyList()) {
             Student si = problem.getFreeStudentWithNoEmptyList();
+            logger.error(si.getName() + " " + String.valueOf(si.getId()));
+
             Project pj = si.getFirstProject();
             // provisionally assign si to pj
 

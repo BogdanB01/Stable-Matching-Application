@@ -1,4 +1,4 @@
-<div fxLayout="column" style="margin:20px" class="components-container-gt-xs component-holder" [ngClass.xs]="'components-container-xs'"  fxLayoutGap="20px">
+<div fxLayout="column" style="margin:20px; margin-bottom: 70px;" class="components-container-gt-xs component-holder" [ngClass.xs]="'components-container-xs'"  fxLayoutGap="20px">
 
     <mat-toolbar class="header"> 
         <h1 class="mat-headline center-align"> {{ project.title }} </h1>
@@ -7,13 +7,13 @@
     <div class="container">
         
             <div fxFlex.xs="100" fxFlex.lg="100" fxFlex.md="100" fxFlex.sm="100" >
-				<h4 class="mat-subheading-2 center-align">Studenti care au aplicat la acest proiect </h4>
+				<h4 class="mat-subheading-2 center-align"> {{'PROJECTS.APPLIED_STUDENTS' | translate}} </h4>
                 
-                <button *ngIf="preferences" mat-raised-button color="primary" (click)="saveOrder()" style="margin-bottom: 10px;"> Salveaza </button>
+                <button *ngIf="preferences" mat-raised-button color="primary" (click)="saveOrder()" style="margin-bottom: 10px;"> {{'SAVE' | translate}} </button>
                 
                 <mat-divider></mat-divider>
                 
-                <div *ngIf="!preferences || !preferences.length"> Nici un student nu a aplicat inca </div>
+                <div *ngIf="!preferences || !preferences.length"> {{'PROJECTS.EMPTY_LIST' | translate}}</div>
                 
                 <mat-accordion dnd-sortable-container [sortableData]="preferences">
                    
@@ -25,11 +25,11 @@
                         
                         <div style="width : 10%; float:right">
                             <button mat-icon-button matTooltip="Move First!" (click)="moveFirst(i)">
-                                <i class="material-icons">arrow_upward</i>
+                                <i class="material-icons up">fast_forward</i>
                             </button>
 
                             <button mat-icon-button matTooltip="Move Last!" (click)="moveLast(i)">
-                                <i class="material-icons">arrow_downward</i>
+                                <i class="material-icons down">fast_rewind</i>
                             </button>
                         </div>
                     </div>

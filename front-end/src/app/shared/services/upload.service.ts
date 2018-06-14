@@ -12,16 +12,6 @@ export class UploadService {
                 private snackBarService: SnackBarService) {}
 
 
-    matchStudentsToProjectsAndGetReport() {
-        this.httpClient.get(`${APP_CONSTANTS.ENDPOINT}/api/report`, {
-            responseType: 'blob', observe: 'response'
-        }).subscribe(res => {
-            saveAs(res.body, 'report.pdf');
-        }, err => {
-            console.log(err);
-        });
-    }
-
     pushFileToStorage(file: File): Observable<any> {
         const formdata: FormData = new FormData();
 
@@ -47,6 +37,7 @@ export class UploadService {
         this.httpClient.request(req).subscribe(res => {
             this.snackBarService.showSnackBar('Fisierul a fost uploadat cu succes!');
         }, err => {
+            console.log(err);
             this.snackBarService.showSnackBar('Fisierul nu a putut fi uploadat!');
         });
     }

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
@@ -33,18 +34,13 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    private StudentService studentService;
-
-    @Autowired
-    private PreferenceService preferenceService;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     /**
      * Get a list with all the Project objects from the database
      * @return List with the Project Objects and a message if the request was successfully
      */
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<ProjectDto>> getAllProjects() {
         List<Project> all = projectService.findAll();
@@ -59,7 +55,7 @@ public class ProjectController {
      * Get a paginated list of Projects from database
      * @return A Page object with the requested items
      */
-
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<Page<?>> listProjects(@RequestParam(value = "type", required = false, defaultValue = "all") String type,
                                                          @RequestParam(value = "filter", required = false, defaultValue = "") String filter,
@@ -90,6 +86,7 @@ public class ProjectController {
      * @param id the Id to search by
      * @return An Project Object / message if the object was successfully found or not
      */
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) throws ResourceNotFoundException {
         Project project = projectService.findById(id);
@@ -106,6 +103,7 @@ public class ProjectController {
      * @param id the id of the Project to delete
      * @return message if the object was successfully deleted
      */
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Project> deleteProjectById(@PathVariable Long id) throws ResourceNotFoundException {
         Project project = projectService.findById(id);
@@ -122,6 +120,7 @@ public class ProjectController {
      * @param projectDTO the object that needs to be updated
      * @param id the id of the object
      */
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<ProjectDto> updateProject(@RequestBody UpdateProjectDTO projectDTO, @PathVariable Long id) throws ResourceNotFoundException, BadRequestException {
         // validate request
@@ -140,63 +139,7 @@ public class ProjectController {
         return ResponseEntity.ok(modelMapper.map(updatedProject, ProjectDto.class));
     }
 
-//    @RequestMapping(value = "/{id}/delete", method = RequestMethod.PATCH)
-//    public ResponseEntity<ProjectDto> unassignStudentFromProject(@PathVariable Long id, @RequestBody Student student) throws BadRequestException, ResourceNotFoundException {
-//        Student studentDb = studentService.findById(student.getId());
-//        Project projectDb = projectService.findById(id);
-//
-//        if(studentDb == null) {
-//            throw new ResourceNotFoundException(String.format("Studentul cu numele %s nu a fost gasit!", student.getName()));
-//        }
-//
-//        if(projectDb == null) {
-//            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul %s nu a fost gasit!", id));
-//        }
-//
-//        if(projectDb.getAssignedProjects().stream()
-//                .filter(s -> s.getStudent().getId().equals(student.getId())).collect(Collectors.toList()).size() == 0) {
-//            throw new BadRequestException(String.format("Studentul cu id-ul %s nu este asignat la acest proiect", student.getId()));
-//        }
-//
-//        AssignedProjects assignedProjects = projectDb.getAssignedProjects().stream()
-//                .filter(a -> a.getStudent().getId().equals(studentDb.getId())).findFirst().get();
-//
-//        projectDb.unnasignStudent(assignedProjects);
-//        Project updatedProject = projectService.save(projectDb);
-//
-//        return ResponseEntity.ok(modelMapper.map(updatedProject, ProjectDto.class));
-//    }
-//
-//
-//    @RequestMapping(value = "/{id}/assign", method = RequestMethod.PATCH)
-//    public ResponseEntity<ProjectDto> assignStudentToProject(@PathVariable Long id, @RequestBody StudentDto student) throws BadRequestException, ResourceNotFoundException {
-//        Student studentDb = studentService.findStudentByName(student.getName());
-//        Project projectDb = projectService.findById(id);
-//
-//        if(studentDb == null) {
-//            throw new ResourceNotFoundException(String.format("Studentul cu numele %s nu a fost gasit!", student.getName()));
-//        }
-//
-//        if(projectDb == null) {
-//            throw new ResourceNotFoundException(String.format("Proiectul cu id-ul %s nu a fost gasit!", id));
-//        }
-//
-//        if(projectDb.getAssignedProjects().size() >= projectDb.getCapacity()) {
-//            throw new BadRequestException(String.format("Nu mai poti adauga studenti la acest proiect!"));
-//        }
-//
-//        if (projectDb.getAssignedProjects().stream()
-//                .filter(c -> c.getStudent().getId().equals(studentDb.getId())).collect(Collectors.toList()).size() > 0) {
-//            throw new BadRequestException(String.format("Nu poti adauga de doua ori acelasi student!"));
-//        }
-//
-//        projectDb.getAssignedProjects().add(new AssignedProjects() {{ setStudent(studentDb); setProject(projectDb);}});
-//
-//        Project updatedProject = projectService.save(projectDb);
-//
-//        return ResponseEntity.ok(modelMapper.map(updatedProject, ProjectDto.class));
-//    }
-
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "/{id}/preferences", method = RequestMethod.GET)
     public ResponseEntity<List<PreferenceDto>> getPreferencesForProject(@PathVariable Long id) throws ResourceNotFoundException {
         Project project = projectService.findById(id);
@@ -210,6 +153,7 @@ public class ProjectController {
         return ResponseEntity.ok(modelMapper.map(preferences, targetListType));
     }
 
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "/{id}/preferences", method = RequestMethod.PUT)
     public ResponseEntity<?> reorderPreferencesForProject(@PathVariable Long id,
                                                           @RequestBody List<PreferenceDto> preferences) throws ResourceNotFoundException, BadRequestException {

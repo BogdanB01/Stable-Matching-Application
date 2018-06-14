@@ -15,6 +15,7 @@ export class ProjectDetailsResolve implements Resolve<any> {
 
     resolve(route: ActivatedRouteSnapshot, rstate: RouterStateSnapshot): Observable<any> {
         const id = +route.params['id'];
+        console.log('aici');
         return this.projectService.getProject(id).catch( res => {
            // return Observable.of('data not available at this time');
 

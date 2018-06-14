@@ -37,7 +37,7 @@ export class ProjectListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.mediaSub.unsubscribe();
+  //  this.mediaSub.unsubscribe();
   }
 
   private observeResponsiveColLayout() {

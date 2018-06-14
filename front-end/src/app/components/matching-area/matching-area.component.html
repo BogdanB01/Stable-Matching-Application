@@ -2,13 +2,35 @@
 
     <div fxLayout="column" class="service-card-content">
 
+        <h1 class="heading"><span>Administrare</span></h1>
+
+        <div fxLayout="row" class="service-card-container" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <div fxFlex.lt-md="100" fxLayout="row" fxLayoutAlign="space-evenly center" fxLayoutGap="20px" fxFlex.gt-sm="90" class="mat-elevation-z4 service-card" >
+                
+                <div fxLayout="column" fxLayoutAlign="space-between center"  fxLayoutGap="20px">
+                    
+                    <h3 style="color: #327ebd"> Starea aplicatiei </h3>
+                    <mat-slide-toggle color="warn" (change)="changeAppStatus($event)" [(ngModel)]="appStatus">Schimba</mat-slide-toggle>
+                    <h3 style="color:#327ebd"> Inscrierile sunt 
+                        <span *ngIf="appStatus"> deschise </span>  
+                        <span *ngIf="!appStatus"> inchise </span>
+                    </h3>
+                </div>
+
+                <div fxLayout="column" fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+                    <h3 style="color:#327ebd"> Sterge studentii </h3>
+                    <button mat-fab color="warn" (click)="deleteStudents()">Clear</button>
+                </div>
+            </div>
+        </div>
+
         <h1 class="heading"><span>Import</span></h1>
         <div fxLayout="row" class="service-card-container" fxLayout.lt-md="column" fxLayoutGap="20px">
             
 			<div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card " >
                 <img src="/assets/img/student.png" fxFlex>
                 
-                <h3 class="mat-title" fxFlex>Importa studentii</h3>
+                <h3 class="mat-title" fxFlex>{{'MATCHING_AREA.STUDENTS_IMPORT' | translate}}</h3>
                 <input style="display: none" type="file" (change)="uploadStudentsFile($event)" #studentsFile>
                 <button mat-button type="button" (click)="studentsFile.click()">
                     <mat-icon> unarchive </mat-icon>
@@ -21,7 +43,7 @@
 			<div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
 				<img src="/assets/img/teacher.png" fxFlex>
 
-                <h3 class="mat-title" fxFlex>Importa profesorii</h3>
+                <h3 class="mat-title" fxFlex>{{'MATCHING_AREA.LECTURERS_IMPORT' | translate}}</h3>
                
                 <input style="display: none" type="file" (change)="uploadLecturersFile($event)" #lecturersFile>
                 <button mat-button type="button" (click)="lecturersFile.click()">
@@ -31,10 +53,22 @@
 
 			</div>
 
+            <div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
+				<img src="/assets/img/prototype.png" fxFlex>
+
+                <h3 class="mat-title"  fxFlex>{{'MATCHING_AREA.COURSES_IMPORT' | translate}}</h3>
+
+                <input style="display: none" type="file" (change)="uploadCoursesFile($event)" #coursesFile>
+                <button mat-button type="button" (click)="coursesFile.click()">
+                    <mat-icon> unarchive </mat-icon>
+                    <span> Upload </span>
+                </button>		
+            </div>
+            
 			<div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
 				<img src="/assets/img/grades.png" fxFlex>
 
-                <h3 class="mat-title"  fxFlex>Importa notele</h3>
+                <h3 class="mat-title"  fxFlex>{{'MATCHING_AREA.GRADES_IMPORT' | translate}}</h3>
                 
                 <input style="display: none" type="file" (change)="uploadGradesFile($event)" #gradesFile>
                 <button mat-button type="button" (click)="gradesFile.click()">
@@ -43,17 +77,6 @@
                 </button>            
             </div>
             
-            <div fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex.gt-sm="32" class="mat-elevation-z4 service-card "  >
-				<img src="/assets/img/prototype.png" fxFlex>
-
-                <h3 class="mat-title"  fxFlex>Importa cursurile</h3>
-
-                <input style="display: none" type="file" (change)="uploadCoursesFile($event)" #coursesFile>
-                <button mat-button type="button" (click)="coursesFile.click()">
-                    <mat-icon> unarchive </mat-icon>
-                    <span> Upload </span>
-                </button>		
-            </div>
         </div>
 
         <h1 class="heading"><span>Match</span></h1>
@@ -67,7 +90,8 @@
                 </div>
 
                 <div fxLayout="row">
-                    <button mat-fab color="primary" (click)="match()">Match</button>
+                    <button mat-fab color="primary" (click)="match()">Preview</button>
+                    <button mat-fab color="warn" style="margin-left:40px" (click)="save()">Save</button>
                 </div>
             </div>
         </div>
@@ -78,18 +102,18 @@
                 
                 <form>
                     <mat-form-field>
-                      <mat-select placeholder="Alege an" [(ngModel)]="selectedYear" name="year">
+                      <mat-select placeholder="{{'MATCHING_AREA.PICK_YEAR' | translate}}" [(ngModel)]="selectedYear" name="year">
                         <mat-option *ngFor="let year of years" [value]="year">
                           {{year}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                   
-                    <p> An selectat: {{selectedYear}} </p>
+                    <p> {{'MATCHING_AREA.SELECTED_YEAR' | translate}}: {{selectedYear}} </p>
                 </form>                
                 <button mat-button type="button" (click)="viewHistoryForYear()">
                     <mat-icon> attachment </mat-icon>
-                    <span> Vezi situatia </span>
+                    <span> {{'MATCHING_AREA.VIEW_REPORT' | translate}} </span>
                 </button>
             </div>
         </div>

@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class History {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "history_seq", sequenceName = "history_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "history_seq")
     private Long id;
 
     private String studentName;

@@ -1,5 +1,6 @@
 package com.license.smapp.boundry.controller;
 
+import com.license.smapp.aop.StopMethodExecution;
 import com.license.smapp.common.PdfGenerator;
 import com.license.smapp.entity.model.Project;
 import com.license.smapp.entity.model.Student;
@@ -36,7 +37,8 @@ public class TestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/test/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
+    @StopMethodExecution
     public String testAdmin() {
         return "PROFESORULE";
     }
@@ -60,12 +62,6 @@ public class TestController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(bis));
-    }
-
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String testezCeva() {
-        return "Ok";
     }
 
 }

@@ -1,0 +1,112 @@
+{
+    "SAVE": "Salveaza",
+    "USERS": "Utilizatori",
+    "EMAIL": "E-mail",
+    "NAME": "Nume",
+    "ROLE": "Rol",
+    "CANCEL": "Anuleaza",
+    "UPDATE": "Modifica",
+    "INFO": "Informatii suplimentare",
+    "APP": {
+        "NAME": "Inscrierea la licenta FII"
+    },
+    "APPLY": {
+        "AT": "Aplica la",
+        "DATE": "Data aplicarii",
+        "PERSONAL_NOTE": "Nota personala"
+    },
+    "MENU": {
+        "PROJECTS": "Proiecte",
+        "LECTURER_ACCOUNT": "Cont profesor",
+        "STUDENT_ACCOUNT": "Cont student",
+        "MY_ACCOUNT": "Contul meu",
+        "ACCOUNT_SETTINGS": "Setari cont",
+        "ADMIN_ACCOUNT": "Cont admin", 
+        "USERS": "Utilizatori",
+        "MATCHING_AREA": "Organizare",
+        "LANGUAGE": "Limba",
+        "RO": "Romana",
+        "EN": "Engleza",
+        "LOGOUT": "Iesire"
+    },
+    "PROJECTS": {
+        "TITLE": "Titlu",
+        "PROPOSER": "Propus de",
+        "APPLY": "Aplica",
+        "DETAILS": "Detalii",
+        "BIBLIOGRAPHIES": "Referinte",
+        "TAGS": "Tag-uri",
+        "ATTACHED_FILE": "Fisier atasat",
+        "CAPACITY": "Capacitate",
+        "SAME_LECTURER": "Propuse de acelasi profesor",
+        "ASSIGNED_STUDENTS": "Studenti asignati",
+        "ACTIONS": "Actiuni",
+        "QUESTIONS": "Intrebari",
+        "APPLIED_STUDENTS": "Studenti care au aplicat la acest proiect",
+        "EMPTY_LIST": "Nici un student nu a aplicat inca"
+    },
+    "EDIT_ACCOUNT": {
+        "INFO": "Informatii",
+        "NAME": "Nume",
+        "EMAIL": "E-mail",
+        "CHANGE_PASSWORD": "Schimba parola",
+        "OLD_PASSWORD": "Parola veche",
+        "NEW_PASSWORD": "Parola noua",
+        "REGISTRATION_NUMBER": "Numar matricol",
+        "PASSWORD_STRENGTH_ERROR" : "Parola trebuie sa contina cel putin 8 caractere, o litera mare, o litera mica, un numar si un caracter special"
+    },
+    "STUDENTS": {
+        "PREFERENCES": "Preferinte",
+        "REORDER": "Drag & Drop pentru a reordona lista",
+        "ASSIGNED_PROJECT": "Proiectul asignat",
+        "GRADES": "Notele studentului",
+        "ANSWERS": "Raspunsurile studentului"
+    },
+    "LECTURERS": {
+        "ACCOUNT": {
+            "PROPOSED_PROJECTS": "Proiecte propuse",
+            "ADD_PROJECT": "Adauga un proiect",
+            "ACCOUNT_SETTINGS": "Setari cont",
+            "PAST_PROJECTS": "Proiecte din anii trecuti",
+            "STATISTICS": "Statistici proiecte",
+            "DELETE_PROJECT": "Sterge proiect",
+            "UPDATE_PROJECT": "Editeaza proiect",
+            "STUDENTS_PREFERENCES": "Preferinte studenti"
+        },
+        "CREATE": {
+            "PROJECT": "Adauga un proiect",
+            "DESCRIPTION": "Adauga o descriere acestui proiect",
+            "MISSING_TITLE": "Titlul este obligatoriu",
+            "MISSING_CAPACITY": "Capacitatea este obligatorie",
+            "INCORRECT_CAPACITY": "Numarul de studenti trebuie sa fie mai mare sau egal cu 1",
+            "MISSING_DESCRIPTION": "Introdu o descriere pentru acest proiect",
+            "ADD_TAGS": "Adauga tag-uri acestui proiect...",
+            "ADD_BIBLIOGRAPHY": "Adauga o referinta",
+            "ADD_QUESTION": "Adauga o intrebare",
+            "UPLOAD_FILE": "Adauga un fisier"
+        }
+    },
+    "ADMIN": {
+        "SEARCH_USERS": "Cauta utilizatori",
+        "ACTIONS": "Actiuni"
+    }, 
+    "MATCHING_AREA": {
+        "STUDENTS_IMPORT": "Importa studentii",
+        "LECTURERS_IMPORT" : "Importa profesorii",
+        "COURSES_IMPORT": "Importa cursurile",
+        "GRADES_IMPORT": "Importa notele",
+        "PICK_YEAR": "Alege an",
+        "SELECTED_YEAR": "An selectat",
+        "VIEW_REPORT": "Vezi situatia"
+    },
+    "SEARCH": {
+        "PROJECTS": "Cauta proiecte",
+        "BY_TITLE": "Titlu",
+        "BY_TAG": "Tag",
+        "BY_LECTURER": "Profesor"
+    }, 
+    "EDIT": {
+        "PROJECT": "Editeaza proiect",
+        "TAGS": "Adauga sau sterge taguri"
+    }
+}

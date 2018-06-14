@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,6 +47,7 @@ public class StudentController {
      * Get a list with all the Student objects from the database
      * @return List with the Student Objects and a message if the request was successfully
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<StudentDto>> getAllStudents() {
         List<Student> students = studentService.findAll();
@@ -60,6 +62,7 @@ public class StudentController {
      *
      * @return An Student Object / message if the object was successfully found or not
      */
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
         Student student = studentService.findById(id);
@@ -72,6 +75,7 @@ public class StudentController {
      * @param id the id of the User to delete
      * @return message if the object was successfully deleted
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Student> deleteStudentById(@PathVariable Long id) {
         studentService.delete(id);
@@ -83,6 +87,7 @@ public class StudentController {
      * Add a new Student object into the database
      * @param student the object to be saved
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Student> createStudent(@RequestBody @Valid CreateStudentDTO student) throws URISyntaxException {
 
@@ -96,6 +101,7 @@ public class StudentController {
      * @param student the object that needs to be updated
      * @param id the id of the object
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateStudent(@RequestBody Student student, @PathVariable Long id) throws ResourceNotFoundException {
         Student updatedStudent = this.studentService.findById(id);
@@ -112,6 +118,7 @@ public class StudentController {
      * @param id the id of the student
      * @return a list of that particular student grades
      */
+    @PreAuthorize("hasRole('LECTURER') or hasRole('STUDENT') or hasRole('ADMIN')")
     @RequestMapping(value = "/{id}/grades", method = RequestMethod.GET)
     public ResponseEntity<List<Grade>> getGrades(@PathVariable Long id) {
         List<Grade> grades = this.studentService.getGradesForStudent(id);
@@ -119,6 +126,7 @@ public class StudentController {
     }
 
 
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN')")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<StudentDto>> search(@RequestParam(value = "search", required = false) String searchTerm) {
 
@@ -128,6 +136,7 @@ public class StudentController {
         return ResponseEntity.ok(modelMapper.map(students, targetListType));
     }
 
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN')")
     @RequestMapping(value = "/filter", method = RequestMethod.GET)
     public ResponseEntity<Student> getStudentByName(@RequestParam("name") String name) throws ResourceNotFoundException {
         Student student = this.studentService.findStudentByName(name);
@@ -138,6 +147,7 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/apply", method = RequestMethod.GET)
     public ResponseEntity<?> checkIfStudentCanApplyToProject(@PathVariable Long id,
                                                              @RequestParam("projectId") Long projectId) throws BadRequestException, ResourceNotFoundException {
@@ -162,6 +172,7 @@ public class StudentController {
     }
 
 
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN')")
     @RequestMapping(value = "/{id}/details", method = RequestMethod.GET)
     public ResponseEntity<?> getStudentDetails(@PathVariable Long id,
                                                @RequestParam("projectId") Long projectId) throws ResourceNotFoundException {
@@ -182,6 +193,7 @@ public class StudentController {
         return ResponseEntity.ok(studentDetails);
     }
 
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
     @RequestMapping(value = "/{id}/project", method = RequestMethod.GET)
     public ResponseEntity<?> getAssignedProjectForStudent(@PathVariable Long id) throws ResourceNotFoundException {
         Student student = studentService.findById(id);
@@ -189,17 +201,19 @@ public class StudentController {
         if (student == null) {
             throw new ResourceNotFoundException(String.format("Studentul cu id-ul=%s nu a fost gasit!", id));
         }
-
+        if (student.getProject() == null) {
+            return ResponseEntity.ok(null);
+        }
         ProjectDto projectDto = modelMapper.map(student.getProject(), ProjectDto.class);
         return ResponseEntity.ok(projectDto);
     }
 
     // TODO: refactor this
+    @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/preferences", method = RequestMethod.POST)
     public ResponseEntity<?> addPreferenceToStudent(@PathVariable Long id,
                                                     @RequestBody CreatePreferenceDTO preferenceDto) throws ResourceNotFoundException, URISyntaxException {
 
-        LOGGER.error("SALUT");
         Student student = studentService.findById(id);
 
         if (student == null) {
@@ -229,7 +243,7 @@ public class StudentController {
             student.addAnswer(answer);
         }
 
-        student.addPreference(new Preference() {{setProject(project); }});
+        student.addPreference(new Preference() {{setProject(project); setPersonalNote(preferenceDto.getPersonalNote());  }});
 
         studentService.update(student);
 
@@ -237,6 +251,7 @@ public class StudentController {
     }
 
 
+    @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/preferences", method = RequestMethod.GET)
     public ResponseEntity<?> getPreferencesForStudent(@PathVariable Long id) throws ResourceNotFoundException {
 
@@ -250,6 +265,7 @@ public class StudentController {
         return ResponseEntity.ok(preferences);
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/preferences/{preferenceId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePreferenceFromStudent(@PathVariable Long id,
                                                          @PathVariable Long preferenceId) throws ResourceNotFoundException, BadRequestException {
@@ -275,14 +291,15 @@ public class StudentController {
         student.removePreference(preference);
 
         // get answers of student if any
-        List<Answer> answers = student.getAnswers().stream().filter(a -> a.getQuestion().getProject().equals(preference.getProject())).collect(Collectors.toList());
-        answers.forEach(a -> student.removeAnswer(a));
+//        List<Answer> answers = student.getAnswers().stream().filter(a -> a.getQuestion().getProject().equals(preference.getProject())).collect(Collectors.toList());
+//        answers.forEach(a -> student.removeAnswer(a));
 
         studentService.update(student);
 
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/preferences/reorder", method = RequestMethod.PUT)
     public ResponseEntity<?> reorderPreferencesListForStudent(@PathVariable Long id,
                                                               @RequestBody List<PreferenceDto> preferences) throws ResourceNotFoundException, BadRequestException {
@@ -295,13 +312,12 @@ public class StudentController {
 
         List<Preference> preferencesDb = student.getPreferences();
 
-        if (preferencesDb.size() != preferences.size()) {
-            throw new BadRequestException(String.format("Cele doua liste nu au aceeasi dimesiune %s %s", preferencesDb.size(), preferences.size()));
-        }
-
 
         // TODO: find a better way to solve this
         for(Preference p : preferencesDb) {
+            if (p == null) {
+                continue;
+            }
             PreferenceDto preference = preferences.stream().filter(pref -> pref.getId().equals(p.getId())).findFirst().orElse(null);
 
             if (preference == null) {

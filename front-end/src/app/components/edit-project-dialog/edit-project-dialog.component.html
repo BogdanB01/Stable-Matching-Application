@@ -1,10 +1,10 @@
-<h2 mat-dialog-title> Editeaza proiect </h2>
+<h2 mat-dialog-title> {{'EDIT.PROJECT' | translate}} </h2>
 
 <form [formGroup]="updateProjectForm" fxFill (ngSubmit)="updateProjectForm.valid && updateProject()">
     <mat-dialog-content fxLayout="row">
         <div fxFill>    
             <mat-form-field style="width: 100%">
-                <input matInput placeholder="Titlu" value={{project.title}} formControlName="titleControl">
+                <input matInput placeholder="{{'PROJECTS.TITLE' | translate}}" value={{project.title}} formControlName="titleControl">
             </mat-form-field>
 
                 <!-- <textarea matInput placeholder="Descriere" value={{project.description}} formControlName="descriptionControl"> </textarea> -->
@@ -17,7 +17,7 @@
                         {{tag.name}}
                         <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
-                    <input #tag placeholder="Adauga sau sterge taguri"
+                    <input #tag placeholder="{{'EDIT.TAGS' | translate}}"
                         [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="true"
@@ -28,11 +28,11 @@
             </mat-form-field>
 
             <mat-form-field style="width: 100%">
-                <input matInput placeholder="Numar studenti" value="{{project.capacity}}" formControlName="capacityControl">
+                <input matInput placeholder="{{'PROJECTS.CAPACITY' | translate}}" value="{{project.capacity}}" formControlName="capacityControl">
             </mat-form-field>
 
             <mat-list>
-                <h3 matSubheader> Referinte </h3>
+                <h3 matSubheader> {{'PROJECTS.BIBLIOGRAPHIES' | translate}} </h3>
                 <mat-list-item *ngFor="let reference of references; let i = index">
                     <h4 matLine> {{reference.name}}</h4>
                     <button type="button" mat-icon-button (click)="removeReference(i)">
@@ -43,7 +43,7 @@
 
             <div class="row" style="width: 100%; margin-left: 3px;">
                 <mat-form-field style="width: calc(100% - 58px) !important;">
-                    <input #reference matInput placeholder="Adauga o noua referinta">
+                    <input #reference matInput placeholder="{{'LECTURERS.CREATE.ADD_BIBLIOGRAPHY' | translate}}">
                 </mat-form-field>
                 <button type="button" mat-icon-button (click)="addReference(reference.value)">
                     <i class="material-icons">add</i>
@@ -51,7 +51,7 @@
             </div>
 
             <mat-list>
-                <h3 matSubheader> Intrebari </h3> 
+                <h3 matSubheader> {{'PROJECTS.QUESTIONS' | translate}} </h3> 
                 
                 <mat-list-item *ngFor="let question of questions; let i = index">
                     <h4 matLine> {{question.question}} </h4>
@@ -63,7 +63,7 @@
 
             <div class="row" style="width:100%; margin-left: 3px;">
                 <mat-form-field style="width: calc(100% - 58px) !important;">
-                    <input #question matInput placeholder="Adauga o noua intrebare">
+                    <input #question matInput placeholder="{{'LECTURERS.CREATE.ADD_QUESTION' | translate}}">
                 </mat-form-field>
                 <button type="button" mat-icon-button (click)="addQuestion(question.value)">
                     <i class="material-icons"> add </i> 
@@ -82,7 +82,7 @@
                 <input style="display: none;" type="file" #fileInput (change)="fileChange($event)" name="file" />
                 <button mat-button type="button" (click)="fileInput.click()">
                     <mat-icon> file_upload </mat-icon>
-                    <span> Incarca un fisier </span>
+                    <span> {{'LECTURERS.CREATE.UPLOAD_FILE' | translate}} </span>
                 </button>
                
                 <mat-chip *ngIf="file" [removable]="true" (remove)="removeFile()" (click)="downloadFile(file.path)">
@@ -95,7 +95,7 @@
     </mat-dialog-content>
 
     <mat-dialog-actions> 
-        <button mat-button mat-dialog-close>Anuleaza</button>
-        <button mat-button type="button" (click)="updateProject()">Modifica</button>
+        <button mat-button mat-dialog-close>{{'CANCEL' | translate}}</button>
+        <button mat-button type="button" (click)="updateProject()">{{'UPDATE' | translate}}</button>
     </mat-dialog-actions>
 </form>

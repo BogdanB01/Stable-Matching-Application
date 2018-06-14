@@ -4,11 +4,15 @@ package com.license.smapp.entity.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.license.smapp.common.EntityIdResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Student JPA entity
@@ -24,13 +28,13 @@ import java.util.List;
 )
 public class Student extends User implements Serializable{
 
+    @NotNull
     @Column(name="registration_number")
     private String registrationNumber;
 
     @OneToMany(mappedBy = "student")
     private List<Grade> grades;
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderColumn(name ="index")
     private List<Preference> preferences;
 
@@ -70,7 +74,7 @@ public class Student extends User implements Serializable{
     }
 
     public List<Preference> getPreferences() {
-        return preferences;
+        return preferences.stream().filter(p -> p != null).collect(Collectors.toList());
     }
 
     public void setPreferences(List<Preference> preferences) {
@@ -84,10 +88,9 @@ public class Student extends User implements Serializable{
     }
 
     public void removePreference(Preference preference) {
-        this.preferences.remove(preference);
-        if (preference != null) {
-            preference.setStudent(null);
-        }
+        preferences.remove(preference);
+        preference.setStudent(null);
+        preference.getProject().removePreference(preference);
     }
 
     public void addGrade(Grade grade) {
@@ -116,17 +119,13 @@ public class Student extends User implements Serializable{
     }
 
     public void removeAnswer(Answer answer) {
+        answer.setQuestion(null);
         answers.remove(answer);
         if (answer != null) {
             answer.setStudent(null);
         }
     }
 
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
-    @Transient
     public Double getAvg() {
         if (this.grades == null || this.grades.size() == 0) {
             return Double.valueOf(0);
@@ -142,11 +141,11 @@ public class Student extends User implements Serializable{
     }
 
     public Project getFirstProject() {
-        return this.preferences.get(0).getProject();
+        return this.getPreferences().get(0).getProject();
     }
 
     public void removeProject(Project project) {
-        preferences.removeIf(p -> p.getProject().equals(project));
+        preferences.removeIf( p -> p != null && p.getProject().equals(project));
     }
 
 }

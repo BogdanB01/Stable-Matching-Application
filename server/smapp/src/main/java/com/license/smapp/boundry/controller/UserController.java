@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
@@ -34,6 +35,7 @@ public class UserController {
      * Get a list with all the User objects from the database
      * @return List with the User Objects and a message if the request was successfully
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsers() {
         List<UserDto> users = modelMapper.map(userService.findAll(), new TypeToken<List<UserDto>>() {}.getType());
@@ -44,6 +46,7 @@ public class UserController {
      * Get a paginated list of User object from the database
      * @return a List with User object
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/filter", method = RequestMethod.GET)
     Page<UserDto> getUsersByPage(@RequestParam(value = "email", required = false, defaultValue = "") String email,
                                  Pageable pageable) {
@@ -59,6 +62,7 @@ public class UserController {
      *
      * @return An User Object / message if the object was successfully found or not
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<User> getUserById(@PathVariable Long id) throws ResourceNotFoundException {
         User user = userService.findById(id);
@@ -76,6 +80,7 @@ public class UserController {
      * @param id the id of the User to delete
      * @return message if the object was successfully deleted
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) throws ResourceNotFoundException {
 

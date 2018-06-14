@@ -1,4 +1,22 @@
-<div [hidden]="!chart" style="margin: 20px">
-    <canvas id="canvas" style="height:350px !important;">{{ chart }}</canvas>
-</div>
+
+
+   <mat-tab-group [dynamicHeight]="true">
+    <mat-tab label="Numar studenti">
+        <div [hidden]="!numberOfStudentsChart" style="margin: 20px">
+            <canvas #numberOfStudentsCanvas style="height:350px !important;">{{ numberOfStudentsChart }}</canvas>
+        </div>    
+    </mat-tab>
+    
+    <mat-tab label="Medie studenti">
+        <div [hidden]="!avgMeanChart" style="margin: 20px">
+            <canvas #avgMeanCanvas style="height:350px !important;">{{ avgMeanChart }}</canvas>
+        </div>    
+    </mat-tab>
+    
+    <mat-tab label="Pozitie preferinte">
+        <div [hidden]="!avgPositionChart" style="margin: 20px">
+            <canvas #avgPositionCanvas style="height:350px !important;">{{ avgPositionChart }}</canvas>
+        </div>
+    </mat-tab>
+  </mat-tab-group>
   

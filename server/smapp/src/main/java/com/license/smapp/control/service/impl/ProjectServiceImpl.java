@@ -111,14 +111,13 @@ public class ProjectServiceImpl implements ProjectService{
 
         for(Tag t : tagsToBeDeletedOrAdded) {
             if (t.getId() != null) {
-                LOGGER.error("Am adaugat " + t.getName());
                 project.removeTag(t);
             } else {
-               // LOGGER.error("Am sters " + t.getName());
                 Tag existingTag = tagRepository.getFirstByName(t.getName());
                 if (existingTag != null) {
                     project.addTag(existingTag);
                 } else {
+                    LOGGER.error(t.getName());
                     project.addTag(t);
                 }
             }
@@ -128,7 +127,12 @@ public class ProjectServiceImpl implements ProjectService{
         project.setCapacity(model.getCapacity());
         project.setDescription(model.getDescription());
 
-        project.setFile(model.getFile());
+        if (model.getFile() != project.getFile()) {
+            project.removeFile();
+            if (model.getFile() != null) {
+                project.addFile(model.getFile());
+            }
+        }
         return projectRepository.save(project);
     }
 

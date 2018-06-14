@@ -3,13 +3,8 @@
   
     
     <mat-toolbar class="input-header">
-        <h1 class="mat headline center-align"> Adauga un proiect </h1>
+        <h1 class="mat headline center-align"> {{'LECTURERS.CREATE.PROJECT' | translate}} </h1>
         
-        <input style="display: none;" type="file" #fileInput>
-        <button mat-button type="button" (click)="fileInput.click()">
-            <mat-icon> file_upload </mat-icon>
-            <span> Importa Proiect </span>
-        </button>
     </mat-toolbar>
 
     <form [formGroup]="createProjectForm" class="input-container">
@@ -18,22 +13,22 @@
 
             <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
                 <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Titlu proiect" formControlName="titleControl">
+                    <input matInput placeholder="{{ 'PROJECTS.TITLE' | translate}}" formControlName="titleControl">
                     <mat-error *ngIf="createProjectForm.controls['titleControl'].errors?.required && createProjectForm.controls['titleControl'].touched">
-                        Titlul este <strong> obligatoriu </strong>
+                        {{'LECTURERS.CREATE.MISSING_TITLE' | translate }}
                     </mat-error>
                 </mat-form-field>
             </div>
 
             <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
                 <mat-form-field class="example-full-width">
-                    <input type="number" matInput placeholder="Capacitate" formControlName="capacityControl">
+                    <input type="number" matInput placeholder="{{ 'PROJECTS.CAPACITY' | translate}}" formControlName="capacityControl">
                     <mat-error *ngIf="createProjectForm.controls['capacityControl'].errors?.required && createProjectForm.controls['capacityControl'].touched">
-                        Introdu <strong> numarul maxim de studenti pentru acest proiect </strong>
+                        {{'LECTURERS.CREATE.MISSING_CAPACITY' | translate }}
                     </mat-error>
 
                     <mat-error *ngIf="createProjectForm.controls['capacityControl'].errors?.min && createProjectForm.controls['capacityControl'].touched">
-                        <strong> Numarul de studenti trebuie sa fie mai mare sau egal cu 1</strong>
+                        <strong> {{'LECTURERS.CREATE.INCORRECT_CAPACITY' | translate }}</strong>
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -43,7 +38,7 @@
             <div fxFill>
                 <quill-editor [modules]="editorConfig.editorConfig" formControlName="descriptionControl" [style]="{height: '150px'}" [placeholder]="editorConfig.placeholder"> </quill-editor>
                 <mat-error *ngIf="createProjectForm.controls['descriptionControl'].errors?.required && createProjectForm.controls['descriptionControl'].touched">
-                    Introdu <strong> o descriere pentru acest proiect </strong>
+                    {{'LECTURERS.CREATE.MISSING_DESCRIPTION' | translate}}
                 </mat-error>
             </div>
         </div>
@@ -56,7 +51,7 @@
                         {{tag.name}}
                         <mat-icon matChipRemove>cancel</mat-icon>
                       </mat-chip>
-                      <input #tag placeholder="Adauga tag-uri acestui proiect..."
+                      <input #tag placeholder="{{'LECTURERS.CREATE.ADD_TAGS' | translate}}"
                              [matChipInputFor]="chipList"
                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                              [matChipInputAddOnBlur]="addOnBlur"
@@ -71,7 +66,7 @@
             
             <div fxFLex fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
                 <mat-form-field style="width: 80%;">
-                    <input #reference (keyup.enter)="addReference(reference.value)" matInput placeholder="Adauga o referinta">
+                    <input #reference (keyup.enter)="addReference(reference.value)" matInput placeholder="{{'LECTURERS.CREATE.ADD_BIBLIOGRAPHY' | translate }}">
                 </mat-form-field>
                 <button type="button" mat-icon-button (click)="addReference(reference.value)">
                     <i class="material-icons">add</i>
@@ -80,7 +75,7 @@
         
             <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
                 <mat-list>
-                    <h3 matSubheader> Referinte </h3>
+                    <h3 matSubheader> {{'PROJECTS.BIBLIOGRAPHIES' | translate}} </h3>
                     <mat-list-item *ngFor="let reference of references; let i = index">
                         <h4 matLine> {{reference.name}}</h4>
                         <button type="button" mat-icon-button (click)="removeReference(i)">
@@ -96,7 +91,7 @@
             <div fxFLex fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
                 
                 <mat-form-field style="width: 80%;">
-                    <input #question (keyup.enter)="addQuestion(question.value)" matInput placeholder="Adauga o intrebare">
+                    <input #question (keyup.enter)="addQuestion(question.value)" matInput placeholder="{{'LECTURERS.CREATE.ADD_QUESTION' | translate}}">
                 </mat-form-field>
                 <button type="button" mat-icon-button (click)="addQuestion(question.value)">
                     <i class="material-icons"> add </i>
@@ -106,7 +101,7 @@
             
             <div fxFlex.xs="100" fxFlex.lg="50" fxFlex.md="50" fxFlex.sm="50">
                 <mat-list>
-                    <h3 matSubheader> Intrebari </h3> 
+                    <h3 matSubheader> {{'PROJECTS.QUESTIONS' | translate}} </h3> 
                     <mat-list-item *ngFor="let question of questions; let i = index">
                         <h4 matLine> {{ question.question }} </h4>
                         <button type="button" mat-icon-button (click)="removeQuestion(i)">
@@ -122,7 +117,7 @@
                 <input style="display: none;" type="file" #fileInput (change)="fileChange($event)" name="file" />
                 <button mat-button type="button" (click)="fileInput.click()">
                     <mat-icon> file_upload </mat-icon>
-                    <span> Incarca un fisier </span>
+                    <span> {{'LECTURERS.CREATE.UPLOAD_FILE' | translate}} </span>
                 </button>
             </div>
             <div *ngIf="file" fxFlex fxFlex.xs="100" fxFlex.lg="70" fxFlex.md="70" fxFlex.sm="70">
@@ -135,7 +130,7 @@
         </div>
 
         <div fxLayout="row-reverse" fxLayout.lt-sm="column" fxLayoutGap="20px">
-                <button mat-raised-button color="primary" type="button" [disabled]="!createProjectForm.valid" (click)="createProjectForm.valid && createProject()">Adauga proiect</button>
+                <button mat-raised-button color="primary" type="button" [disabled]="!createProjectForm.valid" (click)="createProjectForm.valid && createProject()">{{ 'LECTURERS.ACCOUNT.ADD_PROJECT' | translate }}</button>
         </div>
     </form>
 

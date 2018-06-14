@@ -1,9 +1,9 @@
 <mat-nav-list  [style.height]="getHeight()" [ngClass]="{'secondaryMenu': secondaryMenu}" class="mat-typography">
-        <mat-list-item *ngIf = "menu.link==false" (click)="menu.open = !menu.open" >
+        <mat-list-item *ngIf = "menu.link==false" (click)="click()" >
             
             <mat-icon matListIcon iconsmall  >{{menu.icon}} </mat-icon>
     
-            <h3 matLine *ngIf="!iconOnly">{{ menu.name }} </h3>
+            <h3 matLine *ngIf="!iconOnly">{{ menu.name | translate }} </h3>
             <mat-chip-list *ngIf="menu?.chip && !iconOnly">
                 <mat-chip >{{menu?.chip?.value}} </mat-chip>
             </mat-chip-list>        
@@ -12,7 +12,7 @@
         </mat-list-item>
         <mat-list-item *ngIf = "menu.link!=false" (click)="click()" [routerLink]="[menu.link]">
             <mat-icon matListIcon iconsmall  >{{menu.icon}} </mat-icon>
-            <h3 matLine *ngIf="!iconOnly">{{ menu.name }} </h3>
+            <h3 matLine *ngIf="!iconOnly">{{ menu.name | translate }} </h3>
         </mat-list-item>
         <app-sidemenu-item *ngFor="let submenu of menu?.sub" [menu]="submenu" [iconOnly]="iconOnly" [secondaryMenu]="true"> </app-sidemenu-item>
 </mat-nav-list>

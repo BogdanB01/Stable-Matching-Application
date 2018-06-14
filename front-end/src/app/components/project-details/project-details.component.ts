@@ -3,9 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ProjectDetailsResolve } from '../../shared/services/project.resolve.service';
 import { UploadService } from '../../shared/services/upload.service';
 import { ApplyDialogComponent } from '../apply-dialog/apply-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSuffix } from '@angular/material';
 import { StudentService } from '../../shared/services/student.service';
 import { SnackBarService } from '../../shared/services/snackbar.service';
+import { ProjectService } from '../../shared/services/project.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-project-details',
@@ -15,18 +17,41 @@ import { SnackBarService } from '../../shared/services/snackbar.service';
 export class ProjectDetailsComponent implements OnInit {
 
   private project: any;
+  private otherProjects: any;
   constructor(
     private route: ActivatedRoute,
     private uploadService: UploadService,
     private studentService: StudentService,
     private snackBarService: SnackBarService,
+    private projectService: ProjectService,
+    private authService: AuthService,
     public dialog: MatDialog) {
-      this.project = this.route.snapshot.data.message;
-      console.log(this.project);
-  }
+
+      // this.route.data.subscribe(res => {
+      //   this.project = res.message;
+      // });
+    }
 
   ngOnInit() {
+    this.route.data.subscribe(val => {
+      this.project = val.message;
+        this.projectService.getOtherProjectForLecturer(this.project.lecturer.id).subscribe(res => {
+          // console.log(res);
+          res = res.filter((item, idx) => {
+            return item.id !== this.project.id;
+          });
 
+          if (res.length <= 5) {
+            this.otherProjects = res;
+          } else {
+
+            const shuffled = res.sort(() => .5 - Math.random()); // shuffle
+            this.otherProjects = shuffled.slice(0, 5); // get sub-array of first 5 elements after shuffle
+          }
+        }, err => {
+          console.log(err);
+        });
+      });
   }
 
 
@@ -50,11 +75,6 @@ export class ProjectDetailsComponent implements OnInit {
       console.log(err);
     });
 
-    // this.studentService.addPreference(this.project.id).subscribe(res => {
-    //   console.log(res);
-    // }, err => {
-    //   console.log(err);
-    // });
   }
 
   downloadFile(filename: string) {

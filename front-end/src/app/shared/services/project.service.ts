@@ -4,15 +4,16 @@ import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SnackBarService } from './snackbar.service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class ProjectService {
 
     dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
-    lecturerId = 31;
 
     constructor(private http: HttpClient,
-                private snackBarService: SnackBarService) {}
+                private snackBarService: SnackBarService,
+                private authService: AuthService) {}
 
     get data(): any {
         return this.dataChange.value;
@@ -29,17 +30,21 @@ export class ProjectService {
         });
     }
 
+    public getProjectStatistics() {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/${this.authService.currentUser.id}/statistics`);
+    }
+
     public createProject(project: any): Observable<any> {
-        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/projects`, project);
+        return this.http.post(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.authService.currentUser.id + `/projects`, project);
     }
 
     public updateProjects(projects: any): Observable<any> {
-        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/projects`, projects);
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.authService.currentUser.id + `/projects`, projects);
     }
 
     public getActiveProjectsForLecturer(): void {
 
-        this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/activeProjects`).subscribe(data => {
+        this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.authService.currentUser.id + `/activeProjects`).subscribe(data => {
             this.dataChange.next(data);
         },
         (error: HttpErrorResponse) => {
@@ -47,8 +52,12 @@ export class ProjectService {
         });
     }
 
+    public getOtherProjectForLecturer(lecturerId): Observable<any> {
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/${lecturerId}/activeProjects`);
+    }
+
     public getInactiveProjectsForLecturer(): Observable<any> {
-        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.lecturerId + `/inactiveProjects`);
+        return this.http.get(`${APP_CONSTANTS.ENDPOINT}/lecturers/` + this.authService.currentUser.id + `/inactiveProjects`);
     }
 
     public getProject(id: number): Observable<any> {
@@ -89,7 +98,11 @@ export class ProjectService {
     }
 
     public reorderPreferences(preferences, projectId) {
-        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/projects/` + projectId + '/preferences', preferences);
+        return this.http.put(`${APP_CONSTANTS.ENDPOINT}/projects/` + projectId + '/preferences', preferences).subscribe(res => {
+            this.snackBarService.showSnackBar('Ordinea a fost salvata cu succes!');
+        }, err => {
+            this.snackBarService.showSnackBar('A intervenit o eroare la salvarea ordinii!');
+        });
     }
 
 

@@ -74,4 +74,9 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findTop10ByNameIsContaining(searchTerm);
     }
 
+    @Override
+    public void flush() {
+        this.studentRepository.flush();
+    }
+
 }

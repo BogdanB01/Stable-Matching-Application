@@ -1,0 +1,112 @@
+{
+    "SAVE": "Save",
+    "USERS": "Users",
+    "EMAIL": "E-mail",
+    "NAME": "Name",
+    "ROLE": "Role",
+    "CANCEL": "Cancel",
+    "UPDATE": "Update",
+    "INFO": "More info",
+    "APP": {
+        "NAME": "FII License"
+    },
+    "APPLY": {
+        "AT": "Apply at",
+        "DATE": "Date",
+        "PERSONAL_NOTE": "Personal note"
+    },
+    "MENU": {
+        "PROJECTS": "Projects",
+        "LECTURER_ACCOUNT": "Lecturer account",
+        "STUDENT_ACCOUNT": "Student account",
+        "MY_ACCOUNT": "My account",
+        "ACCOUNT_SETTINGS": "Account settings",
+        "ADMIN_ACCOUNT": "Admin account", 
+        "USERS": "Users",
+        "MATCHING_AREA": "Organization",
+        "LANGUAGE": "Language",
+        "RO": "Romanian",
+        "EN": "English",
+        "LOGOUT": "Log Out"
+    },
+    "PROJECTS": {
+        "TITLE": "Title",
+        "PROPOSER": "Proposed by",
+        "APPLY": "Apply",
+        "DETAILS": "Details",
+        "BIBLIOGRAPHIES": "Bibliographies",
+        "TAGS": "Tags",
+        "ATTACHED_FILE": "Attached file",
+        "CAPACITY": "Capacity",
+        "SAME_LECTURER": "Proposed by same lecturer",
+        "ASSIGNED_STUDENTS": "Assigned students",
+        "ACTIONS": "Actions",
+        "QUESTIONS": "Questions",
+        "APPLIED_STUDENTS": "Students that applied at this project",
+        "EMPTY_LIST": "No student applied for this project"
+    },
+    "EDIT_ACCOUNT": {
+        "INFO": "Information",
+        "NAME": "Name",
+        "EMAIL": "E-mail",
+        "CHANGE_PASSWORD": "Change password",
+        "OLD_PASSWORD": "Old password",
+        "NEW_PASSWORD": "New password",
+        "REGISTRATION_NUMBER": "Registration number",
+        "PASSWORD_STRENGTH_ERROR" : "Password must contain at least 8 characters, a capital letters, a digit and a special character"
+    },
+    "STUDENTS": {
+        "PREFERENCES": "Preferences",
+        "REORDER": "Drag and Drop to reorder list",
+        "ASSIGNED_PROJECT": "Assigned project",
+        "GRADES": "Student's grades",
+        "ANSWERS": "Student's answers"
+    },
+    "LECTURERS": {
+        "ACCOUNT": {
+            "PROPOSED_PROJECTS": "Proposed projects",
+            "ADD_PROJECT": "Add project",
+            "ACCOUNT_SETTINGS": "Account settings",
+            "PAST_PROJECTS": "Past projects",
+            "STATISTICS": "Statistics",
+            "DELETE_PROJECT": "Delete project",
+            "UPDATE_PROJECT": "Update project",
+            "STUDENTS_PREFERENCES": "Students preferences"
+        },
+        "CREATE": {
+            "PROJECT": "Add new project",
+            "DESCRIPTION": "Add a description to this project",
+            "MISSING_TITLE": "Title is required",
+            "MISSING_CAPACITY": "Capacity is required",
+            "INCORRECT_CAPACITY": "Capacity must be greater or equal to 1",
+            "MISSING_DESCRIPTION": "Enter a description for this project",
+            "ADD_TAGS": "Add tags to this project...",
+            "ADD_BIBLIOGRAPHY": "Add new bibliography",
+            "ADD_QUESTION": "Add new question",
+            "UPLOAD_FILE": "Attach file"
+        }
+    },
+    "ADMIN": {
+        "SEARCH_USERS": "Search users",
+        "ACTIONS": "Actions"
+    }, 
+    "MATCHING_AREA": {
+        "STUDENTS_IMPORT": "Import students",
+        "LECTURERS_IMPORT" : "Import lecturers",
+        "COURSES_IMPORT": "Import courses",
+        "GRADES_IMPORT": "Import grades",
+        "PICK_YEAR": "Pick year",
+        "SELECTED_YEAR": "Selected year",
+        "VIEW_REPORT": "View report"
+    },
+    "SEARCH": {
+        "PROJECTS": "Search projects",
+        "BY_TITLE": "Title",
+        "BY_TAG": "Tag",
+        "BY_LECTURER": "Lecturer"
+    }, 
+    "EDIT": {
+        "PROJECT": "Edit project",
+        "TAGS": "Add or delete tags"
+    }
+}

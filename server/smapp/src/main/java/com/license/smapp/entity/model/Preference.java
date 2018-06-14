@@ -1,12 +1,16 @@
 package com.license.smapp.entity.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "preferences")
-public class Preference implements Comparable<Preference>, Cloneable{
+public class Preference implements Comparable<Preference> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Preference.class);
     @Id
     @SequenceGenerator(name = "stud_pref_seq", sequenceName = "stud_pref_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stud_pref_seq")
@@ -29,6 +33,16 @@ public class Preference implements Comparable<Preference>, Cloneable{
     private Double avg;
 
     private Integer pos;
+
+    private String personalNote;
+
+    public String getPersonalNote() {
+        return personalNote;
+    }
+
+    public void setPersonalNote(String personalNote) {
+        this.personalNote = personalNote;
+    }
 
     public Integer getIndex() {
         return index;
@@ -130,17 +144,6 @@ public class Preference implements Comparable<Preference>, Cloneable{
                 return EQUAL;
             }
         }
-    }
-
-    @Override
-    public Preference clone() {
-        Preference clone = null;
-        try {
-            clone = (Preference) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-        return clone;
     }
 
 }

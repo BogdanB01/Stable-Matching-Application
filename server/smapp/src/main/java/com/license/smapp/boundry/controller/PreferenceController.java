@@ -11,6 +11,7 @@ import com.license.smapp.control.service.StudentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,6 +31,7 @@ public class PreferenceController {
     private ModelMapper modelMapper;
 
 
+    @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createPreference(@RequestBody PreferenceDto preference) throws ResourceNotFoundException, BadRequestException {
         Student student = studentService.findById(preference.getStudent().getId());

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface HistoryRepository extends JpaRepository<History, Long> {
-    @Query("select distinct year from History")
+    @Query("select distinct year from History order by year")
     List<Integer> getDistinctYears();
 
     List<History> findAllByYear(Integer year);

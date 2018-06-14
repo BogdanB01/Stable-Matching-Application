@@ -76,6 +76,7 @@ export class EditProjectDialogComponent implements OnInit {
       assignedProjects: Object.assign([], this.project.assignedProjects)
     };
 
+    console.log(updateProject);
     return updateProject;
   }
 

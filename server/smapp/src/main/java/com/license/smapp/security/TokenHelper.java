@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class TokenHelper {
@@ -76,6 +78,7 @@ public class TokenHelper {
     }
 
     public String refreshToken(String token, Device device) {
+
         String refreshedToken;
         Date a = timeProvider.now();
         try {
@@ -92,11 +95,18 @@ public class TokenHelper {
         return refreshedToken;
     }
 
-    public String generateToken(String username, Device device) {
+    public String generateToken(User user, Device device) {
         String audience = generateAudience(device);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("name", user.getName());
+        claims.put("role", user.getRoles());
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setIssuer( APP_NAME )
-                .setSubject(username)
+                .setSubject(user.getUsername())
                 .setAudience(audience)
                 .setIssuedAt(timeProvider.now())
                 .setExpiration(generateExpirationDate(device))

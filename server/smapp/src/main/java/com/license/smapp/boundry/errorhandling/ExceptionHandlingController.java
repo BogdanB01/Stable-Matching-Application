@@ -8,9 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 
 @ControllerAdvice
@@ -19,11 +23,10 @@ public class ExceptionHandlingController {
     Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlingController.class);
 
     @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorDto handleBadRequestException(BadRequestException ex)
+    public ResponseEntity<ErrorDto> handleBadRequestException(BadRequestException ex)
     {
         LOGGER.error(ex.getMessage());
-        return this.generateErrorDto(HttpStatus.BAD_REQUEST, ex);
+        return new ResponseEntity<ErrorDto>(this.generateErrorDto(HttpStatus.BAD_REQUEST, ex), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

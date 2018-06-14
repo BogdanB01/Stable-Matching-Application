@@ -3,6 +3,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './shared/services/auth.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { APP_CONSTANTS } from './shared/app.constants';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'app';
 
-  isLoggedIn$: Observable<boolean>;
+  // isLoggedIn$: Observable<boolean>;
 
   mobileQuery: MediaQueryList;
   searchOpen = false;
@@ -20,97 +22,43 @@ export class AppComponent {
 
   private _mobileQueryListener: () => void;
 
-
-  menus = [
-    {
-      'name' : 'Proiecte',
-      'icon' : 'dashboard',
-      'link' : '/projects',
-      'open' : false,
-    },
-    {
-      'name' : 'Cont profesor',
-      'icon' : 'account_circle',
-      'link' : '/lecturer-account',
-      'open' : true
-    },
-    {
-      'name' : 'Cont student',
-      'icon' : 'account_box',
-      'link' : false,
-      'open' : false,
-      'sub' : [
-        {
-          'name' : 'Aplicarile mele',
-          'icon' : 'account_box',
-          'link' : '/student-account',
-          'chip' : false,
-          'open' : true
-        },
-        {
-          'name' : 'Setari cont',
-          'icon' : 'build',
-          'link' : '/student-settings',
-          'chip' : false,
-          'open' : true
-        }
-      ]
-    },
-    {
-      'name' : 'Cont admin',
-      'icon' : 'account_box',
-      'link' : false,
-      'open' : false,
-      'sub' : [
-        {
-          'name' : 'Utilizatori',
-          'icon' : '',
-          'link' : '/admin-account',
-          'chip' : false,
-          'open' : true
-        },
-        {
-          'name' : 'Cursuri',
-          'icon' : 'build',
-          'link' : '',
-          'chip' : false,
-          'open' : true
-        },
-        {
-          'name' : 'Matching area',
-          'icon' : 'build',
-          'link' : '/matching-area',
-          'chip' : false,
-          'open' : true
-        }
-      ]
-    },
-    {
-      'name': 'LogOut',
-      'icon': 'exit_to_app',
-      'link': true,
-      'open': false
-    }
-  ];
-
+  public menus: any;
 
   constructor(
     private router: Router,
-    changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private translate: TranslateService) {
+      translate.setDefaultLang('ro');
       this.mobileQuery = media.matchMedia('(max-width: 600px)');
       this._mobileQueryListener = () => changeDetectorRef.detectChanges();
       this.mobileQuery.addListener(this._mobileQueryListener);
-      this.isLoggedIn$ = this.authService.isLoggedIn;
+      // this.isLoggedIn$ = this.authService.isLoggedIn;
 
-      console.log(this.isLoggedIn$);
-
+      this.authService.role.subscribe(role => {
+        console.log(role);
+        switch (role) {
+          case APP_CONSTANTS.ROLE_LECTURER: {
+            this.menus = APP_CONSTANTS.LECTURER_MENU;
+            break;
+          }
+          case APP_CONSTANTS.ROLE_STUDENT: {
+            this.menus = APP_CONSTANTS.STUDENT_MENU;
+            break;
+          }
+          case APP_CONSTANTS.ROLE_ADMIN: {
+            this.menus = APP_CONSTANTS.ADMIN_MENU;
+            break;
+          }
+          // default:
+          //   this.authService.logout();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
-
 
 }

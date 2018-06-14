@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sidemenu-item',
@@ -11,11 +12,15 @@ export class SidemenuItemComponent implements OnInit {
     @Input() menu;
     @Input() iconOnly;
     @Input() secondaryMenu = false;
+    title = '';
 
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService,
+                private translate: TranslateService) {
+                }
 
     ngOnInit() {
 
+        // console.log(this.title);
     }
 
     openLink() {
@@ -39,8 +44,14 @@ export class SidemenuItemComponent implements OnInit {
 
     click() {
         this.menu.open = !this.menu.open;
-        console.log(this.menu);
-        if (this.menu.name === 'LogOut') {
+
+        if (this.menu.name === 'MENU.RO') {
+            this.translate.use('ro');
+        } else if (this.menu.name === 'MENU.EN') {
+            this.translate.use('en');
+        }
+
+        if (this.menu.name === 'MENU.LOGOUT') {
             console.log('salut');
             this.authService.logout();
         }

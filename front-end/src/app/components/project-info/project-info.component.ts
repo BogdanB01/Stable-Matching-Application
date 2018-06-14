@@ -22,6 +22,7 @@ export class ProjectInfoComponent implements OnInit {
     ngOnInit(): void {
         this.projectService.getProjectPreferences(this.project.id).subscribe(res => {
             this.preferences = res;
+            console.log(this.preferences);
         });
     }
 
@@ -48,11 +49,7 @@ export class ProjectInfoComponent implements OnInit {
     }
 
     saveOrder(): void {
-        this.projectService.reorderPreferences(this.preferences, this.project.id).subscribe(res => {
-            console.log(res);
-        }, err => {
-            console.log(err);
-        });
+        this.projectService.reorderPreferences(this.preferences, this.project.id);
     }
 
 }

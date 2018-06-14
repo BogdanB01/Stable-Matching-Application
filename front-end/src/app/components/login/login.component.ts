@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { User } from '../../shared/interfaces/user';
@@ -12,15 +12,16 @@ import { User } from '../../shared/interfaces/user';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  submitted = false;
   constructor(
     private fb: FormBuilder,
     private authService: AuthService
-  ) { }
+  ) {
+    this.authService.logout();
+  }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email : ['', Validators.required],
+      email : ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
@@ -33,7 +34,6 @@ export class LoginComponent implements OnInit {
       password: formModel.password as string
     };
     this.authService.login(user);
-
   }
 
 }

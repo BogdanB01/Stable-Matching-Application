@@ -5,7 +5,7 @@
         </mat-panel-title>
                             
         <mat-panel-description>
-            Informatii suplimentare
+            {{'INFO' | translate}}
         </mat-panel-description>
     </mat-expansion-panel-header>
     
@@ -13,11 +13,11 @@
     <ng-template matExpansionPanelContent>
 
         <div fxLayout="row">
-            <h4 class="mat-subheading-2 center-align"> Data aplicarii : <span> {{ preference.submittedAt | date:'medium' }} </span> </h4> 
+            <h4 class="mat-subheading-2 center-align"> {{'APPLY.DATE' | translate}} : <span> {{ preference.submittedAt | date:'medium' }} </span> </h4> 
         </div>
         
         <div *ngIf="details && details.grades && details.grades.length > 0">
-            <h4 class="mat-subheading-2 center-align">Notele studentului</h4>
+            <h4 class="mat-subheading-2 center-align">{{'STUDENTS.GRADES' | translate}}</h4>
             <mat-divider></mat-divider>
 
             <div *ngIf="details && details.grades" fxLayout="row" fxLayoutWrap="wrap" class="parent">
@@ -31,11 +31,17 @@
 
         
         <div *ngIf="details && details.answers && details.answers.length > 0" fxLayout="column">
-            <h4 class="mat-subheading-2 center-align">Raspunsurile studentului</h4>
+            <h4 class="mat-subheading-2 center-align"> {{'STUDENTS.ANSWERS' | translate}} </h4>
 
             <div *ngFor="let el of details.answers" class="size">
                 <span class="question"> {{el.question.question}} </span> - <span class="answer"> {{el.answer}} </span>
             </div>
+        </div>
+
+        <div>
+            <h4 class="mat-subheading-2 center-align">{{'APPLY.PERSONAL_NOTE' | translate}}</h4>
+            <span *ngIf="!preference.personalNote"> None </span>
+            {{preference.personalNote}}
         </div>
 
     </ng-template>

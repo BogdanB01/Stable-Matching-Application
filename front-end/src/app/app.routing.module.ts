@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { ProjectCardComponent } from './components/project-card/project-card.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { AuthGuard } from './shared/services/auth.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { StudentAccountComponent } from './components/student-account/student-account.component';
@@ -20,35 +20,66 @@ import { ProjectInfoResolve } from './shared/services/project.info.resolve.servi
 import { SearchProjectsComponent } from './components/search-projects/search-projects.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
+import { RoleGuard } from './shared/guards/role.guard';
 
 
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
-  //  { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'lecturer-account', component: LecturerAccountComponent,
+      canActivateChild: [AuthGuard],
       children: [
         { path: '', redirectTo: 'proposed-projects', pathMatch: 'full' },
         { path: 'proposed-projects', component: LecturerProjectsComponent },
         { path: 'add-project', component: CreateProjectComponent },
         { path: 'account-settings', component: EditLecturerAccountComponent },
-      ]
+      ],
+      canActivate: [RoleGuard, AuthGuard],
+      data: {
+        expectedRole: 'ROLE_LECTURER'
+      }
     },
     { path: 'lecturer-account/proposed-projects/:id/info', component: ProjectInfoComponent,
       resolve: {
         message: ProjectDetailsResolve
+      },
+      canActivate: [RoleGuard, AuthGuard],
+      data: {
+        expectedRole: 'ROLE_LECTURER'
       }
     },
-    { path: 'projects', component: ProjectListComponent , /* canActivate: [AuthGuard] */},
-    { path: 'student-settings', component: EditStudentAccountComponent},
+    { path: 'projects', component: ProjectListComponent ,  canActivate: [AuthGuard] },
+    { path: 'student-settings', component: EditStudentAccountComponent,
+      canActivate: [RoleGuard, AuthGuard],
+      data: {
+        expectedRole: 'ROLE_STUDENT'
+      }
+    },
     { path: 'projects/:id', component: ProjectDetailsComponent,
         resolve: {
           message: ProjectDetailsResolve
-        }
+        },
+        canActivate: [AuthGuard]
     },
-    { path: 'search', component: SearchProjectsComponent },
-    { path: 'student-account', component: StudentAccountComponent },
-    { path: 'admin-account', component: AdminAccountComponent },
-    { path: 'matching-area', component: MatchingAreaComponent},
+    { path: 'search', component: SearchProjectsComponent, canActivate: [AuthGuard] },
+    { path: 'student-account', component: StudentAccountComponent,
+      canActivate: [RoleGuard],
+      data: {
+        expectedRole: 'ROLE_STUDENT'
+      }
+    },
+    { path: 'admin-account', component: AdminAccountComponent,
+      canActivate: [RoleGuard, AuthGuard],
+      data: {
+        expectedRole: 'ROLE_ADMIN'
+      }
+    },
+    { path: 'matching-area', component: MatchingAreaComponent,
+      canActivate: [RoleGuard, AuthGuard],
+      data: {
+        expectedRole: 'ROLE_ADMIN'
+      }
+    },
     { path: 'not-found', component: NotFoundComponent },
     { path: '**', redirectTo: 'not-found' }
 ];

@@ -3,6 +3,7 @@ package com.license.smapp.boundry.controller;
 import com.google.common.reflect.TypeToken;
 import com.license.smapp.boundry.dto.LecturerDto;
 import com.license.smapp.boundry.dto.ProjectDto;
+import com.license.smapp.boundry.dto.ProjectStatisticsDto;
 import com.license.smapp.boundry.exceptions.BadRequestException;
 import com.license.smapp.boundry.exceptions.ResourceNotFoundException;
 import com.license.smapp.entity.model.Lecturer;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -39,6 +41,7 @@ public class LecturerController {
      * Get a list with all the Lecturer objects from the database
      * @return List with the Lecturer Objects and a message if the request was successfully
      */
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<List<LecturerDto>> getAllLecturers() {
         List<LecturerDto> all = modelMapper.map(lecturerService.findAll(), new TypeToken<List<LecturerDto>>() {}.getType());
@@ -51,6 +54,7 @@ public class LecturerController {
      * @param id the Id to search by
      * @return An Lecturer Object / message if the object was successfully found or not
      */
+    @PreAuthorize("hasRole('ADMIN') or hasRole('STUDENT') or hasRole('LECTURER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = lecturerService.findById(id);
@@ -67,6 +71,7 @@ public class LecturerController {
      * @param id the id of the Lecturer to delete
      * @return message if the object was successfully deleted
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteLecturer(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = lecturerService.findById(id);
@@ -83,6 +88,7 @@ public class LecturerController {
      * Add a new Lecturer object into the database
      * @param lecturer the object to be saved
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<Lecturer> createUser(@RequestBody LecturerDto lecturer) throws URISyntaxException {
 
@@ -95,6 +101,7 @@ public class LecturerController {
      * @param lecturer the object that needs to be updated
      * @param id the id of the object
      */
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateLecturer(@RequestBody LecturerDto lecturer, @PathVariable Long id) throws BadRequestException, ResourceNotFoundException {
 
@@ -117,6 +124,7 @@ public class LecturerController {
      * @param: id - the id of the Lecturer
      * @param  - the project to add to the lecturer's list
      */
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "/{id}/projects", method = RequestMethod.POST)
     public ResponseEntity<ProjectDto> addProject(@PathVariable Long id,
                                               @RequestBody ProjectDto projectDto) throws URISyntaxException, ResourceNotFoundException {
@@ -142,6 +150,7 @@ public class LecturerController {
      * Get a List with Project Objects proposed by the Lecturer
      * @param: the id of the Lecturer to search by
      */
+    @PreAuthorize("hasRole('LECTURER') or hasRole('STUDENT') or hasRole('ADMIN')")
     @RequestMapping(value = "{id}/activeProjects", method = RequestMethod.GET)
     public ResponseEntity<List<ProjectDto>> getActiveProjects(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = this.lecturerService.findById(id);
@@ -155,6 +164,7 @@ public class LecturerController {
         return ResponseEntity.ok(modelMapper.map(projects,  new TypeToken<List<ProjectDto>>() {}.getType()));
     }
 
+    @PreAuthorize("hasRole('LECTURER') or hasRole('STUDENT') or hasRole('ADMIN')")
     @RequestMapping(value = "{id}/inactiveProjects", method = RequestMethod.GET)
     public ResponseEntity<?> getInactiveProjects(@PathVariable Long id) throws ResourceNotFoundException {
         Lecturer lecturer = this.lecturerService.findById(id);
@@ -168,6 +178,24 @@ public class LecturerController {
         return ResponseEntity.ok(modelMapper.map(projects, new TypeToken<List<ProjectDto>>() {}.getType()));
     }
 
+
+    @PreAuthorize("hasRole('LECTURER')")
+    @RequestMapping(value = "{id}/statistics", method = RequestMethod.GET)
+    public ResponseEntity<?> getStatisticsForLecturer(@PathVariable Long id) throws ResourceNotFoundException {
+        Lecturer lecturer = this.lecturerService.findById(id);
+
+        if (lecturer == null) {
+            throw new ResourceNotFoundException(String.format("Profesorul cu id-ul=%s nu a fost gasit!", id));
+        }
+
+        List<Project> projects = this.projectService.getProjectsForLecturer(lecturer, true);
+
+        List<ProjectStatisticsDto> statistics = modelMapper.map(projects, new TypeToken<List<ProjectStatisticsDto>>() {}.getType());
+
+        return ResponseEntity.ok(statistics);
+    }
+
+    @PreAuthorize("hasRole('LECTURER')")
     @RequestMapping(value = "{id}/projects", method = RequestMethod.PUT)
     public ResponseEntity<?> updateProjects(@PathVariable Long id,
                                             @RequestBody List<ProjectDto> projects) throws ResourceNotFoundException, BadRequestException {

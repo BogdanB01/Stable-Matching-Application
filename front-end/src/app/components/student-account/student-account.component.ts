@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentService } from '../../shared/services/student.service';
 import { MatDialog } from '@angular/material';
-import { DeleteDialogComponent } from '../../dialogs/delete/delete.dialog.component';
+import { ConfirmDialogComponent } from '../../dialogs/confirm/confirm.dialog.component';
 import { SnackBarService } from '../../shared/services/snackbar.service';
 
 @Component({
@@ -11,8 +11,6 @@ import { SnackBarService } from '../../shared/services/snackbar.service';
 })
 export class StudentAccountComponent implements OnInit {
 
-
-  draggable = false;
   preferences = null;
   project = null;
 
@@ -37,10 +35,11 @@ export class StudentAccountComponent implements OnInit {
   }
 
   removeProject(index: number): void {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '350px',
       data: {
-        title: this.preferences[index].project.title
+        title: this.preferences[index].project.title,
+        positiveButton: 'Delete'
       }
     });
 
@@ -59,9 +58,9 @@ export class StudentAccountComponent implements OnInit {
   saveOrder(): void {
     console.log(this.preferences);
     this.studentService.reorderPreference(this.preferences).subscribe(res => {
-      console.log(res);
+      this.snackBarService.showSnackBar('Ordine salvata cu succes!');
     }, err => {
-      console.log(err);
+      this.snackBarService.showSnackBar('A intervenit o eroare la salvarea ordinii!');
     });
   }
 }

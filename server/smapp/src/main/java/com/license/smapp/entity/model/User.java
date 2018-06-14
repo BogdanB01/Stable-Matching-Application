@@ -1,11 +1,13 @@
 package com.license.smapp.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Email;
 import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +29,8 @@ public class User implements UserDetails{
 
     private String name;
 
+    @NotNull(message = "Email-ul nu poate fi null")
+    @Email(message = "Email-ul nu este valid")
     @Column(unique = true)
     private String email;
 
@@ -80,6 +84,10 @@ public class User implements UserDetails{
 
     public String getPassword() {
         return password;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     public void setPassword(String password) {

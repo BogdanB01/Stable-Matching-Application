@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class Problem {
@@ -93,8 +94,10 @@ public class Problem {
                 Student student = studentRepository.findOne(s.getId());
                 Project project = projectRepository.findOne(s.getProject().getId());
 
-                project.addStudent(student);
-                projectRepository.save(project);
+                if (student.getProject() != null) {
+                    project.addStudent(student);
+                    projectRepository.save(project);
+                }
             }
         }
     }

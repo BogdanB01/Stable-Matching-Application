@@ -2,11 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatTableDataSource, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTab } from '@angular/material';
 import { EditProjectDialogComponent } from '../edit-project-dialog/edit-project-dialog.component';
 import { StatisticsDialogComponent } from '../lecturer-project-statistics-dialog/statistics-dialog-component';
-import { SearchStudentDialogComponent } from './search-student-dialog.component';
 import { ProjectService } from '../../shared/services/project.service';
 import { StudentService } from '../../shared/services/student.service';
 import { DataSource } from '@angular/cdk/collections';
-import { DeleteDialogComponent } from '../../dialogs/delete/delete.dialog.component';
+import { ConfirmDialogComponent } from '../../dialogs/confirm/confirm.dialog.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SnackBarService } from '../../shared/services/snackbar.service';
 import { PastProjectsComponent } from '../../dialogs/past-projects/past-projects.component';
@@ -49,10 +48,11 @@ export class LecturerProjectsComponent implements OnInit {
 
       const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === id);
 
-      const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         width: '350px',
         data: {
           title: this.exampleDatabase.dataChange.value[foundIndex].title,
+          positiveButton: 'Delete'
         }
       });
 
@@ -73,25 +73,6 @@ export class LecturerProjectsComponent implements OnInit {
 
     refreshTable() {
       this.exampleDatabase.dataChange.next(0);
-    }
-
-    openSearchStudentModal(projectId: any): void {
-      const dialogRef = this.dialog.open(SearchStudentDialogComponent, {
-        width: '350px',
-        data: {
-          projectId: projectId
-        }
-      });
-
-      const sub = dialogRef.componentInstance.onAssign.subscribe((data) => {
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex(x => x.id === projectId);
-        this.exampleDatabase.dataChange.value[foundIndex] = data;
-        this.projectService.dataChange.next(this.projectService.dataChange.value);
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-      });
     }
 
     openEditProjectModal(project: any): void {

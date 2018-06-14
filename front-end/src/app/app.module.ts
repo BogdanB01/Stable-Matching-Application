@@ -25,7 +25,6 @@ import { ProjectInfoComponent } from './components/project-info/project-info.com
 import { StudentDetailsComponent } from './components/student-details/student-details.component';
 import { LecturerProjectsComponent } from './components/lecturer-projects/lecturer-projects.component';
 import { ApplyDialogComponent } from './components/apply-dialog/apply-dialog.component';
-import { SearchStudentDialogComponent } from './components/lecturer-projects/search-student-dialog.component';
 import { SearchProjectsComponent } from './components/search-projects/search-projects.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { EditStudentAccountComponent } from './components/edit-student-account/edit-student-account.component';
@@ -38,13 +37,14 @@ import { MediaMatcher } from '@angular/cdk/layout';
 
 import { DndModule } from 'ng2-dnd';
 
-import { DeleteDialogComponent } from './dialogs/delete/delete.dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm/confirm.dialog.component';
 import { PastProjectsComponent } from './dialogs/past-projects/past-projects.component';
 
 
 // services
 import { AuthService } from './shared/services/auth.service';
-import { AuthGuard } from './shared/services/auth.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
+import { RoleGuard } from './shared/guards/role.guard';
 import { SearchService } from './shared/services/search.service';
 import { ProjectService } from './shared/services/project.service';
 import { UploadService } from './shared/services/upload.service';
@@ -72,6 +72,12 @@ import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { LoaderService } from './components/loader/loader.service';
 import { LoaderComponent } from './components/loader/loader.component';
 
+// import ngx-translate and the http loader
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { AuthModule } from './auth.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,7 +87,6 @@ import { LoaderComponent } from './components/loader/loader.component';
     ProjectDetailsComponent,
     StudentAccountComponent,
     LecturerAccountComponent,
-    SearchStudentDialogComponent,
     EditProjectDialogComponent,
     CreateProjectComponent,
     EditLecturerAccountComponent,
@@ -95,7 +100,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     LecturerProjectsComponent,
     EscapeHtmlPipe,
     ApplyDialogComponent,
-    DeleteDialogComponent,
+    ConfirmDialogComponent,
     PastProjectsComponent,
     SearchProjectsComponent,
     LoaderComponent,
@@ -112,20 +117,28 @@ import { LoaderComponent } from './components/loader/loader.component';
     BrowserModule,
     DndModule.forRoot(),
     AppRoutingModule,
-    QuillModule
+    QuillModule,
+    AuthModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   entryComponents: [
-    SearchStudentDialogComponent,
     EditProjectDialogComponent,
     StatisticsDialogComponent,
     ApplyDialogComponent,
-    DeleteDialogComponent,
+    ConfirmDialogComponent,
     PastProjectsComponent
   ],
   providers: [
     MediaMatcher,
     AuthService,
     AuthGuard,
+    RoleGuard,
     UploadService,
     ProjectService,
     ProjectDetailsResolve,
@@ -150,3 +163,8 @@ import { LoaderComponent } from './components/loader/loader.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

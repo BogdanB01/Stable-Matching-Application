@@ -29,6 +29,7 @@ drop sequence if exists question_seq;
 drop sequence if exists file_seq;
 drop sequence if exists answer_seq;
 drop sequence if exists proj_pref;
+drop sequence if exists history_seq;
 
 create sequence user_seq START 1;
 create sequence tag_seq START 1;
@@ -42,6 +43,7 @@ create sequence question_seq START 1;
 create sequence file_seq START 1;
 create sequence answer_seq START 1;
 create sequence proj_pref START 1;
+create sequence history_seq START 1;
 
 drop extension if exists pgcrypto;
 
