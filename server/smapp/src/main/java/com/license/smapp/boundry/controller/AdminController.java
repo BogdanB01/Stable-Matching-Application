@@ -3,10 +3,13 @@ package com.license.smapp.boundry.controller;
 import com.license.smapp.boundry.exceptions.BadRequestException;
 import com.license.smapp.common.PdfGenerator;
 import com.license.smapp.common.TimeProvider;
+import com.license.smapp.control.service.CourseService;
 import com.license.smapp.control.service.MatchingService;
+import com.license.smapp.control.service.StudentService;
 import com.license.smapp.entity.model.*;
 import com.license.smapp.control.service.HistoryService;
 import com.license.smapp.entity.repository.ApplicationStateRepository;
+import com.license.smapp.entity.repository.CourseRepository;
 import com.license.smapp.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,12 @@ public class AdminController {
 
     @Autowired
     private MatchingService matchingService;
+
+    @Autowired
+    private CourseService courseService;
+
+    @Autowired
+    private StudentService studentService;
 
     @Autowired
     TimeProvider timeProvider;
@@ -125,5 +134,13 @@ public class AdminController {
     @RequestMapping(value = "/app/state", method = RequestMethod.GET)
     public ResponseEntity<?> getApplicationState() {
         return ResponseEntity.ok(applicationStateRepository.findOne(Constants.STATE_ID));
+    }
+
+    @RequestMapping(value = "/clear", method = RequestMethod.GET)
+    public ResponseEntity<?> prepareNewSession() {
+        this.studentService.deleteAll();
+        this.courseService.deleteAll();
+
+        return null;
     }
 }

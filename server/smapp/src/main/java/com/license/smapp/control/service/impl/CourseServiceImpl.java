@@ -33,4 +33,9 @@ public class CourseServiceImpl implements CourseService{
     public void delete(Long id) {
         this.courseRepository.delete(id);
     }
+
+    @Override
+    public void deleteAll() {
+        this.courseRepository.deleteAll();
+    }
 }

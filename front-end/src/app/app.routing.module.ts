@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { ProjectCardComponent } from './components/project-card/project-card.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { ProjectListComponent } from './components/project-list/project-list.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';

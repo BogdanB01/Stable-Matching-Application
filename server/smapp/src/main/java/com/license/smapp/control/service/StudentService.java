@@ -11,4 +11,5 @@ public interface StudentService extends CrudService<Student>{
     void update(Student student);
     List<Student> searchStudent(String searchTerm);
     void flush();
+    void deleteAll();
 }

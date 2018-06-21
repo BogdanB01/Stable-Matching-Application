@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ProjectCardComponent } from './components/project-card/project-card.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { StudentAccountComponent } from './components/student-account/student-account.component';
@@ -82,7 +81,6 @@ import { AuthModule } from './auth.module';
   declarations: [
     AppComponent,
     LoginComponent,
-    SidebarComponent,
     ProjectCardComponent,
     ProjectDetailsComponent,
     StudentAccountComponent,

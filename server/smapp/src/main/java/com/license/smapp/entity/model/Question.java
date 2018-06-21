@@ -33,8 +33,8 @@ public class Question {
     @JoinColumn(name = "project_id")
     private Project project;
 
-//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-//    private List<Answer> answers;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private List<Answer> answers;
 
     public Question() {}
 
@@ -58,13 +58,13 @@ public class Question {
         this.project = project;
     }
 
-//    public List<Answer> getAnswers() {
-//        return answers;
-//    }
-//
-//    public void setAnswers(List<Answer> answers) {
-//        this.answers = answers;
-//    }
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
 
     public void setId(Long id) {
         this.id = id;

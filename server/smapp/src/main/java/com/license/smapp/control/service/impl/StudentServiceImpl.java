@@ -79,4 +79,9 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository.flush();
     }
 
+    @Override
+    public void deleteAll() {
+        this.studentRepository.deleteAll();
+    }
+
 }

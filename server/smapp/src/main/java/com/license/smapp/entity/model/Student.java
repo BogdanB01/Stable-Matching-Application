@@ -32,8 +32,9 @@ public class Student extends User implements Serializable{
     @Column(name="registration_number")
     private String registrationNumber;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Grade> grades;
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderColumn(name ="index")
     private List<Preference> preferences;
@@ -41,7 +42,7 @@ public class Student extends User implements Serializable{
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "project_id")
     private Project project;
 

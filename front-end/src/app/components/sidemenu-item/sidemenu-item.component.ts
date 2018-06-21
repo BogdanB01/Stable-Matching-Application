@@ -19,7 +19,7 @@ export class SidemenuItemComponent implements OnInit {
                 }
 
     ngOnInit() {
-
+        this.menu.open = false;
         // console.log(this.title);
     }
 

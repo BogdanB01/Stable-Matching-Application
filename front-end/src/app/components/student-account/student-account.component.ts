@@ -49,7 +49,11 @@ export class StudentAccountComponent implements OnInit {
           this.preferences.splice(index, 1);
           this.snackBarService.showSnackBar('Preferinta a fost stearsa cu succes!');
         }, err => {
-          this.snackBarService.showSnackBar('A intervenit o eroare la stergerea preferintei!');
+          if (err.status === 400) {
+            this.snackBarService.showSnackBar(err.error.message);
+          } else {
+            this.snackBarService.showSnackBar('A intervenit o eroare la stergerea preferintei!');
+          }
         });
       }
     });
@@ -60,7 +64,11 @@ export class StudentAccountComponent implements OnInit {
     this.studentService.reorderPreference(this.preferences).subscribe(res => {
       this.snackBarService.showSnackBar('Ordine salvata cu succes!');
     }, err => {
-      this.snackBarService.showSnackBar('A intervenit o eroare la salvarea ordinii!');
+      if (err.status === 400) {
+        this.snackBarService.showSnackBar(err.error.message);
+      } else {
+        this.snackBarService.showSnackBar('A intervenit o eroare la salvarea ordinii!');
+      }
     });
   }
 }

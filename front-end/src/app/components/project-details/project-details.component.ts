@@ -72,6 +72,9 @@ export class ProjectDetailsComponent implements OnInit {
         this.snackBarService.showSnackBar('Nu poti aplica de 2 ori la acelasi proiect!');
       }
     }, err => {
+      if (err.status === 400) {
+        this.snackBarService.showSnackBar(err.error.message);
+      }
       console.log(err);
     });
 

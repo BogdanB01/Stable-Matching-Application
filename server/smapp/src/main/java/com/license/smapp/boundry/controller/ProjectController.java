@@ -1,5 +1,6 @@
 package com.license.smapp.boundry.controller;
 
+import com.license.smapp.aop.StopMethodExecution;
 import com.license.smapp.boundry.dto.*;
 import com.license.smapp.boundry.exceptions.BadRequestException;
 import com.license.smapp.boundry.exceptions.ResourceNotFoundException;
@@ -38,7 +39,7 @@ public class ProjectController {
 
     /**
      * Get a list with all the Project objects from the database
-     * @return List with the Project Objects and a message if the request was successfully
+     * @return List with the all the projects from the database
      */
     @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -80,13 +81,14 @@ public class ProjectController {
         }
     }
 
+
+    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
+
     /**
      * Find a Project by id
-     *
      * @param id the Id to search by
      * @return An Project Object / message if the object was successfully found or not
      */
-    @PreAuthorize("hasRole('LECTURER') or hasRole('ADMIN') or hasRole('STUDENT')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) throws ResourceNotFoundException {
         Project project = projectService.findById(id);
@@ -154,6 +156,7 @@ public class ProjectController {
     }
 
     @PreAuthorize("hasRole('LECTURER')")
+    @StopMethodExecution
     @RequestMapping(value = "/{id}/preferences", method = RequestMethod.PUT)
     public ResponseEntity<?> reorderPreferencesForProject(@PathVariable Long id,
                                                           @RequestBody List<PreferenceDto> preferences) throws ResourceNotFoundException, BadRequestException {

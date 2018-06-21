@@ -1,6 +1,7 @@
 package com.license.smapp.boundry.controller;
 
 
+import com.license.smapp.aop.StopMethodExecution;
 import com.license.smapp.boundry.dto.*;
 import com.license.smapp.boundry.exceptions.BadRequestException;
 import com.license.smapp.boundry.exceptions.ResourceNotFoundException;
@@ -147,6 +148,7 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    @StopMethodExecution
     @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/apply", method = RequestMethod.GET)
     public ResponseEntity<?> checkIfStudentCanApplyToProject(@PathVariable Long id,
@@ -265,6 +267,8 @@ public class StudentController {
         return ResponseEntity.ok(preferences);
     }
 
+
+    @StopMethodExecution
     @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/preferences/{preferenceId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePreferenceFromStudent(@PathVariable Long id,
@@ -299,6 +303,7 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @StopMethodExecution
     @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/{id}/preferences/reorder", method = RequestMethod.PUT)
     public ResponseEntity<?> reorderPreferencesListForStudent(@PathVariable Long id,
