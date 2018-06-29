@@ -54,7 +54,6 @@
                       <input #tag placeholder="{{'LECTURERS.CREATE.ADD_TAGS' | translate}}"
                              [matChipInputFor]="chipList"
                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                             [matChipInputAddOnBlur]="addOnBlur"
                              (matChipInputTokenEnd)="add($event)" 
                              (input)="tag.value=$event.target.value.toUpperCase()"
                              />

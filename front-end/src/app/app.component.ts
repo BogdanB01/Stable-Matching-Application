@@ -28,7 +28,7 @@ export class AppComponent {
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private authService: AuthService,
+    public authService: AuthService,
     private translate: TranslateService) {
       translate.setDefaultLang('ro');
       this.mobileQuery = media.matchMedia('(max-width: 600px)');

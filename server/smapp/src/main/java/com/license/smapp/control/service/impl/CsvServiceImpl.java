@@ -18,6 +18,7 @@ import org.aspectj.apache.bcel.classfile.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,6 +49,10 @@ public class CsvServiceImpl implements CsvService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     @Override
     public void parseStudentsFile(MultipartFile multipartFile) {
         File file = convertMultipartFileToFile(multipartFile);
@@ -67,7 +72,9 @@ public class CsvServiceImpl implements CsvService {
             List<Student> students = new ArrayList<>();
             while (studentIterator.hasNext()) {
                 Student student = studentIterator.next();
-                student.setPassword(UUID.randomUUID().toString());
+                //student.setPassword(UUID.randomUUID().toString());
+                // for testing purposes
+                student.setPassword(passwordEncoder.encode("test"));
                 student.addRole(role);
 
                 students.add(student);
@@ -103,7 +110,9 @@ public class CsvServiceImpl implements CsvService {
             List<Lecturer> lecturers = new ArrayList<>();
             while (lecturerIterator.hasNext()) {
                 Lecturer lecturer = lecturerIterator.next();
-                lecturer.setPassword(UUID.randomUUID().toString());
+                // lecturer.setPassword(UUID.randomUUID().toString());
+                // for testing purposes
+                lecturer.setPassword(passwordEncoder.encode("test"));
                 lecturer.addRole(role);
 
                 lecturers.add(lecturer);

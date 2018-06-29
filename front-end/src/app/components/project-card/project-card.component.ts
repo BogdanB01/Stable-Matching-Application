@@ -19,7 +19,7 @@ export class ProjectCardComponent implements OnInit {
   constructor(private studentService: StudentService,
               private dialog: MatDialog,
               private snackBarService: SnackBarService,
-              private authService: AuthService) {
+              public authService: AuthService) {
     // this.div = document.createElement('div');
     // this.div.innerHTML = this.project.description;
   }

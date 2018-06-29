@@ -1,5 +1,5 @@
 export const APP_CONSTANTS = {
-    ENDPOINT: 'http://127.0.0.1:8080',
+    ENDPOINT: 'http://localhost:8080',
 
     STUDENT_MENU: [
         {

@@ -16,15 +16,15 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class ProjectDetailsComponent implements OnInit {
 
-  private project: any;
-  private otherProjects: any;
+  public project: any;
+  public otherProjects: any;
   constructor(
     private route: ActivatedRoute,
     private uploadService: UploadService,
     private studentService: StudentService,
     private snackBarService: SnackBarService,
     private projectService: ProjectService,
-    private authService: AuthService,
+    public authService: AuthService,
     public dialog: MatDialog) {
 
       // this.route.data.subscribe(res => {
