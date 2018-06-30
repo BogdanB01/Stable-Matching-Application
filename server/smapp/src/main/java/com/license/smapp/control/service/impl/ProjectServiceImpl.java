@@ -160,4 +160,9 @@ public class ProjectServiceImpl implements ProjectService{
     public Page<Project> filterActiveProjectsByTagName(boolean active, String filter, Pageable pageable) {
         return projectRepository.findDistinctByActiveAndTags_NameStartingWithIgnoreCase(active, filter, pageable);
     }
+
+    @Override
+    public void setAllProjectsInactive() {
+        this.projectRepository.setAllProjectsInactive();
+    }
 }

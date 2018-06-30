@@ -8,6 +8,8 @@ import com.license.smapp.entity.repository.LecturerRepository;
 import com.license.smapp.entity.repository.RoleRepository;
 import com.license.smapp.entity.repository.StudentRepository;
 import com.license.smapp.entity.repository.UserRepository;
+import com.license.smapp.util.Constants;
+import org.aspectj.apache.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -34,28 +36,13 @@ public class PopulateDb implements ApplicationRunner{
     private PasswordEncoder passwordEncoder;
 
     public void run(ApplicationArguments args) {
-        Role studentRole = null;
-        Role lecturerRole = null;
-        Role adminRole = null;
 
-        if (roleRepository.count() == 0) {
-            // create three category of roles
-            studentRole = this.createRole("ROLE_STUDENT");
-            lecturerRole = this.createRole("ROLE_LECTURER");
-            adminRole = this.createRole("ROLE_ADMIN");
-        }
+        Role adminRole = roleRepository.findByName(Constants.ADMIN_USER);
 
         if (userRepository.count() == 0) {
+            // create admin account
             User user = this.createAdmin("Administator", "admin@email.com", "admin", adminRole);
-
-
         }
-    }
-
-    private Role createRole(String roleName) {
-        Role role = new Role();
-        role.setName(roleName);
-        return roleRepository.save(role);
     }
 
     public User createAdmin(String name, String email, String password, Role role) {

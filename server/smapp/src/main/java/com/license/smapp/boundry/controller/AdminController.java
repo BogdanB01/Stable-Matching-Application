@@ -3,11 +3,8 @@ package com.license.smapp.boundry.controller;
 import com.license.smapp.boundry.exceptions.BadRequestException;
 import com.license.smapp.common.PdfGenerator;
 import com.license.smapp.common.TimeProvider;
-import com.license.smapp.control.service.CourseService;
-import com.license.smapp.control.service.MatchingService;
-import com.license.smapp.control.service.StudentService;
+import com.license.smapp.control.service.*;
 import com.license.smapp.entity.model.*;
-import com.license.smapp.control.service.HistoryService;
 import com.license.smapp.entity.repository.ApplicationStateRepository;
 import com.license.smapp.entity.repository.CourseRepository;
 import com.license.smapp.util.Constants;
@@ -16,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +41,9 @@ public class AdminController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     TimeProvider timeProvider;
@@ -137,10 +138,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
-    public ResponseEntity<?> prepareNewSession() {
+    public ResponseEntity<HttpStatus> prepareNewSession() {
         this.studentService.deleteAll();
         this.courseService.deleteAll();
-
-        return null;
+        this.projectService.setAllProjectsInactive();
+        return new ResponseEntity<HttpStatus>(HttpStatus.OK);
     }
 }

@@ -58,4 +58,13 @@ export class HistoryService {
             }
         });
     }
+
+    clearStudents() {
+        this.http.get(`${APP_CONSTANTS.ENDPOINT}/admin/clear`).subscribe(res => {
+            this.snackBarService.showSnackBar('Datele au fost sterse cu succes!');
+        }, err => {
+            this.snackBarService.showSnackBar('A intervenit o eroare!');
+            console.log(err);
+        });
+    }
 }

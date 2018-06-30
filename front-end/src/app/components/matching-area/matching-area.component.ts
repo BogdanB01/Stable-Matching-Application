@@ -131,7 +131,7 @@ export class MatchingAreaComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result === 1) {
-              console.log('dada');
+                this.historyService.clearStudents();
             }
         });
     }

@@ -15,4 +15,6 @@ public interface ProjectService extends CrudService<Project>{
     Page<Project> filterActiveProjectsByProjectTitle(boolean active, String filter, Pageable pageable);
     Page<Project> filterActiveProjectsByLecturerName(boolean active, String filter, Pageable pageable);
     Page<Project> filterActiveProjectsByTagName(boolean active, String filter, Pageable pageable);
+    void setAllProjectsInactive();
+
 }

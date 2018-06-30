@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "App_State")
+@Table(name = "app_state")
 public class ApplicationState {
 
     public ApplicationState() {}
